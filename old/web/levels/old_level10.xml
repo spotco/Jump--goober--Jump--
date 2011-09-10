@@ -1,0 +1,38 @@
+<level name="old_level10">
+<textfield x="35" y="450" text="This was the final level for the original game. BY SPOTCO"></textfield>
+<wall x="125" y="471" width="239" height="27"></wall>
+<boost x="82" y="398" width="-81" height="-114"></boost>
+<boost x="401" y="290" width="98" height="104"></boost>
+<wall x="81" y="82" width="303" height="33"></wall>
+<wall x="76" y="-129" width="30" height="242"></wall>
+<wall x="351" y="-122" width="32" height="236"></wall>
+<wall x="79" y="-151" width="302" height="37"></wall>
+<boost x="188" y="-305" width="88" height="85"></boost>
+<goal x="192" y="-530" width="66" height="71"></goal>
+<wall x="132" y="-91" width="35" height="11"></wall>
+<wall x="141" y="-87" width="13" height="31"></wall>
+<wall x="182" y="-90" width="13" height="41"></wall>
+<wall x="189" y="-72" width="33" height="12"></wall>
+<wall x="210" y="-94" width="11" height="42"></wall>
+<wall x="237" y="-93" width="16" height="47"></wall>
+<wall x="246" y="-90" width="32" height="7"></wall>
+<wall x="246" y="-70" width="30" height="8"></wall>
+<wall x="240" y="-50" width="30" height="10"></wall>
+<wall x="135" y="-21" width="10" height="68"></wall>
+<wall x="139" y="-18" width="40" height="8"></wall>
+<wall x="139" y="13" width="38" height="6"></wall>
+<wall x="137" y="37" width="33" height="13"></wall>
+<wall x="197" y="-19" width="5" height="77"></wall>
+<wall x="200" y="-10" width="13" height="9"></wall>
+<wall x="212" y="-2" width="9" height="20"></wall>
+<wall x="219" y="15" width="8" height="16"></wall>
+<wall x="228" y="32" width="6" height="12"></wall>
+<wall x="242" y="48" width="-6" height="-67"></wall>
+<wall x="263" y="-15" width="4" height="69"></wall>
+<wall x="266" y="-10" width="14" height="7"></wall>
+<wall x="280" y="-1" width="10" height="18"></wall>
+<wall x="292" y="17" width="4" height="13"></wall>
+<wall x="295" y="31" width="-7" height="10"></wall>
+<wall x="288" y="41" width="-12" height="13"></wall>
+<wall x="279" y="55" width="-9" height="-2"></wall>
+</level>

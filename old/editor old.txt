@@ -1,0 +1,44 @@
+var yellow:TextFormat = new TextFormat();
+            yellow.size = 10;
+			yellow.color = 0xFFFF00;
+			var black:TextFormat = new TextFormat();
+            black.size = 10;
+			black.color = 0x000000;
+			
+			
+						blueselector = new Wall(0,500,20,20,true);
+			blueselector.addEventListener(MouseEvent.CLICK,function(){currenttype = 0;});
+			redselector = new FalldownBlock(25,500,20,20,true);
+			redselector.addEventListener(MouseEvent.CLICK,function(){currenttype = 1;});
+			yellowselector = new Boost(50,500,20,20);
+			yellowselector.addEventListener(MouseEvent.CLICK,function(){currenttype = 2;});
+			greenselector = new Goal(75,500,20,20,true);
+			greenselector.addEventListener(MouseEvent.CLICK,function(){currenttype = 3;});
+			
+			main.addChild(blueselector);
+			main.addChild(redselector);
+			main.addChild(yellowselector);
+			main.addChild(greenselector);
+			
+			textboxselector = new Wall(0,0,0,0);
+			textboxselector.whitemode(100,500,20,20);
+			main.addChild(textboxselector);
+			textboxselectortext = new TextField();
+			textboxselectortext.x=105;
+			textboxselectortext.defaultTextFormat=black;
+			textboxselectortext.y=503;
+			textboxselectortext.width=40;
+			textboxselectortext.selectable=false;
+			textboxselectortext.text="T";
+			main.addChild(textboxselectortext);
+			textboxselector.addEventListener(MouseEvent.CLICK,function(){currenttype = 4;});
+			textboxselectortext.addEventListener(MouseEvent.CLICK,function(){currenttype = 4;});
+			
+			numobjdisplay = new TextField();
+			numobjdisplay.x=125;
+			numobjdisplay.defaultTextFormat=yellow;
+			numobjdisplay.y=503;
+			numobjdisplay.width=200;
+			numobjdisplay.selectable=false;
+			update_numobjdisplay();
+			main.addChild(numobjdisplay);

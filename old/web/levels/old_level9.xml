@@ -1,0 +1,37 @@
+<level name="old_level9">
+<textfield x="35" y="450" text="This was the ninth level for the original game. BY SPOTCO"></textfield>
+<wall x="131" y="465" width="213" height="34"></wall>
+<wall x="391" y="364" width="-32" height="-80"></wall>
+<boost x="392" y="141" width="74" height="91"></boost>
+<wall x="260" y="44" width="-32" height="-120"></wall>
+<boost x="198" y="-213" width="82" height="92"></boost>
+<wall x="83" y="-599" width="299" height="121"></wall>
+<boost x="181" y="-709" width="96" height="108"></boost>
+<wall x="155" y="-738" width="26" height="140"></wall>
+<wall x="278" y="-737" width="35" height="152"></wall>
+<deathwall x="177" y="-909" width="-177" height="-107"></deathwall>
+<deathwall x="286" y="-1014" width="211" height="103"></deathwall>
+<boost x="179" y="-1155" width="97" height="132"></boost>
+<deathwall x="170" y="-1168" width="-170" height="-63"></deathwall>
+<deathwall x="272" y="-1228" width="227" height="59"></deathwall>
+<boost x="189" y="-1374" width="79" height="136"></boost>
+<deathwall x="262" y="-1424" width="236" height="40"></deathwall>
+<deathwall x="199" y="-1629" width="298" height="53"></deathwall>
+<boost x="107" y="-1674" width="84" height="92"></boost>
+<deathwall x="162" y="-1907" width="334" height="57"></deathwall>
+<boost x="79" y="-1991" width="83" height="84"></boost>
+<deathwall x="110" y="-2233" width="386" height="49"></deathwall>
+<boost x="107" y="-2237" width="-107" height="-52"></boost>
+<wall x="212" y="-2341" width="190" height="36"></wall>
+<wall x="431" y="-2656" width="43" height="300"></wall>
+<wall x="274" y="-2681" width="-57" height="-58"></wall>
+<wall x="92" y="-2821" width="-49" height="-74"></wall>
+<wall x="224" y="-3031" width="56" height="72"></wall>
+<wall x="90" y="-3039" width="-39" height="-240"></wall>
+<boost x="105" y="-3391" width="-69" height="-106"></boost>
+<boost x="34" y="-3691" width="72" height="120"></boost>
+<boost x="41" y="-3953" width="57" height="135"></boost>
+<deathwall x="139" y="-4071" width="188" height="161"></deathwall>
+<wall x="329" y="-4123" width="170" height="36"></wall>
+<goal x="369" y="-4314" width="95" height="144"></goal>
+</level>
