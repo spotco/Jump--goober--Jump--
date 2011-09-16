@@ -49,49 +49,6 @@
 			addChild(ok);
 		}
 		
-		//question message with yes and no button
-		public function yesnobox(questiontext:String, yes:Function, no: Function) {
-			clear();
-			makewindow(questiontext);
-			
-			ok = new Sprite();
-			ok.x = 166; ok.y = 293;
-			ok.addChild(yesbutton);
-			ok.addEventListener(MouseEvent.CLICK,yes);
-			addChild(ok);
-			
-			this.no = new Sprite();
-			this.no.x = 260; this.no.y = 293;
-			this.no.addChild(nobutton);
-			this.no.addEventListener(MouseEvent.CLICK,no);
-			addChild(this.no);
-		}
-		
-		//message with ok
-		public function okbox(questiontext:String,ok:Function) {
-			clear();
-			makewindow(questiontext);
-			
-			this.ok = new Sprite();
-			this.ok.x = 220; this.ok.y = 293;
-			this.ok.addChild(okbutton);
-			this.ok.addEventListener(MouseEvent.CLICK,ok);
-			addChild(this.ok);
-		}
-		
-		//message with no interaction (leveleditor sending uses it)
-		public function messagebox(questiontext:String) {
-			clear();
-			makewindow(questiontext);
-		}
-		
-		private function clear() {
-			graphics.clear();
-			while(numChildren > 0) {
-    			removeChildAt(0);
-			}
-		}
-		
 		private function makewindow(questiontext:String) {
 			this.currentfunction = currentfunction;
 			
@@ -107,16 +64,16 @@
 		}
 		
 				[Embed(source='..//img//button//yes.png')]
-		private var mb1:Class;
-		private var yesbutton:Bitmap = new mb1;
+		public static var mb1:Class;
+		public static var yesbutton:Bitmap = new mb1;
 		
 				[Embed(source='..//img//button//no.png')]
-		private var mb2:Class;
-		private var nobutton:Bitmap = new mb2;
+		public static var mb2:Class;
+		public static var nobutton:Bitmap = new mb2;
 		
 						[Embed(source='..//img//button//ok.png')]
-		private var mb3:Class;
-		private var okbutton:Bitmap = new mb3;
+		public static var mb3:Class;
+		public static var okbutton:Bitmap = new mb3;
 
 	}
 	

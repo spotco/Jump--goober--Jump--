@@ -16,6 +16,8 @@
 		public var canJump:Boolean;
 		public var jumpCounter:Number;
 		
+		public var guydisplay:Sprite = new Sprite;
+		
 			
 		public function Guy(initx:Number, inity:Number) {
 			jumpCounter = 0;
@@ -26,7 +28,8 @@
 			this.x = initx;
 			this.y = inity;
 			vx = 0; vy = 0;
-			addChild(guy);
+			guydisplay.addChild(guy);
+			addChild(guydisplay);
 		}
 		
 		public function changePos(chx:Number, chy:Number) {
@@ -104,7 +107,10 @@
 					}
 				}
 			}
-			if (xhit) {
+			if (xhit && Math.abs(vx) > 5 && !isslide) {
+				vx = -vx/2;
+				
+			} else if (xhit) {
 				vx = -vx/1.1;
 			}
 			hashitwall = (xhit || yhit);
@@ -134,49 +140,48 @@
 				animcounter = 0;
 				toggle = !toggle;
 			}
-			while(numChildren > 0) {
-    			removeChildAt(0);
+			
+			while(guydisplay.numChildren > 0) {
+    			guydisplay.removeChildAt(0);
 			}
 			vy = -vy;
-			/*if (!canJump) {
-				addChild(guyhop);
-			} else */if (isslide) {
+			if (isslide) {
 				if (vx > 0) {
-					addChild(guyslideright);
+					guydisplay.addChild(guyslideright);
 				} else {
-					addChild(guyslideleft);
+					guydisplay.addChild(guyslideleft);
 				}
 			} else if (vx < -2) {
 				if (vy < -.5) {
-					addChild(guydownleft);
+					guydisplay.addChild(guydownleft);
 				} else if (vy > 1.4) {
-					addChild(guyupleft);
+					guydisplay.addChild(guyupleft);
 				} else {
 					if (toggle) {
-						addChild(guyleft);
+						guydisplay.addChild(guyleft);
 					} else {
-						addChild(guyleft2);
+						guydisplay.addChild(guyleft2);
 					}
 				}
 			} else if (vx > 2) {
 				if (vy < -.5) {
-					addChild(guydownright);
+					guydisplay.addChild(guydownright);
 				} else if (vy > 1.4) {
-					addChild(guyupright);
+					guydisplay.addChild(guyupright);
 				} else {
 					if (toggle) {
-						addChild(guyright);
+						guydisplay.addChild(guyright);
 					} else {
-						addChild(guyright2);
+						guydisplay.addChild(guyright2);
 					}
 					
 				}
 			} else if (vy > .5) {
-				addChild(guyup);
+				guydisplay.addChild(guyup);
 			} else if (vy < -.5) {
-				addChild(guydown);
+				guydisplay.addChild(guydown);
 			} else {
-				addChild(guy);
+				guydisplay.addChild(guy);
 			}
 			
 			

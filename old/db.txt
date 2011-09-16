@@ -1,0 +1,35 @@
+CREATE TABLE level
+(id int PRIMARY KEY AUTO INCREMENT,
+xml text NOT NULL,
+date_created timestamp DEFAULT CURRENT_TIMESTAMP,
+creator_name varchar(16) DEFAULT "anonymous",
+level_name varchar(20) NOT NULL UNIQUE,
+creator_num int,
+creator_str varchar(16));
+
+CREATE TABLE level_review
+(id int PRIMARY KEY,
+level_id int FOREIGN KEY,
+text text,
+date date,
+writer_num int,
+writer_str text);
+
+ALTER TABLE level_review MODIFY rating INT(5) NOT NULL; 
+
+ALTER TABLE level
+ADD CONSTRAINT check_name_length CHECK (LENGTH(level_name) > 0);
+
+INSERT INTO level (xml, creator_name, level_name)
+VALUES ('<level></level>', 'niveaucreateur', 'mon niveau'); 
+
+INSERT INTO level_review (level_id, rating, text)
+VALUES (0,3,'sucked');
+
+SELECT xml,creator_name,level_name
+FROM level
+WHERE id = 0;
+
+SELECT rating,text
+FROM level_review
+WHERE level_id = 0;

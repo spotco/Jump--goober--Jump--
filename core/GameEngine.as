@@ -40,21 +40,21 @@
 		public var storekey:Array;
 		public var jumpUnpressed:Boolean;
 		
-		[Embed(source='..//img//block//bgtest.png')]
+		[Embed(source='..//img//block//bg1.png')]
 		private var bg1:Class;
 		private var bg:Bitmap; //the current only background, the pink forest
 		var bgcounter:Number = 0;
 		
 		var usebackbutton:Boolean;
 		//loads and creates game given xml file, adds self to main param
-		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false) {
+		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, bgoffset:Number = 0) {
 			trace("gameengine start");
 			this.usebackbutton = usebackbutton;
 			
 			bg = new bg1();
 			//TODO -- make this variable with other backgrounds
 			bg.y = -1800;
-			bg.x = -(Math.random()*290);
+			bg.x = bgoffset;
 			main.addChild(bg);
 			
 			
@@ -171,6 +171,7 @@
 			}
 			for (var i = 0; i < deathwall.length; i++) { //loops through deathwalls, if hit starts death animation then reloads
 				if (testguy.hitTestObject(deathwall[i])) {
+					if (!main.mute) { main.explodesound.play(); }
 					timer.stop();
 					testguy.explode();
 					timer = new Timer(1200,1);
@@ -307,20 +308,22 @@
 			var topkey = storekey[storekey.length-1];
 			if (storekey.length > 0) {
 				if (topkey == Keyboard.LEFT) {
-					if (testguy.vx < -4) {
-						testguy.vx+=1;
-					} else if (testguy.vx > 4)  {
+					if (testguy.vx < -5) {
+						//testguy.vx+=1;
+					} else if (testguy.vx > 5)  {
 						testguy.vx-=1;
 					} else {
-						testguy.vx = -4;
+						testguy.vx = -5;
 					}
+
 				} else if (topkey == Keyboard.RIGHT) {
-					if (testguy.vx < -4) {
+
+					if (testguy.vx < -5) {
 						testguy.vx+=1;
-					} else if (testguy.vx > 4)  {
-						testguy.vx-=1;
+ 					} else if (testguy.vx > 5)  {
+						//testguy.vx-=1;
 					} else {
-               			testguy.vx = 4;
+               			testguy.vx = 5;
 					}
 				} else if (topkey == Keyboard.SPACE && ( (testguy.canJump && testguy.hashitwall)||testguy.boost > 0)) {
 					if (testguy.boost > 0) {
@@ -353,7 +356,7 @@
 			curfunction.nextLevel(hitgoal);
 		}
 		
-		private function clear() { //clears all from stage and removes keylisteners, called when player dies or otherwise ending game
+		public function clear() { //clears all from stage and removes keylisteners, called when player dies or otherwise ending game
 			trace("gameengine end");
 			while(main.numChildren > 0) {
     			main.removeChildAt(0);
@@ -368,8 +371,8 @@
 		private var menubuttonimg:Bitmap = new mb1;
 		
 		[Embed(source='..//img//button//back.png')]
-		private var mb2:Class;
-		private var backbuttonimg:Bitmap = new mb2;
+		public static var mb2:Class;
+		public static var backbuttonimg:Bitmap = new mb2;
 		
 		[Embed(source='..//img//button//skip.png')]
 		private var mb3:Class;
