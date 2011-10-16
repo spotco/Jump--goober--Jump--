@@ -39,7 +39,17 @@
 		
 		var fadeTimer:Timer;
 		
-		public function update(ge:GameEngine) {
+		public override function update(g:GameEngine):Boolean {
+			this.animate(g);
+			if (this.ready && g.testguy.hitTestObject(this.hitbox)) {
+				g.testguy.boost = 3;
+				g.testguy.canJump = true;
+				this.eat(g);
+			}
+			return false;
+		}
+		
+		public function animate(ge:GameEngine):Boolean {
 			var thisref:BoostFruit = this;
 			if (trailbox.alpha == 1 && !ready && stage != null) {
 				trailbox.graphics.beginFill(0xFFFF00);
@@ -65,6 +75,7 @@
 				}
 			}
 			updateAnimation();
+			return false;
 		}
 		
 		var animcounter:Number = 0;

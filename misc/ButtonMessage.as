@@ -119,6 +119,26 @@
 			s7.x = 10; s7.y = 25;
 			s7.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.BOOSTFRUIT;leveleditor.unmakeui();leveleditor.makeui();});
 			addChild(s7);
+			
+			var s8:Sprite = leveleditor.makeBitmapWrapper(trackicon);
+			s8.x = 10; s8.y = 40;
+			s8.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACK;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s8);
+			
+			var s9:Sprite = leveleditor.makeBitmapWrapper(trackwallicon);
+			s9.x = 25; s9.y = 40;
+			s9.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACKWALL;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s9);
+			
+			var s10:Sprite = leveleditor.makeBitmapWrapper(trackbladeicon);
+			s10.x = 40; s10.y = 40;
+			s10.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACKBLADE;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s10);
+			
+			var s11:Sprite = leveleditor.makeBitmapWrapper(bossplanticon);
+			s11.x = 55; s11.y = 40;
+			s11.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.FLOWERBOSS;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s11);
 		}
 		
 		private var message1:String = "Welcome to the level editor! To start placing blocks, select the type with the button to the far left. Pick your type from the menu.";
@@ -149,38 +169,54 @@
 		private var nexthelp:Bitmap = new mb4;
 		
 		
-						[Embed(source='..//img//editoricon//blue.png')]
+		[Embed(source='..//img//editoricon//blue.png')]
 		public var i1:Class;
 		public var blue:Bitmap = new i1;
 		
-						[Embed(source='..//img//editoricon//red.png')]
+		[Embed(source='..//img//editoricon//red.png')]
 		public var i2:Class;
 		public var red:Bitmap = new i2;
 		
-						[Embed(source='..//img//editoricon//yellow.png')]
+		[Embed(source='..//img//editoricon//yellow.png')]
 		public var i3:Class;
 		public var yellow:Bitmap = new i3;
 		
-						[Embed(source='..//img//editoricon//green.png')]
+		[Embed(source='..//img//editoricon//green.png')]
 		public var i4:Class;
 		public var green:Bitmap = new i4;
 		
-						[Embed(source='..//img//editoricon//delete.png')]
+		[Embed(source='..//img//editoricon//delete.png')]
 		public var i5:Class;
 		public var deleteicon:Bitmap = new i5;
 		
-						[Embed(source='..//img//editoricon//move.png')]
+		[Embed(source='..//img//editoricon//move.png')]
 		public var i6:Class;
 		public var moveicon:Bitmap = new i6;
 		
-								[Embed(source='..//img//editoricon//text.png')]
+		[Embed(source='..//img//editoricon//text.png')]
 		public var i7:Class;
 		public var texticon:Bitmap = new i7;
 		
-							[Embed(source='..//img//editoricon//boostfruit.png')]
+		[Embed(source='..//img//editoricon//boostfruit.png')]
 		private var mb7:Class;
 		public var boostfruiticon:Bitmap = new mb7;
+		
+		[Embed(source='..//img//editoricon//track.png')]
+		private var mb8:Class;
+		public var trackicon:Bitmap = new mb8;
+		
+		[Embed(source='..//img//editoricon//trackwall.png')]
+		private var mb9:Class;
+		public var trackwallicon:Bitmap = new mb9;
+		
+		[Embed(source='..//img//editoricon//trackblade.png')]
+		private var mb10:Class;
+		public var trackbladeicon:Bitmap = new mb10;
+		
 
+		[Embed(source='..//img//editoricon//bossplant.png')]
+		private var mb11:Class;
+		public var bossplanticon:Bitmap = new mb11;
 		
 		
 		

@@ -1,0 +1,11 @@
+<level name="new_level">
+  <flowerboss y="492"/>
+  <wall x="193" y="286" width="189" height="40"/>
+  <wall x="468" y="222" width="-27" height="-299"/>
+  <wall x="284" y="-10" width="-214" height="-36"/>
+  <wall x="80" y="-147" width="-42" height="-338"/>
+  <wall x="216" y="-436" width="240" height="35"/>
+  <wall x="455" y="-544" width="26" height="-347"/>
+  <wall x="319" y="-823" width="-231" height="-35"/>
+  <wall x="49" y="-949" width="-24" height="-276"/>
+</level>

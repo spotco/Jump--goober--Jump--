@@ -33,6 +33,8 @@
 		public var walls:Array;
 		public var goals:Array;
 		public var boostfruits:Array;
+		public var tracks:Array;
+		
 		public var testguy:Guy; //player, dunno why it's called testguy (another old jump or die thing?)
 		
 		public var timer:Timer;
@@ -40,21 +42,27 @@
 		public var storekey:Array;
 		public var jumpUnpressed:Boolean;
 		
-		[Embed(source='..//img//block//bgtest.png')]
-		private var bg1:Class;
-		private var bg:Bitmap; //the current only background, the pink forest
+		public var currenty:Number = 0;
+		
+		private var blocksarrays:Array;
+		
+		private var bg:Bitmap; //the current background
 		var bgcounter:Number = 0;
 		
 		var usebackbutton:Boolean;
 		//loads and creates game given xml file, adds self to main param
-		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false) {
+		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = 1) {
 			trace("gameengine start");
 			this.usebackbutton = usebackbutton;
 			
-			bg = new bg1();
-			//TODO -- make this variable with other backgrounds
-			bg.y = -1800;
-			bg.x = -(Math.random()*290);
+			if (useBg == 2) {
+				bg = new bg2();
+			} else if (useBg == 3) {
+				bg = new bg3();
+			} else {
+				bg = new bg1();
+			}
+			bg.y = -940;
 			main.addChild(bg);
 			
 			
@@ -69,6 +77,9 @@
 			main.addChild(testguy);
 			storekey = new Array();
 			jumpUnpressed = true;
+			
+			blocksarrays = new Array(walls,goals,deathwall,boostlist,textdisplays,boostfruits,tracks);
+			
 			main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
@@ -85,6 +96,8 @@
 			goals = new Array();
 			textdisplays = new Array();
 			boostfruits = new Array();
+			tracks = new Array();
+			
 			for each (var node:XML in clvlxml.boost) {
 				var boosk:Boost = new Boost(node.@x,node.@y,node.@width,node.@height);
 				boostlist.push(boosk);
@@ -115,6 +128,26 @@
 				var newboostfruit:BoostFruit = new BoostFruit(node.@x,node.@y);
 				boostfruits.push(newboostfruit);
 				main.addChild(newboostfruit);
+			}
+			for each (var node:XML in clvlxml.track) {
+				var newtrack:Track = new Track(node.@x,node.@y,node.@width,node.@height);
+				tracks.push(newtrack);
+				main.addChild(newtrack);
+			}
+			for each (var node:XML in clvlxml.trackwall) {
+				var newtrackwall:Wall = new TrackWall(node.@x,node.@y,node.@width,node.@height);
+				walls.push(newtrackwall);
+				main.addChild(newtrackwall);
+			}
+			for each (var node:XML in clvlxml.trackblade) {
+				var newtrackblade:FalldownBlock = new TrackBlade(node.@x,node.@y);
+				deathwall.push(newtrackblade);
+				main.addChild(newtrackblade);
+			}
+			for each (var node:XML in clvlxml.flowerboss) {
+				var newFlowerBoss:FlowerBoss = new FlowerBoss(node.@y);
+				deathwall.push(newFlowerBoss);
+				main.addChild(newFlowerBoss);
 			}
 		}
 		
@@ -156,6 +189,7 @@
 		private var justWallJumped:Boolean = false;
 		//START GAME ENGINE CODE
 		public function update(e:TimerEvent) { //main update cycle
+			//trace(main.numChildren);
 			leveldisplay.text = displayname;
 			inputStackMove(); //moves testguy based on top key in input stack
 			gameScroll(); //scrolls all the current blocks and player
@@ -165,63 +199,23 @@
 				return;
 			}
 			
-			for (var i = 0; i < walls.length; i++) {
-				clearAbove(walls[i]);
-				clearBelow(walls[i],walls,i);
-			}
-			for (var i = 0; i < deathwall.length; i++) { //loops through deathwalls, if hit starts death animation then reloads
-				if (testguy.hitTestObject(deathwall[i])) {
-					timer.stop();
-					testguy.explode();
-					timer = new Timer(1200,1);
-					timer.start();
-					timer.addEventListener(TimerEvent.TIMER_COMPLETE, function(){reload();});
-					return;
-				}
-				clearAbove(deathwall[i]);
-				clearBelow(deathwall[i],deathwall,i);
-			}
-			
-			for (var i = 0; i < boostlist.length; i++) { //loops through boost and adds velocity
-				boostlist[i].updateAnimation();
-				if (testguy.hitTestObject(boostlist[i])) {
-					if (testguy.vy > -20) {
-						testguy.vy -= 3;
-						//testguy.vy = -20;
+			for each(var a:Array in blocksarrays) {
+				for each(var b:BaseBlock in a) {
+					if (b.update(this)) {
+						return;
 					}
-					testguy.canJump = true;
-					testguy.jumpCounter+=4;
+					clearAbove(b);
+					clearBelow(b,a,a.indexOf(b));
 				}
-				clearAbove(boostlist[i]);
-				clearBelow(boostlist[i],boostlist,i);
 			}
+			moveUiToFront();
 			
-			for (var i = 0; i < textdisplays.length; i++) { //loops through and animates textbugs
-				textdisplays[i].update(testguy);
-				if (textdisplays[i].stage != null) {
-					main.setChildIndex(textdisplays[i],main.numChildren-1);
-				}
-				clearAbove(textdisplays[i]);
-				clearBelow(textdisplays[i],textdisplays,i);
-			}
-			
-			for (var i = 0; i < goals.length; i++) { //loops through goals and checks collision, loads next level if yes
-				goals[i].update();
-				if (testguy.hitTestObject(goals[i])) {
-					timer.stop();
-					loadnextlevel(true); //HIT GOAL EXIT
-					return;
-				}
-				clearAbove(goals[i]);
-				clearBelow(goals[i],goals,i);
-			}
-			
-			for (var i = 0; i < boostfruits.length; i++) {
-				boostfruits[i].update(this);
-				if (boostfruits[i].ready && testguy.hitTestObject(boostfruits[i].hitbox)) {
-					testguy.boost = 3;
-					testguy.canJump = true;
-					boostfruits[i].eat(this);
+		}
+		
+		private function moveUiToFront() {
+			for each (var b:FalldownBlock in deathwall) {
+				if (b is FlowerBoss || b is Bullet) {
+					main.setChildIndex(b,main.numChildren-1);
 				}
 			}
 			main.setChildIndex(leveldisplayimg,main.numChildren-1);
@@ -229,7 +223,6 @@
 			main.setChildIndex(menubutton,main.numChildren-1);
 			main.setChildIndex(skipbutton,main.numChildren-1);
 			main.setChildIndex(testguy,main.numChildren-1);
-			
 		}
 		
 		//memory saving mathods, dunno why they have to be >='s (if not they break :( )
@@ -268,14 +261,13 @@
 					bgcounter = 0;
 				}
 				
-				var blocksarrays:Array = new Array(walls,goals,deathwall,boostlist,textdisplays,boostfruits);
 				for each (var a:Array in blocksarrays) {
 					for each (var b:BaseBlock in a) {
 						b.y+=SCROLL_SPD;
 					}
 				}
 				testguy.y +=SCROLL_SPD;
-				
+				currenty += SCROLL_SPD;
 			}
 		}
 		
@@ -307,22 +299,24 @@
 			var topkey = storekey[storekey.length-1];
 			if (storekey.length > 0) {
 				if (topkey == Keyboard.LEFT) {
-					if (testguy.vx < -4) {
-						testguy.vx+=1;
-					} else if (testguy.vx > 4)  {
+					if (testguy.vx < -5) {
+						//testguy.vx+=1;
+					} else if (testguy.vx > 5)  {
 						testguy.vx-=1;
 					} else {
-						testguy.vx = -4;
+						testguy.vx = -5;
 					}
+
 				} else if (topkey == Keyboard.RIGHT) {
-					if (testguy.vx < -4) {
+
+					if (testguy.vx < -5) {
 						testguy.vx+=1;
-					} else if (testguy.vx > 4)  {
-						testguy.vx-=1;
+ 					} else if (testguy.vx > 5)  {
+						//testguy.vx-=1;
 					} else {
-               			testguy.vx = 4;
+               			testguy.vx = 5;
 					}
-				} else if (topkey == Keyboard.SPACE && ( (testguy.canJump && testguy.hashitwall)||testguy.boost > 0)) {
+				} else if (topkey == Keyboard.SPACE && ( (testguy.canJump && testguy.hashitwall || testguy.justtouched > 0)||testguy.boost > 0)) {
 					if (testguy.boost > 0) {
 						testguy.boost--;
 					}
@@ -342,18 +336,18 @@
 		//END GAME ENGINE CODE
 		
 		
-		private function reload() { //callback to curfunction, should reload game
+		public function reload() { //callback to curfunction, should reload game
 			clear();
 			curfunction.numDeath++;
 			curfunction.startLevel();
 		}
 		
-		private function loadnextlevel(hitgoal:Boolean) { //callback to curfunction, next
+		public function loadnextlevel(hitgoal:Boolean) { //callback to curfunction, next
 			clear();
 			curfunction.nextLevel(hitgoal);
 		}
 		
-		private function clear() { //clears all from stage and removes keylisteners, called when player dies or otherwise ending game
+		public function clear() { //clears all from stage and removes keylisteners, called when player dies or otherwise ending game
 			trace("gameengine end");
 			while(main.numChildren > 0) {
     			main.removeChildAt(0);
@@ -368,8 +362,8 @@
 		private var menubuttonimg:Bitmap = new mb1;
 		
 		[Embed(source='..//img//button//back.png')]
-		private var mb2:Class;
-		private var backbuttonimg:Bitmap = new mb2;
+		public static var mb2:Class;
+		public static var backbuttonimg:Bitmap = new mb2;
 		
 		[Embed(source='..//img//button//skip.png')]
 		private var mb3:Class;
@@ -378,6 +372,15 @@
 		[Embed(source='..//img//button//leveldisplay.png')]
 		private var mb4:Class;
 		private var leveldisplayimg:Bitmap = new mb4;
+		
+		[Embed(source='..//img//block//bg1.png')]
+		private var bg1:Class;
+		
+		[Embed(source='..//img//block//bg2.png')]
+		private var bg2:Class;
+		
+		[Embed(source='..//img//block//bg3.png')]
+		private var bg3:Class;
 
 	}
 	

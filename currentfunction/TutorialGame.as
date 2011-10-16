@@ -29,6 +29,8 @@
 		public var currentGame:GameEngine;
 		public var switchsong:Boolean;
 		
+		public var bgoffset:Number;
+		
 		public function TutorialGame(main:JumpDieCreateMain) {
 			starttime = new Date();
 			numDeath = 0;
@@ -36,6 +38,7 @@
 			this.main = main;
 			clvl = 0;
 			switchsong = true;
+			bgoffset = -(Math.random()*290);
 			startLevel();
 		}
 		
@@ -45,10 +48,14 @@
 			}
 			currentGame = null;
 			if (switchsong) {
-				main.playRandom();
+				if (clvl == 10) {
+					main.playSpecific(JumpDieCreateMain.BOSSSONG);
+				} else {
+					main.playSpecific(JumpDieCreateMain.SONG1);
+				}
 				switchsong = false;
 			}
-			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name);
+			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,1);
 		}
 		
 		public override function nextLevel(hitgoal:Boolean) {
@@ -98,15 +105,17 @@
 				main.addChild(winanim);
 				winanim.start();
 				main.stop();
-				if (!main.mute) {
-					main.winsound.play(0,1);
-				}
+				playWinSound();
 				main.stage.addEventListener(KeyboardEvent.KEY_DOWN, winscreencontinue);
 				main.stage.focus = main.stage;
 				return;
 			} else {
 				loadNextLevel();
 			}
+		}
+		
+		public function playWinSound() {
+			main.playSpecific(JumpDieCreateMain.SONG1END,false);
 		}
 		
 		function winscreencontinue(e:KeyboardEvent){
@@ -124,6 +133,7 @@
 			starttime = new Date;
 			clvl++;
 			switchsong = true;
+			bgoffset = -(Math.random()*290);
 			startLevel();
 		}
 		
@@ -135,7 +145,7 @@
 			main.curfunction = new JumpDieCreateMenu(main);
 		}
 		
-		private function makeLevelArray() {
+		public function makeLevelArray() {
 			levels = new Array();
 			levels.push(getXML(new l1()));
 			levels.push(getXML(new l2()));
@@ -147,43 +157,47 @@
 			levels.push(getXML(new l8()));
 			levels.push(getXML(new l9()));
 			levels.push(getXML(new l10()));
+			levels.push(getXML(new l11()));
 		}
 		
-		private static function getXML(input:Object) : XML {
+		public static function getXML(input:Object) : XML {
    			var ba:ByteArrayAsset = ByteArrayAsset(input);
    			var xml:XML = new XML( ba.readUTFBytes( ba.length ) );
    			return xml;    
 		}
 				
 		[Embed(source="..//misc//world_1//level1.xml", mimeType="application/octet-stream")]
-		protected static const l1:Class;
+		private var l1:Class;
 		
 		[Embed(source="..//misc//world_1//level2.xml", mimeType="application/octet-stream")]
-		protected static const l2:Class;
+		private var l2:Class;
 		
 		[Embed(source="..//misc//world_1//level3.xml", mimeType="application/octet-stream")]
-		protected static const l3:Class;
+		private var l3:Class;
 		
 		[Embed(source="..//misc//world_1//level4.xml", mimeType="application/octet-stream")]
-		protected static const l4:Class;
+		private var l4:Class;
 		
 		[Embed(source="..//misc//world_1//level5.xml", mimeType="application/octet-stream")]
-		protected static const l5:Class;
+		private var l5:Class;
 		
 		[Embed(source="..//misc//world_1//level6.xml", mimeType="application/octet-stream")]
-		protected static const l6:Class;
+		private var l6:Class;
 		
 		[Embed(source="..//misc//world_1//level7.xml", mimeType="application/octet-stream")]
-		protected static const l7:Class;
+		private var l7:Class;
 		
 		[Embed(source="..//misc//world_1//level8.xml", mimeType="application/octet-stream")]
-		protected static const l8:Class;
+		private var l8:Class;
 		
 		[Embed(source="..//misc//world_1//level9.xml", mimeType="application/octet-stream")]
-		protected static const l9:Class;
+		private var l9:Class;
 		
 		[Embed(source="..//misc//world_1//level10.xml", mimeType="application/octet-stream")]
-		protected static const l10:Class;
+		private var l10:Class;
+		
+		[Embed(source="..//misc//world_1//level11.xml", mimeType="application/octet-stream")]
+		private var l11:Class;
 		
 	}
 	

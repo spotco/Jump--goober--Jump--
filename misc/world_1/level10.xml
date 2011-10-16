@@ -29,5 +29,6 @@
   <wall x="36" y="-1159" width="-28" height="-438"/>
   <deathwall x="167" y="-1441" width="322" height="126"/>
   <wall x="236" y="-1721" width="33" height="252" text=""/>
-  <goal x="186" y="-1927" width="127" height="157" text=""/>
+  <goal x="186" y="-1982" width="127" height="157" text=""/>
+  <textfield x="54" y="-1796" text="warning...boss ahead!"/>
 </level>

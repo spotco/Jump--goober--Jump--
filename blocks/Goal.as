@@ -88,7 +88,17 @@
 		private var right:Class;
 
 		
-		public function update() {
+		public override function update(g:GameEngine):Boolean {
+			this.animate(g);
+			if (g.testguy.hitTestObject(this)) {
+				g.timer.stop();
+				g.loadnextlevel(true); //HIT GOAL EXIT
+				return true;
+			}
+			return false;
+		}
+		
+		public function animate(g:GameEngine):Boolean {
 			animationcounter++;
 			if (animationcounter > 15) {
 				animationcounter = 0;
@@ -105,6 +115,7 @@
 				mainfillcontainer.graphics.endFill();
 				addChild(mainfillcontainer);
 			}
+			return false;
 		}
 		
 		public override function type():String {

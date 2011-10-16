@@ -37,6 +37,17 @@
 			graphics.endFill();
 		}
 		
+		public override function update(g:GameEngine):Boolean {
+			this.updateAnimation();
+			if (g.testguy.hitTestObject(this)) {
+				if (g.testguy.vy > -20) {
+					g.testguy.vy -= 3;
+				}
+				g.testguy.jumpCounter+=4;
+			}
+			return false;
+		}
+		
 		public function updateAnimation() {
 			if (this.y < -1000 || this.y > 700) {
 				return;

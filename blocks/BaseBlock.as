@@ -30,6 +30,10 @@
 		public function internaltext():String {
 			return "";
 		}
+		
+		public function update(g:GameEngine):Boolean {
+			return false;			
+		}
 	}
 	
 }

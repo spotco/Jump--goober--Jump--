@@ -43,7 +43,11 @@
 		public static var DELETE:Number = 5;
 		public static var MOVE:Number = 6;
 		public static var BOOSTFRUIT:Number = 7;
-		public var currenttype:Number; //0-wall,1-deathbox,2-boost,3-goal,4-text,5-delete,6-move,7-boostfruit
+		public static var TRACK:Number = 8;
+		public static var TRACKWALL:Number = 9;
+		public static var TRACKBLADE:Number = 10;
+		public static var FLOWERBOSS:Number = 11;
+		public var currenttype:Number;
 		
 		
 		public function LevelEditor(main:JumpDieCreateMain) {
@@ -54,7 +58,7 @@
 			graphics.endFill();
 			
 			graphics.beginFill(0x202020);
-			graphics.drawRect(0,500,500,20);
+			graphics.drawRect(0,500,500,40);
 			graphics.endFill();
 			
 			xmllist = new Array();
@@ -77,7 +81,7 @@
 			main.playSpecific(JumpDieCreateMain.LEVELEDITOR_MUSIC);
 		}
 				
-		[Embed(source="..//misc//world_1//level3.xml", mimeType="application/octet-stream")]
+		[Embed(source="..//misc//world_1//level10.xml", mimeType="application/octet-stream")]
 		public static var loadThis:Class;
 		
 		
@@ -104,7 +108,16 @@
 					addblock = new Goal(e.@x,e.@y,e.@width,e.@height);
 				} else if (e.name() == "boostfruit") {
 					addblock = new BoostFruit(e.@x,e.@y);
+				} else if (e.name() == "track") {
+					addblock = new Track(e.@x,e.@y,e.@width,e.@height);
+				} else if (e.name() == "trackwall") {
+					addblock = new TrackWall(e.@x,e.@y,e.@width,e.@height);
+				} else if (e.name() == "trackblade") {
+					addblock = new TrackBlade(e.@x,e.@y);
+				} else if (e.name() == "flowerboss") {
+					addblock = new FlowerBoss(e.@y);
 				}
+				
 				rectList.push(addblock);
 				main.addChild(addblock);
 			}
@@ -122,7 +135,7 @@
 			cboxy = main.stage.mouseY;
 			ststo = main.stage.mouseY+currenty;
 			
-			if (currenttype == WALL || currenttype == DEATHBLOCK || currenttype == BOOST || currenttype == GOAL && !keydown) {
+			if (currenttype == WALL || currenttype == DEATHBLOCK || currenttype == BOOST || currenttype == GOAL || currenttype == TRACK || currenttype == TRACKWALL && !keydown) {
 				mousePreviewAnimateTimer = new Timer(20);
 				mousePreviewAnimateTimer.addEventListener(TimerEvent.TIMER,mousePreviewCreate);
 				mousePreviewAnimateTimer.start();
@@ -205,6 +218,18 @@
 					main.addChild(newfruit);
 					rectList.push(newfruit);
 				}
+				if (currenttype == TRACKBLADE) {
+					var newtrackbladej:TrackBlade = new TrackBlade(cboxx,cboxy);
+					xmllist.push('<trackblade x="'+cboxx+'" y="'+ststo+'"></trackblade>');
+					main.addChild(newtrackbladej);
+					rectList.push(newtrackbladej);
+				}
+				if (currenttype == FLOWERBOSS) {
+					var newflowerboss:FlowerBoss = new FlowerBoss(cboxy);
+					xmllist.push('<flowerboss y="'+ststo+'"></flowerboss>');
+					main.addChild(newflowerboss);
+					rectList.push(newflowerboss);
+				}
 				if (currenttype == DELETE) {
 					for(var i = 0; i<rectList.length;i++) {
 						if (rectList[i].hitTestPoint(main.stage.mouseX,main.stage.mouseY)) {
@@ -243,6 +268,16 @@
 					xmllist.push('<goal x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></goal>');
 					main.addChild(newwallg);
 					rectList.push(newwallg);
+				} else if (currenttype==TRACK) {
+					var newtrackh:Track = new Track(cboxx,cboxy,main.stage.mouseX-cboxx,main.stage.mouseY-cboxy);
+					xmllist.push('<track x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></track>');
+					main.addChild(newtrackh);
+					rectList.push(newtrackh);
+				} else if (currenttype == TRACKWALL) {
+					var newtrackwalli:TrackWall = new TrackWall(cboxx,cboxy,main.stage.mouseX-cboxx,main.stage.mouseY-cboxy);
+					xmllist.push('<trackwall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></trackwall>');
+					main.addChild(newtrackwalli);
+					rectList.push(newtrackwalli);
 				}
 				main.removeChild(playerspawn);
 				main.addChild(playerspawn);
@@ -285,7 +320,8 @@
 			clear();
 			main.stop();
 			trace(outputXML("new_level").toXMLString());
-			currentgame = new GameEngine(main,this,outputXML("new_level"),"new level",true);
+			main.playSpecific(JumpDieCreateMain.ONLINE);
+			currentgame = new GameEngine(main,this,outputXML("new_level"),"new level",true,1);
 		}
 		
 		
@@ -354,7 +390,7 @@
 			var passhelper:LevelEditor = this;
 			
 			var gB:ButtonMessage = new ButtonMessage("",this);
-			var iconBitmap:Array = new Array(gB.blue,gB.red,gB.yellow,gB.green,gB.texticon,gB.deleteicon,gB.moveicon,gB.boostfruiticon);
+			var iconBitmap:Array = new Array(gB.blue,gB.red,gB.yellow,gB.green,gB.texticon,gB.deleteicon,gB.moveicon,gB.boostfruiticon,gB.trackicon,gB.trackwallicon,gB.trackbladeicon,gB.bossplanticon);
 			
 			selectorbutton = new Sprite;
 			var selectorbuttonelements:Sprite = new Sprite;
@@ -444,116 +480,25 @@
 			main.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 		
-		//Start level submit code, TODO refactor
-		var confirmsave:TextWindow;
-		
 		public override function nextLevel(hitgoal:Boolean) {
-			if (true) {
-				remake();
-			}
 			if (!hitgoal) {
 				remake();
-			} /*else {
-				confirmsave = new TextWindow("", this, function(){});
-				confirmsave.yesnobox("Level Completed. Save and send to server?", function(){entername();}, function(){main.removeChild(confirmsave);remake();});
-				main.addChild(confirmsave);
-			}*/
-		}
-		
-
-		
-		/*private function entername() {
-			main.removeChild(confirmsave);
-			var msg:String = "Enter the name of your level. It needs to be 3 or more but no greater than 16 letters , using capital or lowercase letters and numbers only. The server will also check if the name is available.";
-			confirmsave = new TextWindow(msg,this,function(){verify(confirmsave.entryfield.text);});
-			main.addChild(confirmsave);
-		}
-		
-		var timeouttimer:Timer;
-		var success:Boolean;
-		var sname:String;
-		
-		private function verify(name:String) {
-			sname = name;
-			main.removeChild(confirmsave);
-			confirmsave = new TextWindow("",this,function(){});
-			confirmsave.messagebox("sending...");
-			main.addChild(confirmsave);
-			if (name.length > 16 || name.length < 3) {
-				verifyfail("Your name length is either too long or too short. Retry sending?");
-				return;
-			}
-			for each (var node:XML in outputXML("testoutput").goal) {
-				if (node.@y > -100) {
-					verifyfail("Your goal(green) squares need to be at least 300 pixels away from the spawn. Try making your level longer. Retry sending?");
-					return;
-				}
-			}
-			timeouttimer = new Timer(6000,1);
-			success = false;
-			timeouttimer.addEventListener(TimerEvent.TIMER,function() {
-										  		if (!success) {
-													timeouttimer.stop();
-													timeouttimer = null;
-													verifyfail("Request timed out. Retry?");
-												}
-										  });
-			timeouttimer.start();
-			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE, uploadcomplete);
-    		var request:URLRequest= new URLRequest("send.php"+'?name='+name+'&pass='+"upload");
-    		request.contentType = "text/xml";
-   			request.data = outputXML(name).toXMLString(); // convert to a string
-    		request.method = URLRequestMethod.POST;     
-    		loader.load(request); 
-			//trace(name);
-		}
-		
-		function uploadcomplete(event:Event):void {
-			main.removeChild(confirmsave);
-			success = true;
-			confirmsave = new TextWindow("",this,function(){});
-			var message:String = "";
-			var suc:Boolean = false;
-			
-			var response:String = event.target.data;
-			if (response.indexOf("SUCCESS") != -1) {
-				message = "Successfully uploaded as "+sname+".xml! Type \""+sname+"\" in online mode to play your level.  Now go play some levels!"
-				suc = true;
-			} else if (response.indexOf("ERROR01") != -1) {
-				message = "Verification failed. Retry?";
-			} else if(response.indexOf("ERROR02") != -1) {
-				message = "Invalid character(s) in your name. Retry?";
-			} else if (response.indexOf("ERROR03") != -1) {
-				message = "Name taken. Retry?";
 			} else {
-				message = "Invalid request or invalid character in your name. Retry?";
+				var submitmenu:SubmitMenu = new SubmitMenu(this); //will eventually call back remake()
 			}
-			if (suc) {
-				confirmsave.okbox(message,function(){destroy();});
-			} else {
-				confirmsave.yesnobox(message,function(){entername();},function(){main.removeChild(confirmsave);remake();});
-			}
-			main.addChild(confirmsave);
-			trace(event.target.data);
 		}
-		
-		private function verifyfail(message:String) {
-			main.removeChild(confirmsave);
-			confirmsave = new TextWindow("",this,function(){});
-			confirmsave.yesnobox(message,function(){entername();},function(){clear();remake();});
-			main.addChild(confirmsave);
-		}*/
 		
 		private function colorByType(currenttype:Number):uint { //helper for finding ghost fill color
-			if (currenttype == WALL) {
+			if (currenttype == WALL || currenttype == TRACK || currenttype == TRACKWALL ) {
 				return 0x0000FF;
-			} else if (currenttype == DEATHBLOCK) {
+			} else if (currenttype == DEATHBLOCK || currenttype == TRACKBLADE || currenttype == FLOWERBOSS) {
 				return 0xFF0000;
 			} else if (currenttype == BOOST || currenttype == BOOSTFRUIT) {
 				return 0xFFFF00;
 			} else if (currenttype == GOAL) {
 				return 0x008000;
+			} else if (currenttype == TRACK) {
+				return 0x5f95b1;
 			} else {
 				return 0xFFFFFF;
 			}
@@ -572,8 +517,16 @@
 				return TEXT;
 			} else if (t == "boostfruit") {
 				return BOOSTFRUIT;
+			} else if (t == "track") {
+				return TRACK;
+			} else if (t == "trackwall") {
+				return TRACKWALL;
+			} else if (t == "trackblade") {
+				return TRACKBLADE;
+			} else if (t == "flowerboss") {
+				return FLOWERBOSS;
 			} else {
-				trace("error in convertToType(string)");
+				trace("error in convertToType(string), this is a LevelEditor Function");
 				return -999;
 			}
 		}

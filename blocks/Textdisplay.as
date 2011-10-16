@@ -94,9 +94,18 @@
 			buganimationphase = 0;
 		}
 		
-		public function update(testguy:Guy) {
+		public override function update(g:GameEngine):Boolean {
+			this.animate(g);
+			if (this.stage != null) {
+				g.main.setChildIndex(this,g.main.numChildren-1);
+			}
+			return false;
+		}
+		
+		public function animate(g:GameEngine):Boolean {
+			var testguy:Guy = g.testguy;
 			if (this.y < -200 || this.y > 700) {
-				return;
+				return false;
 			}
 			buganimationtimer++;
 			if (buganimationtimer > 5 && bugcontainer.numChildren > 0) {
@@ -119,7 +128,7 @@
 			} else {
 				textcontainer.alpha = 1;
 			}
-			
+			return false;
 		}
 		
 		public override function type():String {

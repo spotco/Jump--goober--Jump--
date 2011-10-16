@@ -42,8 +42,7 @@
 			Security.allowDomain("spotcos.com");
             Security.allowInsecureDomain("spotcos.com");
 			cstage = stage;
-			mute = true;
-			initmusic();
+			mute = false;
 			curfunction = new JumpDieCreateMenu(this);
 			
 		}
@@ -56,44 +55,64 @@
 			} else if (menupos == LEVELEDITOR) {
 				curfunction = new LevelEditor(this);
 			} else if (menupos == RANDOMONLINE) {
-				curfunction = new RandomOnlineGame(this); 
+				curfunction = new RandomOnlineGame(this);
 			} else if (menupos == ENTERNAMEONLINE) {
-				curfunction = new TypeNameGame(this);
+				curfunction = new JumpDieCreateMenu(this);
+			} else if (menupos == WORLD2) {
+				curfunction = new WorldTwoGame(this);
+			} else if (menupos == WORLD3) {
+				curfunction = new WorldThreeGame(this);
 			}
 		}
 		
 		//oh yeah, and the main is the sound manager lol
-		private function initmusic() {
-			music = new Array();
-			//TODO -- Add in better
-			/*music.push((new m1) as Sound);
-			music.push((new m3) as Sound);*/
-		}
-		
-		public function playRandom() {
-			if (!mute) {
-				if (sc) {
-					sc.stop();
-				}
-				if (music.length == 0) {
-					return;
-				}
-				sc = music[Math.round(Math.random()*(music.length-1))].play(0,9999);
-			}
-		}
-		
-		public function playSpecific(tar:Number) {
+		public function playSpecific(tar:Number,repeat:Boolean = true) {
 			if (!mute) {
 				if (sc) {
 					sc.stop();
 				}
 				var test:Sound;
+				
 				if (tar == LEVELEDITOR_MUSIC) {
 					test = ((new mleveleditor) as Sound);
 				} else if (tar == MENU_MUSIC) {
 					test = ((new mmenu) as Sound);
+				} else if (tar == SONG1) {
+					/*test = ((new m1intro) as Sound);
+					repeat = false;*/
+					test = ((new m1) as Sound);
+				} else if (tar == SONG2) {
+					/*test = ((new m2intro) as Sound);
+					repeat = false;*/
+					test = ((new m2) as Sound);
+				} else if (tar == SONG1END) {
+					test = ((new m1end) as Sound);
+				} else if (tar == SONG2END) {
+					test = ((new m2end) as Sound);
+				} else if (tar == ONLINEEND) {
+					test = ((new onlineend) as Sound);
+				} else if (tar == ONLINE) {
+					test = ((new online) as Sound);
+				} else if (tar == SONG3) {
+					test = ((new m3) as Sound);
+				} else if (tar == SONG4) {
+					test = ((new m4) as Sound);
+				} else if (tar == BOSSSONG) {
+					test = ((new mboss) as Sound);
 				}
-				sc = test.play(0,9999);
+				
+				if (repeat) {
+					sc = test.play(0,9999);
+				} else {
+					sc = test.play();
+				}
+				
+				/*if (tar == SONG1) {
+					sc.addEventListener(Event.SOUND_COMPLETE, function() {
+											var test2:Sound = (new m1) as Sound;
+											sc = test2.play(0,9999);
+										});
+				}*/
 			}
 		}
 		
@@ -109,21 +128,62 @@
 		public static var ENTERNAMEONLINE:Number = 5;
 		
 		public static var WORLD1:Number = 6;
-		public static var WORLD2:Number = 0;
-		public static var WORLD3:Number = 0;
+		public static var WORLD2:Number = 7;
+		public static var WORLD3:Number = 8;
 		
 		public static var MENU_MUSIC:Number = 44141;
 		public static var LEVELEDITOR_MUSIC:Number = 12312;
+		public static var WIN_SOUND:Number = 19282;
+		public static var BOSSSONG:Number = 99213;
+		public static var SONG1:Number = 23567;
+		public static var SONG2:Number = 67223;
+		public static var SONG3:Number = 65412;
+		public static var SONG4:Number = 44214;
+		public static var SONG1END:Number = 87367;
+		public static var SONG2END:Number = 66423;
+		public static var ONLINE:Number = 77231;
+		public static var ONLINEEND:Number = 88123;
 		
+		[Embed(source='snd//song1.mp3')] 		 
+		private var m1 : Class;
+		
+		[Embed(source='snd//song1end.mp3')] 		 
+		private var m1end : Class;
+		
+		[Embed(source='snd//song2.mp3')] 		 
+		private var m2 : Class;
+		
+		[Embed(source='snd//song2end.mp3')] 		 
+		private var m2end : Class;
+		
+		[Embed(source='snd//song3.mp3')] 		 
+		private var m3 : Class;
+		
+		[Embed(source='snd//song3end.mp3')] 		 
+		private var m3end : Class;
+		
+		[Embed(source='snd//alt.mp3')] 		 
+		private var m4 : Class;
+
+		[Embed(source='snd//boss.mp3')] 		 
+		private var mboss : Class;
+
 		[Embed(source='snd//menu.mp3')] 		 
 		private var mmenu : Class;
 		
+		[Embed(source='snd//online.mp3')] 		 
+		private var online : Class;
+
+		[Embed(source='snd//onlineend.mp3')] 		 
+		private var onlineend : Class;
+		
+		[Embed(source='snd//explode.mp3')] 		 
+		public var explode : Class;
+		public var explodesound:Sound = (new explode) as Sound;
+		
+		
 		[Embed(source='snd//leveleditor.mp3')] 		 
 		private var mleveleditor : Class;
-		
-		[Embed(source='snd//win.mp3')] 		 
-		private var winsounddata:Class;
-		public var winsound:Sound = (new winsounddata) as Sound;
 		
 		private var music : Array;
 		
