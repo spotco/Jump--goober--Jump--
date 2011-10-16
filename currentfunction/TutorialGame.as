@@ -29,8 +29,6 @@
 		public var currentGame:GameEngine;
 		public var switchsong:Boolean;
 		
-		public var bgoffset:Number;
-		
 		public function TutorialGame(main:JumpDieCreateMain) {
 			starttime = new Date();
 			numDeath = 0;
@@ -38,7 +36,6 @@
 			this.main = main;
 			clvl = 0;
 			switchsong = true;
-			bgoffset = -(Math.random()*290);
 			startLevel();
 		}
 		
@@ -51,7 +48,7 @@
 				main.playRandom();
 				switchsong = false;
 			}
-			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,bgoffset);
+			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name);
 		}
 		
 		public override function nextLevel(hitgoal:Boolean) {
@@ -101,7 +98,9 @@
 				main.addChild(winanim);
 				winanim.start();
 				main.stop();
-				main.playSpecific(JumpDieCreateMain.WIN_SOUND,false);
+				if (!main.mute) {
+					main.winsound.play(0,1);
+				}
 				main.stage.addEventListener(KeyboardEvent.KEY_DOWN, winscreencontinue);
 				main.stage.focus = main.stage;
 				return;
@@ -125,7 +124,6 @@
 			starttime = new Date;
 			clvl++;
 			switchsong = true;
-			bgoffset = -(Math.random()*290);
 			startLevel();
 		}
 		

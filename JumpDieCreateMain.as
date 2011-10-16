@@ -42,7 +42,7 @@
 			Security.allowDomain("spotcos.com");
             Security.allowInsecureDomain("spotcos.com");
 			cstage = stage;
-			mute = false;
+			mute = true;
 			initmusic();
 			curfunction = new JumpDieCreateMenu(this);
 			
@@ -56,9 +56,9 @@
 			} else if (menupos == LEVELEDITOR) {
 				curfunction = new LevelEditor(this);
 			} else if (menupos == RANDOMONLINE) {
-				curfunction = new RandomOnlineGame(this);
+				curfunction = new RandomOnlineGame(this); 
 			} else if (menupos == ENTERNAMEONLINE) {
-				curfunction = new JumpDieCreateMenu(this);
+				curfunction = new TypeNameGame(this);
 			}
 		}
 		
@@ -82,7 +82,7 @@
 			}
 		}
 		
-		public function playSpecific(tar:Number,repeat:Boolean = true) {
+		public function playSpecific(tar:Number) {
 			if (!mute) {
 				if (sc) {
 					sc.stop();
@@ -92,14 +92,8 @@
 					test = ((new mleveleditor) as Sound);
 				} else if (tar == MENU_MUSIC) {
 					test = ((new mmenu) as Sound);
-				}  else if (tar == WIN_SOUND) {
-					test = ((new winsounddata) as Sound);
 				}
-				if (repeat) {
-					sc = test.play(0,9999);
-				} else {
-					sc = test.play();
-				}
+				sc = test.play(0,9999);
 			}
 		}
 		
@@ -120,22 +114,16 @@
 		
 		public static var MENU_MUSIC:Number = 44141;
 		public static var LEVELEDITOR_MUSIC:Number = 12312;
-		public static var WIN_SOUND:Number = 19282;
 		
-
 		[Embed(source='snd//menu.mp3')] 		 
 		private var mmenu : Class;
-		
-		[Embed(source='snd//explode.mp3')] 		 
-		public var explode : Class;
-		public var explodesound:Sound = (new explode) as Sound;
-		
 		
 		[Embed(source='snd//leveleditor.mp3')] 		 
 		private var mleveleditor : Class;
 		
 		[Embed(source='snd//win.mp3')] 		 
 		private var winsounddata:Class;
+		public var winsound:Sound = (new winsounddata) as Sound;
 		
 		private var music : Array;
 		

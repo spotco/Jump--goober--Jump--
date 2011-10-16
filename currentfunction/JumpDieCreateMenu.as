@@ -154,7 +154,7 @@
 		
 		private function initmenu() {
 			main_menu = new Array(new MenuOption(250,230,adventure,ADVENTURE),
-								  new MenuOption(250,280,online,ONLINE),
+								  /*new MenuOption(250,280,online,ONLINE),*/
 								  new MenuOption(250,330,leveleditor,JumpDieCreateMain.LEVELEDITOR));
 			
 			world_menu = new Array(new MenuOption(250,210,world1,JumpDieCreateMain.WORLD1),
@@ -163,6 +163,8 @@
 								   new MenuOption(250,360,(new backdata) as Bitmap,BACK_TO_MAIN));
 			
 			online_menu = new Array(new MenuOption(250,210,playrandom,JumpDieCreateMain.RANDOMONLINE),
+								   new MenuOption(250,260,toprated,JumpDieCreateMain.TOPONLINE),
+								   new MenuOption(250,310,entername,JumpDieCreateMain.ENTERNAMEONLINE),
 								   new MenuOption(250,360,(new backdata) as Bitmap,BACK_TO_MAIN));
 		}
 		
