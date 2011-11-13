@@ -217,9 +217,9 @@
 			
 		}
 		
-		private function moveUiToFront() {
+		public function moveUiToFront() {
 			for each (var b:FalldownBlock in deathwall) {
-				if (b is FlowerBoss || b is Bullet) {
+				if (b is FlowerBoss || b is Bullet || b is FlowerBoss) {
 					main.setChildIndex(b,main.numChildren-1);
 				}
 			}

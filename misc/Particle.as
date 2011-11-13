@@ -12,6 +12,9 @@
 		public var vx:Number;
 		public var vy:Number;
 		
+		public var theta:Number;
+		public var c:Number;
+		
 	}
 	
 }

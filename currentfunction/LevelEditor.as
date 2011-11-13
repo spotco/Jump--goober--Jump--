@@ -47,6 +47,7 @@
 		public static var TRACKWALL:Number = 9;
 		public static var TRACKBLADE:Number = 10;
 		public static var FLOWERBOSS:Number = 11;
+		public static var CLOUDBOSS:Number = 12;
 		public var currenttype:Number;
 		
 		
@@ -116,6 +117,8 @@
 					addblock = new TrackBlade(e.@x,e.@y);
 				} else if (e.name() == "flowerboss") {
 					addblock = new FlowerBoss(e.@y);
+				} else if (e.name() == "cloudboss") {
+					addblock = new CloudBoss();
 				}
 				
 				rectList.push(addblock);
@@ -229,6 +232,12 @@
 					xmllist.push('<flowerboss y="'+ststo+'"></flowerboss>');
 					main.addChild(newflowerboss);
 					rectList.push(newflowerboss);
+				}
+				if (currenttype == CLOUDBOSS) {
+					var newcloudboss:CloudBoss = new CloudBoss();
+					xmllist.push('<cloudboss></cloudboss>');
+					main.addChild(newcloudboss);
+					rectList.push(newcloudboss);
 				}
 				if (currenttype == DELETE) {
 					for(var i = 0; i<rectList.length;i++) {
@@ -390,7 +399,21 @@
 			var passhelper:LevelEditor = this;
 			
 			var gB:ButtonMessage = new ButtonMessage("",this);
-			var iconBitmap:Array = new Array(gB.blue,gB.red,gB.yellow,gB.green,gB.texticon,gB.deleteicon,gB.moveicon,gB.boostfruiticon,gB.trackicon,gB.trackwallicon,gB.trackbladeicon,gB.bossplanticon);
+			//note, keep this order the same as the constant numbers
+			var iconBitmap:Array = new Array(gB.blue,
+											 gB.red,
+											 gB.yellow,
+											 gB.green,
+											 gB.texticon,
+											 gB.deleteicon,
+											 gB.moveicon,
+											 gB.boostfruiticon,
+											 gB.trackicon,
+											 gB.trackwallicon,
+											 gB.trackbladeicon,
+											 gB.bossplanticon,
+											 gB.bosscloudicon
+									);
 			
 			selectorbutton = new Sprite;
 			var selectorbuttonelements:Sprite = new Sprite;

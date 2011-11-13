@@ -17,9 +17,13 @@
 		var bulletcounter:Number = -50;
 		var bulletspeed:Number = 60;
 		
+		var particlefield:Sprite = new Sprite;
+		var particlesarray:Array = new Array;
+		
 		public function FlowerBoss(y:Number) {
-			super(0,y,500,300);
-			
+			super(0,y,500,300);			
+			addparticles();
+			this.addChild(particlefield);
 			flowerstem.x = 231; flowerstem.y = -34;
 			this.addChild(flowerstem);
 			
@@ -41,11 +45,14 @@
 			this.addChild(headwrapper);
 			
 			hitboxhelper();
+			/*particlefield.graphics.beginFill(0xFF00FF);
+			particlefield.graphics.drawRect(0,0,500,-150);*/
 		}
 		
 		private var headanimatetimer:Number = 0;
 		
 		public override function update(g:GameEngine):Boolean {
+			updateparticles();
 			headwrapper.rotation = getangle(this.x+260,this.y - 40,g.testguy.x + g.testguy.width, g.testguy.y + g.testguy.height) + 90;
 			
 			bulletcounter++;
@@ -73,6 +80,32 @@
 			this.y -= spdmov;
 			
 			return checkhit(g);
+		}
+		
+		private function addparticles() {
+			for (var i = 0; i < 20; i++) {
+				var np:Particle = new Particle();
+				np.graphics.beginFill(0xcc6666);
+				np.graphics.drawCircle(0,0,2);
+				np.vx = Math.random()*500;
+				np.vy = -Math.random()*150;
+				np.theta = Math.random()*Math.PI;
+				np.c = Math.random()*50+50;
+				particlefield.addChild(np);
+				particlesarray.push(np);
+			}
+		}
+		
+		private function updateparticles() {
+			for each(var p:Particle in particlesarray) {
+				p.theta+=0.04;
+				var r:Number = (p.c)*Math.sin(3*p.theta);
+				p.x = p.vx+r*Math.cos(p.theta);
+				p.y = p.vy+r*Math.sin(p.theta);
+				if (p.theta > 2*Math.PI) {
+					p.theta = 0;
+				}
+			}
 		}
 		
 		private function animatehead() {

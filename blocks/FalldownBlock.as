@@ -94,6 +94,7 @@
 		}
 		
 		public function guyhit(g:GameEngine):Boolean {
+			g.moveUiToFront();
 			if (!g.main.mute) { g.main.explodesound.play(); }
 			g.timer.stop();
 			g.testguy.explode();

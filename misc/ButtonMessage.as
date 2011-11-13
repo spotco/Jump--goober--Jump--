@@ -139,6 +139,11 @@
 			s11.x = 55; s11.y = 40;
 			s11.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.FLOWERBOSS;leveleditor.unmakeui();leveleditor.makeui();});
 			addChild(s11);
+			
+			var s12:Sprite = leveleditor.makeBitmapWrapper(bosscloudicon);
+			s12.x = 70; s12.y = 40;
+			s12.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.CLOUDBOSS;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s12);
 		}
 		
 		private var message1:String = "Welcome to the level editor! To start placing blocks, select the type with the button to the far left. Pick your type from the menu.";
@@ -218,7 +223,9 @@
 		private var mb11:Class;
 		public var bossplanticon:Bitmap = new mb11;
 		
-		
+				[Embed(source='..//img//editoricon//bosscloud.png')]
+		private var mb12:Class;
+		public var bosscloudicon:Bitmap = new mb12;
 		
 	}
 	
