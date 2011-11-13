@@ -88,15 +88,19 @@
 			}
 			
 			if (g.testguy.hitTestObject(this)) {
-				if (!g.main.mute) { g.main.explodesound.play(); }
-				g.timer.stop();
-				g.testguy.explode();
-				g.timer = new Timer(1200,1);
-				g.timer.start();
-				g.timer.addEventListener(TimerEvent.TIMER_COMPLETE, function(){g.reload();});
-				return true;
+				return guyhit(g);
 			}
 			return false;
+		}
+		
+		public function guyhit(g:GameEngine):Boolean {
+			if (!g.main.mute) { g.main.explodesound.play(); }
+			g.timer.stop();
+			g.testguy.explode();
+			g.timer = new Timer(1200,1);
+			g.timer.start();
+			g.timer.addEventListener(TimerEvent.TIMER_COMPLETE, function(){g.reload();});
+			return true;
 		}
 		
 	}

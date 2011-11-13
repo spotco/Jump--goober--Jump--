@@ -2,7 +2,8 @@
   <cloudboss />
   <wall x="0" y="350" width="500" height="40"/>
   <wall x="404" y="4" width="42" height="290"/>
-  <wall x="119" y="41" width="-46" height="-212"/>
+  <deathwall x="119" y="41" width="-46" height="-212"/>
   <wall x="411" y="-137" width="56" height="-296"/>
   <wall x="229" y="41" width="52" height="-245"/>
+  <deathwall x="229" y="41" width="52" height="-450"/>
 </level>

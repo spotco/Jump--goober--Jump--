@@ -149,6 +149,11 @@
 				deathwall.push(newFlowerBoss);
 				main.addChild(newFlowerBoss);
 			}
+			for each (var node:XML in clvlxml.cloudboss) {
+				var newCloudBoss:CloudBoss = new CloudBoss();
+				deathwall.push(newCloudBoss);
+				main.addChild(newCloudBoss);
+			}
 		}
 		
 		var menubutton:Sprite; //wrappers for the ui buttons on bot-right
@@ -263,7 +268,8 @@
 				
 				for each (var a:Array in blocksarrays) {
 					for each (var b:BaseBlock in a) {
-						b.y+=SCROLL_SPD;
+						b.gameScroll(SCROLL_SPD);
+						//b.y+=SCROLL_SPD;
 					}
 				}
 				testguy.y +=SCROLL_SPD;

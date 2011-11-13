@@ -57,6 +57,7 @@
 			levels.push(getXML(new l8()));
 			levels.push(getXML(new l9()));
 			levels.push(getXML(new l10()));
+			levels.push(getXML(new l11()));
 		}
 		
 		public override function playWinSound() {
@@ -92,6 +93,9 @@
 		
 		[Embed(source="..//misc//world_2//level10.xml", mimeType="application/octet-stream")]
 		private var l10:Class;
+		
+				[Embed(source="..//misc//world_2//level11.xml", mimeType="application/octet-stream")]
+		private var l11:Class;
 		
 	}
 	

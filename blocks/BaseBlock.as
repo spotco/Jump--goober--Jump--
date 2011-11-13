@@ -34,6 +34,10 @@
 		public function update(g:GameEngine):Boolean {
 			return false;			
 		}
+		
+		public function gameScroll(scroll_spd:Number) {
+			this.y += scroll_spd;
+		}
 	}
 	
 }
