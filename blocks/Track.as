@@ -69,8 +69,7 @@
 		
 		public override function type():String {
 			return "track";
-		}
-							  
+		}  
 		
 		[Embed(source='..//img//block//track//trackball.png')]
 		private var t0:Class;

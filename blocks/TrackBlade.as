@@ -39,6 +39,11 @@
 		
 		public override function update(g:GameEngine):Boolean {
 			wrapper.rotation+=8;
+			
+			if (this.stage != null) {
+				g.main.setChildIndex(this,g.main.numChildren-1);
+			}
+			
 			if (!hasFoundDirection) {
 				hasFoundDirection = true;
 				findTrack(g);

@@ -83,6 +83,10 @@
 		}
 		
 		public override function update(g:GameEngine):Boolean {
+			if (this.stage != null) {
+				g.main.setChildIndex(this,g.main.numChildren-1);
+			}
+			
 			if (g.testguy.hitTestObject(this)) {
 				if (!g.main.mute) { g.main.explodesound.play(); }
 				g.timer.stop();

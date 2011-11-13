@@ -76,12 +76,12 @@
 			mousePreviewDrawer = new Sprite;
 			main.addChild(mousePreviewDrawer);
 			
-			//loadFromEmbedXML();
+			loadFromEmbedXML();
 			
 			main.playSpecific(JumpDieCreateMain.LEVELEDITOR_MUSIC);
 		}
 				
-		[Embed(source="..//misc//world_1//level10.xml", mimeType="application/octet-stream")]
+		[Embed(source="..//misc//blank.xml", mimeType="application/octet-stream")]
 		public static var loadThis:Class;
 		
 		

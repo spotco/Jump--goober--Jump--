@@ -35,7 +35,11 @@
 			}
 			currentGame = null;
 			if (switchsong) {
-				main.playSpecific(JumpDieCreateMain.SONG2);
+				if (clvl == 6) {
+					main.playSpecific(JumpDieCreateMain.BOSSSONG);
+				} else {
+					main.playSpecific(JumpDieCreateMain.SONG2);
+				}
 				switchsong = false;
 			}
 			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,2);
