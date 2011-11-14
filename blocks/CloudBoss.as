@@ -27,7 +27,7 @@
 		
 		var hitbox_opacity = 0.0;
 		
-		public function CloudBoss() {
+		public function CloudBoss(backgroundvisible:Boolean = true) {
 			super(0,0,0,0);
 			thunderhitbox.graphics.beginFill(0x00FF00,hitbox_opacity);
 			thunderhitbox.graphics.drawRect(0,0,28,520);
@@ -49,6 +49,7 @@
 			backgroundfill.graphics.drawRect(0,0,500,520);
 			backgroundfill.alpha = 0.1;
 			backgroundcontainer.addChild(backgroundfill);
+			backgroundcontainer.visible = backgroundvisible;
 		}
 		
 		public override function type():String {

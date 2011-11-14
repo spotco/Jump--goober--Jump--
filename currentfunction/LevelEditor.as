@@ -48,6 +48,7 @@
 		public static var TRACKBLADE:Number = 10;
 		public static var FLOWERBOSS:Number = 11;
 		public static var CLOUDBOSS:Number = 12;
+		public static var ACTIVATETRACKWALL:Number = 13;
 		public var currenttype:Number;
 		
 		
@@ -119,6 +120,8 @@
 					addblock = new FlowerBoss(e.@y);
 				} else if (e.name() == "cloudboss") {
 					addblock = new CloudBoss();
+				} else if (e.name() == "activatetrackwall") {
+					addblock = new ActivateTrackWall(e.@x,e.@y,e.@width,e.@height);
 				}
 				
 				rectList.push(addblock);
@@ -234,7 +237,7 @@
 					rectList.push(newflowerboss);
 				}
 				if (currenttype == CLOUDBOSS) {
-					var newcloudboss:CloudBoss = new CloudBoss();
+					var newcloudboss:CloudBoss = new CloudBoss(false);
 					xmllist.push('<cloudboss></cloudboss>');
 					main.addChild(newcloudboss);
 					rectList.push(newcloudboss);
@@ -287,6 +290,11 @@
 					xmllist.push('<trackwall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></trackwall>');
 					main.addChild(newtrackwalli);
 					rectList.push(newtrackwalli);
+				} else if (currenttype == ACTIVATETRACKWALL) {
+					var newatrackwalli:ActivateTrackWall = new ActivateTrackWall(cboxx,cboxy,main.stage.mouseX-cboxx,main.stage.mouseY-cboxy);
+					xmllist.push('<activatetrackwall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></activatetrackwall>');
+					main.addChild(newatrackwalli);
+					rectList.push(newatrackwalli);
 				}
 				main.removeChild(playerspawn);
 				main.addChild(playerspawn);
@@ -412,7 +420,8 @@
 											 gB.trackwallicon,
 											 gB.trackbladeicon,
 											 gB.bossplanticon,
-											 gB.bosscloudicon
+											 gB.bosscloudicon,
+											 gB.activatetrackwallicon
 									);
 			
 			selectorbutton = new Sprite;

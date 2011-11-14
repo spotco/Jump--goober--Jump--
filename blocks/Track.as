@@ -69,7 +69,13 @@
 		
 		public override function type():String {
 			return "track";
-		}  
+		}
+		
+		/*public override function update(g:GameEngine):Boolean {
+			if (this.stage != null) {
+				g.main.setChildIndex(this,g.main.numChildren-1);
+			}
+		}*/
 		
 		[Embed(source='..//img//block//track//trackball.png')]
 		private var t0:Class;

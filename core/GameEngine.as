@@ -97,7 +97,6 @@
 			textdisplays = new Array();
 			boostfruits = new Array();
 			tracks = new Array();
-			
 			for each (var node:XML in clvlxml.boost) {
 				var boosk:Boost = new Boost(node.@x,node.@y,node.@width,node.@height);
 				boostlist.push(boosk);
@@ -129,11 +128,6 @@
 				boostfruits.push(newboostfruit);
 				main.addChild(newboostfruit);
 			}
-			for each (var node:XML in clvlxml.track) {
-				var newtrack:Track = new Track(node.@x,node.@y,node.@width,node.@height);
-				tracks.push(newtrack);
-				main.addChild(newtrack);
-			}
 			for each (var node:XML in clvlxml.trackwall) {
 				var newtrackwall:Wall = new TrackWall(node.@x,node.@y,node.@width,node.@height);
 				walls.push(newtrackwall);
@@ -144,16 +138,27 @@
 				deathwall.push(newtrackblade);
 				main.addChild(newtrackblade);
 			}
+			for each (var node:XML in clvlxml.activatetrackwall) {
+				var activatenewtrackwall:Wall = new ActivateTrackWall(node.@x,node.@y,node.@width,node.@height);
+				walls.push(activatenewtrackwall);
+				main.addChild(activatenewtrackwall);
+			}
 			for each (var node:XML in clvlxml.flowerboss) {
 				var newFlowerBoss:FlowerBoss = new FlowerBoss(node.@y);
 				deathwall.push(newFlowerBoss);
 				main.addChild(newFlowerBoss);
+			}
+			for each (var node:XML in clvlxml.track) {
+				var newtrack:Track = new Track(node.@x,node.@y,node.@width,node.@height);
+				tracks.push(newtrack);
+				main.addChild(newtrack);
 			}
 			for each (var node:XML in clvlxml.cloudboss) {
 				var newCloudBoss:CloudBoss = new CloudBoss();
 				deathwall.push(newCloudBoss);
 				main.addChild(newCloudBoss);
 			}
+			
 		}
 		
 		var menubutton:Sprite; //wrappers for the ui buttons on bot-right
@@ -219,7 +224,7 @@
 		
 		public function moveUiToFront() {
 			for each (var b:FalldownBlock in deathwall) {
-				if (b is FlowerBoss || b is Bullet || b is FlowerBoss) {
+				if (b is FlowerBoss || b is Bullet || b is CloudBoss) {
 					main.setChildIndex(b,main.numChildren-1);
 				}
 			}
@@ -261,7 +266,7 @@
 			var SCROLL_SPD = Guy.roundDec((250 - testguy.y)/9,1);
 			if (testguy.y < 250) {
 				bgcounter++;
-				if(bgcounter > 0 && bg.y < -1 && Math.abs(testguy.vy) >= 3) {
+				if(bgcounter > 0 && bg.y < -1 /*&& Math.abs(testguy.vy) >= 3*/) {
 					bg.y+=(SCROLL_SPD/3);
 					bgcounter = 0;
 				}

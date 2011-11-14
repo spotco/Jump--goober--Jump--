@@ -9,8 +9,6 @@
 	
 	public class TrackBlade extends FalldownBlock {
 		
-		
-		
 		public var direction:Boolean;
 		public var start:Number;
 		public var end:Number;
