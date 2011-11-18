@@ -83,7 +83,7 @@
 		}
 		
 		private function addparticles() {
-			for (var i = 0; i < 20; i++) {
+			for (var i = 0; i < 20 ; i++) {
 				var np:Particle = new Particle();
 				np.graphics.beginFill(0xcc6666);
 				np.graphics.drawCircle(0,0,2);

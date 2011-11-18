@@ -39,7 +39,7 @@
 		
 		public override function update(g:GameEngine):Boolean {
 			if (this.stage != null) {
-				g.main.setChildIndex(this,1);
+				g.main.setChildIndex(this,g.main.getChildIndex(g.bg)+1);
 			}
 			this.updateAnimation();
 			if (g.testguy.hitTestObject(this)) {

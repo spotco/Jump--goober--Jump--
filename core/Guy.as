@@ -44,8 +44,21 @@
 		var isslide:Boolean; //is it sliding along a wall? (eyes closed)
 		var hashitwall:Boolean = false;
 		
+		//for jump cooldown, just to prevent under-wall chain jumping
+		public var jumpavailable:Boolean = true;
+		public var jumpcd:Number = 0;
+		public var JUMPCDTIMER:Number = 10;
+		
 		//note: do not include gameengine here, or that will force preloader to include all main game files
 		public function update(walls:Array,justWallJumped:Boolean = false) { //checks wall collisions and updates position based on velocity, the most wizardry here
+			if (!jumpavailable) {
+				jumpcd--;
+				if (jumpcd == 0) {
+					jumpavailable = true;
+				}
+			}
+			//trace(jumpavailable);
+			
 			var isItSlide:Boolean = false;
 			updateImg();
 			vx*=.99;//friction
@@ -269,7 +282,7 @@
 			return nRetVal;
 		} 
 		
-		private function SIG_ONE(n:Number,tar:Number):Number {
+		public static function SIG_ONE(n:Number,tar:Number):Number {
 			if (Math.abs(n) > tar) {
 				if (n < 0) {
 					return -tar;

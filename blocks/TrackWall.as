@@ -26,7 +26,8 @@
 			hitbox.graphics.drawRect(0,0,this.w,this.h);
 			
 			frictionbox.graphics.beginFill(0x000000,0);
-			frictionbox.graphics.drawRect(0,-1,this.w,this.h);
+			//frictionbox.graphics.drawRect(0,-1,this.w,this.h);
+			frictionbox.graphics.drawRect(0,-3,this.w,this.h);
 			this.addChild(frictionbox);
 			
 			makebolts();
@@ -63,25 +64,48 @@
 					if (this.y-g.currenty+this.h/2 < Math.min(this.start,this.end)) {
 						directiontoggle = !directiontoggle;
 					}
-					if (this.hitbox.hitTestObject(g.testguy)) {
+					if (this.hitbox.hitTestObject(g.testguy)) { 
 						g.testguy.y-=this.speed;
+						//may need to check for up/down cases, but it seems like this works
+						while(this.hitbox.hitTestObject(g.testguy)) { //for non-standard sizes, keep moving until out (rounding error?)
+							g.testguy.y-=0.1;
+						}
 						return checkSmash(g);
 					}
 				} else { //down
-					if (this.frictionbox.hitTestObject(g.testguy)) {
+					var hitfriction:Boolean = false;
+					if (this.frictionbox.hitTestObject(g.testguy)) { //if guy is right above the block pulldown and remember to do extra check
 						g.testguy.y+=this.speed;
-						if (guyhitting(g)) {
+						/*if (guyhitting(g)) {
 							g.testguy.y-=this.speed;
-						}
+						}*/
+						
+						hitfriction = true;
+						
+						/*while(this.hitbox.hitTestObject(g.testguy)) {
+							g.testguy.y-=0.1;
+						}*/
+						
 					}
 					this.y+=this.speed;
+					if (hitfriction) { //extra check for ABOVE case
+						g.testguy.vy = 0;
+						while(this.hitbox.hitTestObject(g.testguy)) {
+							g.testguy.y-=0.1;
+						}
+					}
+					while (this.hitbox.hitTestObject(g.testguy) && g.testguy.y > this.y) { //extra check for below case
+						g.testguy.y+=0.1;
+					}
+					
 					if (this.y-g.currenty+this.h/2 > Math.max(this.start,this.end)) {
 						directiontoggle = !directiontoggle;
 					}
-					if (this.hitbox.hitTestObject(g.testguy)) {
+					/*if (this.hitbox.hitTestObject(g.testguy)) {
 						g.testguy.y+=this.speed;
 						return checkSmash(g);
-					}
+					}*/
+					return checkSmash(g);
 				}
 				
 				
@@ -136,13 +160,7 @@
 		private function checkSmash(g:GameEngine):Boolean {
 			for each(var w:Wall in g.walls) {
 				if (w.hitbox.hitTestObject(g.testguy)) {
-					if (!g.main.mute) { g.main.explodesound.play(); }
-					g.timer.stop();
-					g.testguy.explode();
-					g.timer = new Timer(1200,1);
-					g.timer.start();
-					g.timer.addEventListener(TimerEvent.TIMER_COMPLETE, function(){g.reload();});
-					return true;
+					return FalldownBlock.guyhit(g);
 				}
 			}
 			return false;

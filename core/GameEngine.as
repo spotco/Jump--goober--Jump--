@@ -46,7 +46,7 @@
 		
 		private var blocksarrays:Array;
 		
-		private var bg:Bitmap; //the current background
+		public var bg:Bitmap; //the current background
 		var bgcounter:Number = 0;
 		
 		var usebackbutton:Boolean;
@@ -328,17 +328,25 @@
                			testguy.vx = 5;
 					}
 				} else if (topkey == Keyboard.SPACE && ( (testguy.canJump && testguy.hashitwall || testguy.justtouched > 0)||testguy.boost > 0)) {
-					if (testguy.boost > 0) {
+					if (!testguy.jumpavailable) { //cooldown not off, stop
+						return;
+					} else { //else set cooldown on, set cooldown to time
+						testguy.jumpavailable = false;
+						testguy.jumpcd = testguy.JUMPCDTIMER;
+					}
+					if (testguy.boost > 0) { //if boost(boostfruit), subtract boost counter
 						testguy.boost--;
 					}
 					storekey.pop();
-					testguy.jumpCounter++;
+					testguy.jumpCounter++; //dunno what this is for lol
 					testguy.vy = -15;
-					if(/*!testguy.isslide &&*/ testguy.boost == 0) {
+					
+					if(/*!testguy.isslide &&*/ testguy.boost == 0) { //if not boosting, cannot jump until 
 					testguy.canJump = false;
 					}
-					if(testguy.isslide) {
+					if(testguy.isslide) { //if sliding side of wall, add additional vx
 						testguy.vx = 10;
+						//if wall is to the right, bounce off and this is to reduce friction-loss for next cycle
 						justWallJumped = true;
 					}
 				}
