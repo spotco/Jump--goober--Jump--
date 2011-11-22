@@ -118,6 +118,9 @@
 					}
 					if (this.hitbox.hitTestObject(g.testguy)) {
 						g.testguy.x-=this.speed;
+						while(this.hitbox.hitTestObject(g.testguy)) {
+							g.testguy.x-=0.1;
+						}
 						return checkSmash(g);
 					}
 					if (this.frictionbox.hitTestObject(g.testguy)) {
@@ -134,6 +137,9 @@
 					}
 					if (this.hitbox.hitTestObject(g.testguy)) {
 						g.testguy.x+=this.speed;
+						while(this.hitbox.hitTestObject(g.testguy)) {
+							g.testguy.x+=0.1;
+						}
 						return checkSmash(g);
 					}
 					if (this.frictionbox.hitTestObject(g.testguy)) {
