@@ -27,7 +27,10 @@
 			
 			frictionbox.graphics.beginFill(0x000000,0);
 			//frictionbox.graphics.drawRect(0,-1,this.w,this.h);
-			frictionbox.graphics.drawRect(0,-3,this.w,this.h);
+			
+			frictionbox.graphics.drawRect(0,-1,this.w,this.h/2);
+			
+			//frictionbox.graphics.drawRect(0,-3,this.w,this.h);
 			this.addChild(frictionbox);
 			
 			makebolts();
@@ -89,8 +92,8 @@
 					}
 					this.y+=this.speed;
 					if (hitfriction) { //extra check for ABOVE case
-						g.testguy.vy = 0;
-						while(this.hitbox.hitTestObject(g.testguy)) {
+						//g.testguy.vy = 0;
+						while(this.hitbox.hitTestObject(g.testguy) && g.testguy.y < this.y) {
 							g.testguy.y-=0.1;
 						}
 					}
