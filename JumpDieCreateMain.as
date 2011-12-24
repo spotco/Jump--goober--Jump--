@@ -42,7 +42,7 @@
 			Security.allowDomain("spotcos.com");
             Security.allowInsecureDomain("spotcos.com");
 			cstage = stage;
-			mute = false;
+			mute = true;
 			curfunction = new JumpDieCreateMenu(this);
 			
 		}
@@ -78,17 +78,15 @@
 				} else if (tar == MENU_MUSIC) {
 					test = ((new mmenu) as Sound);
 				} else if (tar == SONG1) {
-					/*test = ((new m1intro) as Sound);
-					repeat = false;*/
 					test = ((new m1) as Sound);
 				} else if (tar == SONG2) {
-					/*test = ((new m2intro) as Sound);
-					repeat = false;*/
 					test = ((new m2) as Sound);
 				} else if (tar == SONG1END) {
 					test = ((new m1end) as Sound);
 				} else if (tar == SONG2END) {
 					test = ((new m2end) as Sound);
+				} else if (tar == SONG3END) {
+					test = ((new m3end) as Sound);
 				} else if (tar == ONLINEEND) {
 					test = ((new onlineend) as Sound);
 				} else if (tar == ONLINE) {
@@ -99,6 +97,8 @@
 					test = ((new m4) as Sound);
 				} else if (tar == BOSSSONG) {
 					test = ((new mboss) as Sound);
+				} else if (tar == BOSSENDSONG) {
+					test = ((new mbossend) as Sound);
 				}
 				
 				if (repeat) {
@@ -135,12 +135,14 @@
 		public static var LEVELEDITOR_MUSIC:Number = 12312;
 		public static var WIN_SOUND:Number = 19282;
 		public static var BOSSSONG:Number = 99213;
+		public static var BOSSENDSONG:Number = 88732;
 		public static var SONG1:Number = 23567;
 		public static var SONG2:Number = 67223;
 		public static var SONG3:Number = 65412;
 		public static var SONG4:Number = 44214;
 		public static var SONG1END:Number = 87367;
 		public static var SONG2END:Number = 66423;
+		public static var SONG3END:Number = 13325;
 		public static var ONLINE:Number = 77231;
 		public static var ONLINEEND:Number = 88123;
 		
@@ -162,8 +164,8 @@
 		[Embed(source='snd//song3end.mp3')] 		 
 		private var m3end : Class;
 		
-		[Embed(source='snd//alt.mp3')] 		 
-		private var m4 : Class;
+		[Embed(source='snd//bossend.mp3')] 		 
+		private var mbossend : Class;
 
 		[Embed(source='snd//boss.mp3')] 		 
 		private var mboss : Class;

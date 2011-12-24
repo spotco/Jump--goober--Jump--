@@ -38,7 +38,7 @@
 					g.main.removeChild(this);
 					//trace("bullet removed");
 				}
-				this.visible = false;
+				//this.visible = false;
 			}
 			
 			return super.update(g);

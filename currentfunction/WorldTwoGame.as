@@ -35,7 +35,7 @@
 			}
 			currentGame = null;
 			if (switchsong) {
-				if (clvl == 6) {
+				if (clvl == 6 || clvl == 10) {
 					main.playSpecific(JumpDieCreateMain.BOSSSONG);
 				} else {
 					main.playSpecific(JumpDieCreateMain.SONG2);
@@ -61,7 +61,12 @@
 		}
 		
 		public override function playWinSound() {
-			main.playSpecific(JumpDieCreateMain.SONG2END,false);
+				if (clvl == 6 || clvl == 10) {
+					main.playSpecific(JumpDieCreateMain.BOSSENDSONG,false);
+				} else {
+					main.playSpecific(JumpDieCreateMain.SONG2END,false);
+				}
+			
 		}
 				
 		[Embed(source="..//misc//world_2//level1.xml", mimeType="application/octet-stream")]

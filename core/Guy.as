@@ -128,9 +128,9 @@
 			}
 			if (xhit && Math.abs(vx) > 5 && !isslide) {
 				vx = -vx/2;
-				
 			} else if (xhit) {
 				vx = -vx/1.1;
+				//vx = 0;
 			}
 			if (!xhit && !yhit && justtouched > 0) {
 				justtouched--;
@@ -220,7 +220,7 @@
     			removeChildAt(0);
 			}
 			exanimarray = new Array(ex0,ex1,ex2,ex3);
-			explodetimer = new Timer(40);
+			explodetimer = new Timer(20);
             explodetimer.addEventListener(TimerEvent.TIMER, animupdate);
             explodetimer.start();
 			animframe = 0;
@@ -249,7 +249,7 @@
 						var particle = new Particle;
 						var randSpd = Math.random()*10;
 						particle.graphics.beginFill(0x76C346);
-						particle.graphics.drawCircle(0,0,2);
+						particle.graphics.drawCircle(0,0,4*Math.random());
 						particle.x = 14; particle.y = 12;
 						particle.vx = Math.sin(i*(Math.PI/12))*randSpd;
 						particle.vy = Math.cos(i*(Math.PI/12))*randSpd;
@@ -260,6 +260,7 @@
 					for each (var p:Particle in exanimarray) {
 						p.x += p.vx;
 						p.y += p.vy;
+						p.vy += 0.25;
 					}
 				}
 				

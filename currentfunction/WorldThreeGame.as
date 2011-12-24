@@ -55,6 +55,15 @@
 			levels.push(getXML(new l10()));
 		}
 		
+		public override function playWinSound() {
+				if (clvl == -1) {
+					main.playSpecific(JumpDieCreateMain.BOSSENDSONG,false);
+				} else {
+					main.playSpecific(JumpDieCreateMain.SONG3END,false);
+				}
+			
+		}
+		
 		private static function getXML(input:Object) : XML {
    			var ba:ByteArrayAsset = ByteArrayAsset(input);
    			var xml:XML = new XML( ba.readUTFBytes( ba.length ) );

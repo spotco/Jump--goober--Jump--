@@ -11,6 +11,7 @@
 		//inheritance base for all class that are interactable in-game
 		public var w:Number;
 		public var h:Number;
+		public var memRemoved:Boolean = false;
 		
 		public function getTransparent(tar:Class):BitmapData {
 			var test:Bitmap = new Bitmap(new BitmapData(1,1,true));

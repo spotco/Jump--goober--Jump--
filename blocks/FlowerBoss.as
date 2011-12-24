@@ -122,7 +122,7 @@
 			}
 		}
 		
-		private function getangle(ax:Number,ay:Number,bx:Number,by:Number):Number {
+		public static function getangle(ax:Number,ay:Number,bx:Number,by:Number):Number {
 			return Math.atan2(by - ay, bx - ax) * 180 / Math.PI;
 		}
 		

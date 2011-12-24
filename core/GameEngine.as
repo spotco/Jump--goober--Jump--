@@ -34,6 +34,7 @@
 		public var goals:Array;
 		public var boostfruits:Array;
 		public var tracks:Array;
+		public var particles:Array;
 		
 		public var testguy:Guy; //player, dunno why it's called testguy (another old jump or die thing?)
 		
@@ -78,7 +79,7 @@
 			storekey = new Array();
 			jumpUnpressed = true;
 			
-			blocksarrays = new Array(walls,goals,deathwall,boostlist,textdisplays,boostfruits,tracks);
+			blocksarrays = new Array(walls,goals,deathwall,boostlist,textdisplays,boostfruits,tracks,particles);
 			
 			main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -97,6 +98,7 @@
 			textdisplays = new Array();
 			boostfruits = new Array();
 			tracks = new Array();
+			particles = new Array();
 			for each (var node:XML in clvlxml.boost) {
 				var boosk:Boost = new Boost(node.@x,node.@y,node.@width,node.@height);
 				boostlist.push(boosk);
@@ -157,6 +159,16 @@
 				var newCloudBoss:CloudBoss = new CloudBoss();
 				deathwall.push(newCloudBoss);
 				main.addChild(newCloudBoss);
+			}
+			for each (var node:XML in clvlxml.rocketlauncher) {
+				var newLauncher:RocketLauncher = new RocketLauncher(node.@x,node.@y);
+				deathwall.push(newLauncher);
+				main.addChild(newLauncher);
+			}
+			for each (var node:XML in clvlxml.laserlauncher) {
+				var newLLauncher:LaserLauncher = new LaserLauncher(node.@x,node.@y,node.@dir);
+				deathwall.push(newLLauncher);
+				main.addChild(newLLauncher);
 			}
 			
 		}
@@ -239,8 +251,10 @@
 		public function clearAbove(b:BaseBlock) {
 			if (b.y <= -500 && b.stage != null) {
 				main.removeChild(b);
-			} else if (b.y >= -500 && b.y <= 1000 && b.stage == null) {
+				b.memRemoved = true;
+			} else if (b.y >= -500 && b.y <= 1000 && b.stage == null && b.memRemoved) {
 				main.addChild(b);
+				b.memRemoved = false;
 			}
 		}
 		

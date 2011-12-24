@@ -145,10 +145,20 @@
 			s12.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.CLOUDBOSS;leveleditor.unmakeui();leveleditor.makeui();});
 			addChild(s12);
 			
-			var s13:Sprite = leveleditor.makeBitmapWrapper(activatetrackwallicon);
-			s13.x = 25; s13.y = 25;
-			s13.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ACTIVATETRACKWALL;leveleditor.unmakeui();leveleditor.makeui();});
+			var s13:Sprite = leveleditor.makeBitmapWrapper(rocketlaunchericon);
+			s13.x = 10; s13.y = 55;
+			s13.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ROCKETLAUNCHER;leveleditor.unmakeui();leveleditor.makeui();});
 			addChild(s13);
+			
+			var s14:Sprite = leveleditor.makeBitmapWrapper(lasercwicon);
+			s14.x = 25; s14.y = 55;
+			s14.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.LASERCW;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s14);
+			
+			var s15:Sprite = leveleditor.makeBitmapWrapper(laserccwicon);
+			s15.x = 40; s15.y = 55;
+			s15.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.LASERCCW;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s15);
 		}
 		
 		private var message1:String = "Welcome to the level editor! To start placing blocks, select the type with the button to the far left. Pick your type from the menu.";
@@ -232,9 +242,17 @@
 		private var mb12:Class;
 		public var bosscloudicon:Bitmap = new mb12;
 		
-						[Embed(source='..//img//editoricon//activatetrackwall.png')]
+						[Embed(source='..//img//editoricon//rocketlauncher.png')]
 		private var mb13:Class;
-		public var activatetrackwallicon:Bitmap = new mb13;
+		public var rocketlaunchericon:Bitmap = new mb13;
+		
+						[Embed(source='..//img//editoricon//lasercw.png')]
+		private var mb14:Class;
+		public var lasercwicon:Bitmap = new mb14;
+		
+						[Embed(source='..//img//editoricon//laserccw.png')]
+		private var mb15:Class;
+		public var laserccwicon:Bitmap = new mb15;
 		
 	}
 	

@@ -48,7 +48,9 @@
 		public static var TRACKBLADE:Number = 10;
 		public static var FLOWERBOSS:Number = 11;
 		public static var CLOUDBOSS:Number = 12;
-		public static var ACTIVATETRACKWALL:Number = 13;
+		public static var ROCKETLAUNCHER:Number = 13;
+		public static var LASERCW:Number = 14;
+		public static var LASERCCW:Number = 15;
 		public var currenttype:Number;
 		
 		
@@ -120,8 +122,8 @@
 					addblock = new FlowerBoss(e.@y);
 				} else if (e.name() == "cloudboss") {
 					addblock = new CloudBoss();
-				} else if (e.name() == "activatetrackwall") {
-					addblock = new ActivateTrackWall(e.@x,e.@y,e.@width,e.@height);
+				} else if (e.name() == "rocketlauncher") {
+					addblock = new RocketLauncher(e.@x,e.@y);
 				}
 				
 				rectList.push(addblock);
@@ -242,6 +244,26 @@
 					main.addChild(newcloudboss);
 					rectList.push(newcloudboss);
 				}
+				if (currenttype == ROCKETLAUNCHER) {
+					var newrl:RocketLauncher = new RocketLauncher(cboxx,cboxy);
+					xmllist.push('<rocketlauncher x="'+cboxx+'" y="'+ststo+'" ></rocketlauncher>');
+					main.addChild(newrl);
+					rectList.push(newrl);
+				}
+				if (currenttype == LASERCW) {
+					var newllcw:LaserLauncher = new LaserLauncher(cboxx,cboxy,0);
+					newllcw.launcherContainer.rotation = -90;
+					xmllist.push('<laserlauncher x="'+cboxx+'" y="'+ststo+'" dir="3"></laserlauncher>');
+					main.addChild(newllcw);
+					rectList.push(newllcw);
+				}
+				if (currenttype == LASERCCW) {
+					var newllccw:LaserLauncher = new LaserLauncher(cboxx,cboxy,0);
+					newllccw.launcherContainer.rotation = 90;
+					xmllist.push('<laserlauncher x="'+cboxx+'" y="'+ststo+'" dir="-3"></laserlauncher>');
+					main.addChild(newllccw);
+					rectList.push(newllccw);
+				}
 				if (currenttype == DELETE) {
 					for(var i = 0; i<rectList.length;i++) {
 						if (rectList[i].hitTestPoint(main.stage.mouseX,main.stage.mouseY)) {
@@ -290,11 +312,6 @@
 					xmllist.push('<trackwall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></trackwall>');
 					main.addChild(newtrackwalli);
 					rectList.push(newtrackwalli);
-				} else if (currenttype == ACTIVATETRACKWALL) {
-					var newatrackwalli:ActivateTrackWall = new ActivateTrackWall(cboxx,cboxy,main.stage.mouseX-cboxx,main.stage.mouseY-cboxy);
-					xmllist.push('<activatetrackwall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></activatetrackwall>');
-					main.addChild(newatrackwalli);
-					rectList.push(newatrackwalli);
 				}
 				main.removeChild(playerspawn);
 				main.addChild(playerspawn);
@@ -421,7 +438,9 @@
 											 gB.trackbladeicon,
 											 gB.bossplanticon,
 											 gB.bosscloudicon,
-											 gB.activatetrackwallicon
+											 gB.rocketlaunchericon,
+											 gB.lasercwicon,
+											 gB.laserccwicon
 									);
 			
 			selectorbutton = new Sprite;

@@ -115,7 +115,12 @@
 		}
 		
 		public function playWinSound() {
-			main.playSpecific(JumpDieCreateMain.SONG1END,false);
+				if (clvl == 10) {
+					main.playSpecific(JumpDieCreateMain.BOSSENDSONG,false);
+				} else {
+					main.playSpecific(JumpDieCreateMain.SONG1END,false);
+				}
+			
 		}
 		
 		function winscreencontinue(e:KeyboardEvent){
