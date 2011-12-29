@@ -13,7 +13,7 @@
 		public var chargeDot:Sprite = new Sprite;
 		
 		public var reattack:Number = 65;
-		public var range:Number = 400;
+		public var range:Number = 450;
 		public var hitbox:Sprite = new Sprite;
 		
 		

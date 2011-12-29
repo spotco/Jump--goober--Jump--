@@ -51,6 +51,9 @@
 		public static var ROCKETLAUNCHER:Number = 13;
 		public static var LASERCW:Number = 14;
 		public static var LASERCCW:Number = 15;
+		public static var ACTIVATETRACKWALL:Number = 16;
+		public static var ROCKETBOSS:Number = 17;
+		
 		public var currenttype:Number;
 		
 		
@@ -264,6 +267,12 @@
 					main.addChild(newllccw);
 					rectList.push(newllccw);
 				}
+				if (currenttype == ROCKETBOSS) {
+					var newrboss:RocketBoss = new RocketBoss(cboxx,cboxy);
+					xmllist.push('<rocketboss x="'+cboxx+'" y="'+ststo+'"></rocketboss>');
+					main.addChild(newrboss);
+					rectList.push(newrboss);
+				}
 				if (currenttype == DELETE) {
 					for(var i = 0; i<rectList.length;i++) {
 						if (rectList[i].hitTestPoint(main.stage.mouseX,main.stage.mouseY)) {
@@ -312,6 +321,11 @@
 					xmllist.push('<trackwall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></trackwall>');
 					main.addChild(newtrackwalli);
 					rectList.push(newtrackwalli);
+				} else if (currenttype == ACTIVATETRACKWALL) {
+					var newatrackwalli:ActivateTrackWall = new ActivateTrackWall(cboxx,cboxy,main.stage.mouseX-cboxx,main.stage.mouseY-cboxy);
+					xmllist.push('<activatetrackwall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></activatetrackwall>');
+					main.addChild(newatrackwalli);
+					rectList.push(newatrackwalli);					
 				}
 				main.removeChild(playerspawn);
 				main.addChild(playerspawn);
@@ -440,7 +454,9 @@
 											 gB.bosscloudicon,
 											 gB.rocketlaunchericon,
 											 gB.lasercwicon,
-											 gB.laserccwicon
+											 gB.laserccwicon,
+											 gB.activatetrackwallicon,
+											 gB.rocketbossicon
 									);
 			
 			selectorbutton = new Sprite;

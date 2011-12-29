@@ -170,6 +170,11 @@
 				deathwall.push(newLLauncher);
 				main.addChild(newLLauncher);
 			}
+			for each (var node:XML in clvlxml.rocketboss) {
+				var rboss:RocketBoss = new RocketBoss(node.@x,node.@y);
+				deathwall.push(rboss);
+				main.addChild(rboss);
+			}
 			
 		}
 		

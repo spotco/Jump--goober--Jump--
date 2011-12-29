@@ -159,6 +159,16 @@
 			s15.x = 40; s15.y = 55;
 			s15.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.LASERCCW;leveleditor.unmakeui();leveleditor.makeui();});
 			addChild(s15);
+			
+			var s16:Sprite = leveleditor.makeBitmapWrapper(activatetrackwallicon);
+			s16.x = 55; s16.y = 55;
+			s16.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ACTIVATETRACKWALL;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s16);
+			
+			var s17:Sprite = leveleditor.makeBitmapWrapper(rocketbossicon);
+			s17.x = 70; s17.y = 55;
+			s17.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ROCKETBOSS;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s17);
 		}
 		
 		private var message1:String = "Welcome to the level editor! To start placing blocks, select the type with the button to the far left. Pick your type from the menu.";
@@ -253,6 +263,14 @@
 						[Embed(source='..//img//editoricon//laserccw.png')]
 		private var mb15:Class;
 		public var laserccwicon:Bitmap = new mb15;
+		
+						[Embed(source='..//img//editoricon//activatetrackwall.png')]
+		private var mb16:Class;
+		public var activatetrackwallicon:Bitmap = new mb16;
+		
+						[Embed(source='..//img//editoricon//rocketboss.png')]
+		private var mb17:Class;
+		public var rocketbossicon:Bitmap = new mb17;
 		
 	}
 	

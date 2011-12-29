@@ -1,23 +1,25 @@
-<level name="world 1-3">
-  <wall x="167" y="333" width="197" height="37" text=""/>
-  <activatetrackwall x="283" y="208" width="-44" height="-286"/>
-  <textfield x="55" y="139" width="156" height="70" text="now this next thing..."/>
-  <textfield x="302" y="138" width="156" height="70" text="is pretty awesome! Climb up and see for yourself!"/>
-  <boost x="204" y="-337" width="106" height="140" text=""/>
-  <textfield x="33" y="-300" width="156" height="70" text="Meet the boostpad! He'll get you where you need to go!"/>
-  <textfield x="316" y="-297" width="156" height="70" text="Assuming that's up of course! so, jump in!"/>
-  <wall x="17" y="-548" width="170" height="33" text=""/>
-  <wall x="311" y="-551" width="190" height="35" text=""/>
-  <boost x="146" y="-640" width="-84" height="-156"/>
-  <boost x="363" y="-797" width="86" height="161" text=""/>
-  <wall x="141" y="-1024" width="225" height="99"/>
-  <boost x="209" y="-1301" width="94" height="169"/>
-  <textfield x="45" y="-1213" width="156" height="70" text="enter from the bottom for maximum speed!"/>
-  <wall x="311" y="-1657" width="148" height="184"/>
-  <boost x="419" y="-1777" width="-83" height="-143"/>
-  <textfield x="94" y="-1881" width="156" height="70" text="go left, then right!"/>
-  <boost x="154" y="-2341" width="87" height="341" text=""/>
-  <wall x="263" y="-2733" width="135" height="294"/>
-  <goal x="289" y="-2820" width="91" height="-134"/>
-    <textfield x="191" y="-803" width="156" height="70" text="If you get stuck, try falling off and getting back on from lower!"/>
+<level name="world 3-3">
+  <wall x="216" y="370" width="97" height="63"/>
+  <textfield x="40" y="212" width="156" height="70" text="What's this?"/>
+  <textfield x="315" y="-83" width="156" height="70" text="hop on and take a look!"/>
+  <textfield x="19" y="-233" width="156" height="70" text="It'll change directions based on where you are touching it."/>
+  <textfield x="315" y="-384" width="156" height="70" text="take care of it and you'll go far! now turn left!!"/>
+  <deathwall x="167" y="-629" width="330" height="133" text=""/>
+  <deathwall x="-16" y="-989" width="311" height="125" text=""/>
+  <deathwall x="382" y="-1359" width="151" height="105" text=""/>
+  <deathwall x="-17" y="-1359" width="150" height="110" text=""/>
+  <track x="141" y="-1309" width="231" height="35" text=""/>
+  <trackblade x="335" y="-1303" width="50" height="55" text=""/>
+  <track x="48" y="-1496" width="403" height="89" text=""/>
+  <trackblade x="391" y="-1491"/>
+  <trackblade x="208" y="-1874" width="50" height="55" text=""/>
+  <wall x="201" y="-2144" width="93" height="139" text=""/>
+  <goal x="198" y="-2365" width="94" height="132" text=""/>
+  <deathwall x="0" y="-1865" width="135" height="250" text=""/>
+  <deathwall x="374" y="-1873" width="136" height="262" text=""/>
+  <track x="288" y="-1885" width="61" height="274" text=""/>
+  <track x="205" y="-1886" width="67" height="276" text=""/>
+  <trackblade x="292" y="-1606"/>
+  <activatetrackwall x="213" y="36" width="100" height="203" text=""/>
+  <wall x="428" y="340" width="51" height="-251"/>
 </level>

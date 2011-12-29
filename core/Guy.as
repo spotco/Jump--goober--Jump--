@@ -220,7 +220,7 @@
     			removeChildAt(0);
 			}
 			exanimarray = new Array(ex0,ex1,ex2,ex3);
-			explodetimer = new Timer(20);
+			explodetimer = new Timer(30);
             explodetimer.addEventListener(TimerEvent.TIMER, animupdate);
             explodetimer.start();
 			animframe = 0;

@@ -49,7 +49,7 @@
 			particletrail.push(newp);
 			newp.graphics.beginFill(0xFF0000);
 			
-			outerLoop: while(Math.sqrt(Math.pow(cx-this.x,2)+Math.pow(cy-this.y,2))<400) {
+			outerLoop: while(Math.sqrt(Math.pow(cx-this.x,2)+Math.pow(cy-this.y,2))<300) {
 				for each (var wall:Wall in g.walls) {
 					if (g.testguy.hitTestPoint(cx,cy)) {
 						return guyhit(g);
