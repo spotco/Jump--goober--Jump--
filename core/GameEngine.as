@@ -175,6 +175,11 @@
 				deathwall.push(rboss);
 				main.addChild(rboss);
 			}
+			for each (var node:XML in clvlxml.bossactivate) {
+				var bactv:BossActivate = new BossActivate(node.@x,node.@y,node.@width,node.@height,node.@hp,node.@explode);
+				particles.push(bactv);
+				main.addChild(bactv);
+			}
 			
 		}
 		
@@ -228,6 +233,9 @@
 			
 			for each(var a:Array in blocksarrays) {
 				for each(var b:BaseBlock in a) {
+					if (!b.activated) {
+						continue;
+					}
 					if (b.update(this)) {
 						return;
 					}
@@ -241,7 +249,7 @@
 		
 		public function moveUiToFront() {
 			for each (var b:FalldownBlock in deathwall) {
-				if (b is FlowerBoss || b is Bullet || b is CloudBoss) {
+				if (b is FlowerBoss || b is Bullet || b is CloudBoss || b is RocketBoss) {
 					main.setChildIndex(b,main.numChildren-1);
 				}
 			}
@@ -264,7 +272,7 @@
 		}
 		
 		public function clearBelow(b:BaseBlock,a:Array,i:Number) { //dont show blocks far above, remove blocks far below
-			if(b.y >= 1000) {
+			if(b.y >= 1000 && b.stage != null) {
 				main.removeChild(b);
 				a.splice(i,1);
 			}

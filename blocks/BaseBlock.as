@@ -12,6 +12,7 @@
 		public var w:Number;
 		public var h:Number;
 		public var memRemoved:Boolean = false;
+		public var activated:Boolean = true;
 		
 		public function getTransparent(tar:Class):BitmapData {
 			var test:Bitmap = new Bitmap(new BitmapData(1,1,true));

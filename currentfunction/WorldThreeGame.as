@@ -35,7 +35,11 @@
 			}
 			currentGame = null;
 			if (switchsong) {
-				main.playSpecific(JumpDieCreateMain.SONG3);
+				if (clvl == 4 || clvl == 8 || clvl == 10) {
+					main.playSpecific(JumpDieCreateMain.BOSSSONG);
+				} else {
+					main.playSpecific(JumpDieCreateMain.SONG3);
+				}
 				switchsong = false;
 			}
 			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,3);
@@ -53,10 +57,11 @@
 			levels.push(getXML(new l8()));
 			levels.push(getXML(new l9()));
 			levels.push(getXML(new l10()));
+			levels.push(getXML(new l11()));
 		}
 		
 		public override function playWinSound() {
-				if (clvl == -1) {
+				if (clvl == 4 || clvl == 8 || clvl == 10) {
 					main.playSpecific(JumpDieCreateMain.BOSSENDSONG,false);
 				} else {
 					main.playSpecific(JumpDieCreateMain.SONG3END,false);
@@ -99,6 +104,9 @@
 		
 		[Embed(source="..//misc//world_3//level10.xml", mimeType="application/octet-stream")]
 		private var l10:Class;
+		
+		[Embed(source="..//misc//world_3//level11.xml", mimeType="application/octet-stream")]
+		private var l11:Class;
 		
 	}
 	

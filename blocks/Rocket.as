@@ -55,36 +55,45 @@
 			}
 			for each(var w:Wall in g.walls) {
 				if (this.hitbox.hitTestObject(w.hitbox)) {
-					for (var i = 0; i < 24; i++) {
-						var particle:RocketParticle = new RocketParticle;
-						var randSpd = Math.random()*10;
-						particle.graphics.beginFill(0xFF0000);
-						particle.graphics.drawCircle(0,0,3*Math.random());
-						particle.alphaspd = 0.05;
-						particle.x = this.x; particle.y = this.y;
-						particle.vx = Math.sin(i*(Math.PI/12))*randSpd;
-						particle.vy = Math.cos(i*(Math.PI/12))*randSpd;
-						particle.ay = 0.5;
-						g.particles.push(particle);
-						g.main.addChild(particle);
-					}
-					g.main.removeChild(this);
-					g.deathwall.splice(g.deathwall.indexOf(this),1);
-					return;
-					
+					return explode(g);
+				}
+			}
+			for each(var b:FalldownBlock in g.deathwall) {
+				if (b is RocketBoss && this.hitbox.hitTestObject(b)) {
+					(b as RocketBoss).hitByRocket();
+					return explode(g);
 				}
 			}
 			
 			var newp:RocketParticle = new RocketParticle();
-			newp.x = this.x;
-			newp.y = this.y;
+			newp.x = this.x +(dx* -2);
+			newp.y = this.y +(dy* -2);
 			newp.vx = -dx+(Math.random()*3)-1.5;
 			newp.vy = -dy+(Math.random()*3)-1.5;
-			newp.graphics.beginFill(0xFF0000);
+			newp.graphics.beginFill(0xcc6666);
 			newp.graphics.drawCircle(0,0,Math.random()*4);
 			
 			g.particles.push(newp);
 			g.main.addChild(newp);
+		}
+		
+		public function explode(g:GameEngine) {
+			for (var i = 0; i < 24; i++) {
+				var particle:RocketParticle = new RocketParticle;
+				var randSpd = Math.random()*10;
+				particle.graphics.beginFill(0xcc6666);
+				particle.graphics.drawCircle(0,0,3*Math.random());
+				particle.alphaspd = 0.05;
+				particle.x = this.x; particle.y = this.y;
+				particle.vx = Math.sin(i*(Math.PI/12))*randSpd;
+				particle.vy = Math.cos(i*(Math.PI/12))*randSpd;
+				particle.ay = 0.5;
+				g.particles.push(particle);
+				g.main.addChild(particle);
+			}
+			g.main.removeChild(this);
+			g.deathwall.splice(g.deathwall.indexOf(this),1);
+			return false;
 		}
 		
 		

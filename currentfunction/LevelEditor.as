@@ -127,6 +127,8 @@
 					addblock = new CloudBoss();
 				} else if (e.name() == "rocketlauncher") {
 					addblock = new RocketLauncher(e.@x,e.@y);
+				} else if (e.name() == "bossactivate") {
+					addblock = new BossActivate(e.@x,e.@y,e.@width,e.@height,e.@hp);
 				}
 				
 				rectList.push(addblock);
@@ -267,12 +269,6 @@
 					main.addChild(newllccw);
 					rectList.push(newllccw);
 				}
-				if (currenttype == ROCKETBOSS) {
-					var newrboss:RocketBoss = new RocketBoss(cboxx,cboxy);
-					xmllist.push('<rocketboss x="'+cboxx+'" y="'+ststo+'"></rocketboss>');
-					main.addChild(newrboss);
-					rectList.push(newrboss);
-				}
 				if (currenttype == DELETE) {
 					for(var i = 0; i<rectList.length;i++) {
 						if (rectList[i].hitTestPoint(main.stage.mouseX,main.stage.mouseY)) {
@@ -326,6 +322,11 @@
 					xmllist.push('<activatetrackwall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></activatetrackwall>');
 					main.addChild(newatrackwalli);
 					rectList.push(newatrackwalli);					
+				} else if (currenttype == ROCKETBOSS) {
+					var newrboss:BossActivate = new BossActivate(cboxx,cboxy,main.stage.mouseX-cboxx,main.stage.mouseY-cboxy);
+					xmllist.push('<bossactivate x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'" hp="6" explode="no"></bossactivate>');
+					main.addChild(newrboss);
+					rectList.push(newrboss);
 				}
 				main.removeChild(playerspawn);
 				main.addChild(playerspawn);

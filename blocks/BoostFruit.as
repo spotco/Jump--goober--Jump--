@@ -19,6 +19,7 @@
 		public var ready:Boolean;
 		public var animphase:Number = 0;
 		public var eatAtCounter:Number;
+		public var initgrowth:Number = 0;
 		
 		public function BoostFruit(x:Number, y:Number) {
 			this.w = 24; this.h = 28;
@@ -41,6 +42,12 @@
 		
 		public override function update(g:GameEngine):Boolean {
 			this.animate(g);
+			if (initgrowth > 0) {
+				initgrowth--;
+				this.scaleX = (20-initgrowth)/20;
+				this.scaleY = (20-initgrowth)/20;
+				return false;
+			}
 			if (this.ready && g.testguy.hitTestObject(this.hitbox)) {
 				g.testguy.boost = 3;
 				g.testguy.canJump = true;

@@ -42,7 +42,7 @@
 			Security.allowDomain("spotcos.com");
             Security.allowInsecureDomain("spotcos.com");
 			cstage = stage;
-			mute = true;
+			mute = false;
 			curfunction = new JumpDieCreateMenu(this);
 			
 		}

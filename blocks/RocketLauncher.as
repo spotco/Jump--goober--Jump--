@@ -12,7 +12,7 @@
 		public var launcherContainer:Sprite = new Sprite;
 		public var chargeDot:Sprite = new Sprite;
 		
-		public var reattack:Number = 65;
+		public var reattack:Number = 125;
 		public var range:Number = 450;
 		public var hitbox:Sprite = new Sprite;
 		
@@ -71,7 +71,7 @@
 					for (var i = 0; i < 24; i++) {
 						var particle:RocketParticle = new RocketParticle;
 						var randSpd = Math.random()*10;
-						particle.graphics.beginFill(0xFF0000);
+						particle.graphics.beginFill(0xcc6666);
 						particle.graphics.drawCircle(0,0,5*Math.random());
 						particle.alphaspd = 0.05;
 						particle.x = this.x+dx; particle.y = this.y+dy;
