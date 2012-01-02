@@ -52,13 +52,14 @@
 		
 		var usebackbutton:Boolean;
 		//loads and creates game given xml file, adds self to main param
-		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = 1) {
+		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = -1) {
 			trace("gameengine start");
 			this.usebackbutton = usebackbutton;
-			
-			if (useBg == 2) {
+			if (useBg == 1 || Number(clvlxml.@bg) == 1) {
+				bg = new bg1();
+			} else if (useBg == 2 || Number(clvlxml.@bg) == 2) {
 				bg = new bg2();
-			} else if (useBg == 3) {
+			} else if (useBg == 3 || Number(clvlxml.@bg) == 3) {
 				bg = new bg3();
 			} else {
 				bg = new bg1();

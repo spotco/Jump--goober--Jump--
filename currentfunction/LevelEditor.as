@@ -35,6 +35,10 @@
 		public var cboxx:Number; //x position when mousedown the first time
 		public var cboxy:Number; //y position when mousedown
 		
+		public var bggrid:Sprite = new Sprite;
+		
+		public var bg:Number = 1;
+		
 		public static var WALL:Number = 0;
 		public static var DEATHBLOCK:Number = 1;
 		public static var BOOST:Number = 2;
@@ -83,13 +87,39 @@
 			mousePreviewDrawer = new Sprite;
 			main.addChild(mousePreviewDrawer);
 			
-			loadFromEmbedXML();
+			//loadFromEmbedXML();
 			
 			main.playSpecific(JumpDieCreateMain.LEVELEDITOR_MUSIC);
+			main.addChildAt(bggrid,main.getChildIndex(this)+1);
+			drawGrid();
 		}
 				
 		[Embed(source="..//misc//blank.xml", mimeType="application/octet-stream")]
 		public static var loadThis:Class;
+		
+		private function drawGrid() {
+			bggrid.graphics.clear();
+			while(bggrid.numChildren > 0) {
+				bggrid.removeChildAt(0);
+			}
+			bggrid.graphics.lineStyle(1,0xFFFFFF,0.3);
+			for(var i = Math.floor(currenty/50)*50 + 520; i >= this.currenty; i-= 50) {
+				bggrid.graphics.moveTo(0,i);
+				bggrid.graphics.lineTo(500,i);
+				var s:TextField = new TextField();
+				s.textColor = 0xFFFFFF;
+				s.text = -(i-520)+"px";
+				s.x = 1;
+				s.y = i;
+				s.alpha = 0.3;
+				s.selectable = false;
+				bggrid.addChild(s);
+			}
+			for (i = 0; i <= 500; i+= 50) {
+				bggrid.graphics.moveTo(i,currenty);
+				bggrid.graphics.lineTo(i,currenty+520);
+			}
+		}
 		
 		
 		private function loadFromEmbedXML() {
@@ -130,10 +160,11 @@
 				} else if (e.name() == "bossactivate") {
 					addblock = new BossActivate(e.@x,e.@y,e.@width,e.@height,e.@hp);
 				}
-				
 				rectList.push(addblock);
 				main.addChild(addblock);
 			}
+			unmakeui();
+			makeui();
 		}
 		
 		public function editorKeyListeners() {
@@ -148,7 +179,7 @@
 			cboxy = main.stage.mouseY;
 			ststo = main.stage.mouseY+currenty;
 			
-			if (currenttype == WALL || currenttype == DEATHBLOCK || currenttype == BOOST || currenttype == GOAL || currenttype == TRACK || currenttype == TRACKWALL && !keydown) {
+			if (currenttype == WALL || currenttype == DEATHBLOCK || currenttype == BOOST || currenttype == GOAL || currenttype == TRACK || currenttype == TRACKWALL || currenttype == ACTIVATETRACKWALL || currenttype == ROCKETBOSS && !keydown) {
 				mousePreviewAnimateTimer = new Timer(20);
 				mousePreviewAnimateTimer.addEventListener(TimerEvent.TIMER,mousePreviewCreate);
 				mousePreviewAnimateTimer.start();
@@ -207,21 +238,21 @@
 				if (currenttype==TEXT) { //keep this here, don't care about toothin
 					clearlisteners(); 
 					var newtextobject:TextWindow = new TextWindow("What text would you like to be displayed?",this,
-																  function(){
-																	  if (newtextobject.entryfield.text.length > 0) {
-																		  var pattern:RegExp = /[\<\>\"\/]/g;
-																		  var sanitizedText:String = newtextobject.entryfield.text.replace(pattern,"?");
-																		  xmllist.push('<textfield x="'+cboxx+'" y="'+ststo+'" text="'+sanitizedText+'" ></textfield>');
-																		  var s:Textdisplay = new Textdisplay(cboxx,cboxy,sanitizedText);
-																		  main.addChild(s);
-																		  rectList.push(s);
-																		  editorKeyListeners();
-																		  main.removeChild(newtextobject);
-																	  } else {
-																		  main.removeChild(newtextobject);
-																		  editorKeyListeners();
-																	  }
-																  });
+					  function(){
+						  if (newtextobject.entryfield.text.length > 0) {
+							  var pattern:RegExp = /[\<\>\"\/]/g;
+							  var sanitizedText:String = newtextobject.entryfield.text.replace(pattern,"?");
+							  xmllist.push('<textfield x="'+cboxx+'" y="'+ststo+'" text="'+sanitizedText+'" ></textfield>');
+							  var s:Textdisplay = new Textdisplay(cboxx,cboxy,sanitizedText);
+							  main.addChild(s);
+							  rectList.push(s);
+							  editorKeyListeners();
+							  main.removeChild(newtextobject);
+						  } else {
+							  main.removeChild(newtextobject);
+							  editorKeyListeners();
+						  }
+					  });
 					main.addChild(newtextobject);
 					return;
 				}
@@ -282,7 +313,20 @@
 					if (draggingBlock != null) {
 						draggingBlock.x = main.stage.mouseX - draggingBlockOffsetX;
 						draggingBlock.y = main.stage.mouseY - draggingBlockOffsetY;
-						xmllist[draggingBlockIndex] = '<'+draggingBlock.type()+' x="'+draggingBlock.x+'" y="'+(draggingBlock.y+currenty)+'" width="'+draggingBlock.w+'" height="'+draggingBlock.h+'" text="'+draggingBlock.internaltext()+'"></'+draggingBlock.type()+'>';
+						if (draggingBlock is LaserLauncher) {
+							if ((draggingBlock as LaserLauncher).launcherContainer.rotation == 90) {
+								xmllist[draggingBlockIndex] = '<'+draggingBlock.type()+' x="'+draggingBlock.x+'" y="'+(draggingBlock.y+currenty)+'" dir="-3"></'+draggingBlock.type()+'>';
+							} else {
+								xmllist[draggingBlockIndex] = '<'+draggingBlock.type()+' x="'+draggingBlock.x+'" y="'+(draggingBlock.y+currenty)+'" dir="3"></'+draggingBlock.type()+'>';
+							}
+						} else if (draggingBlock is BossActivate) {
+							xmllist[draggingBlockIndex] = '<'+draggingBlock.type()+' x="'+draggingBlock.x+'" y="'+(draggingBlock.y+currenty)+'" width="'+draggingBlock.w+'" height="'+draggingBlock.h+'" hp="6"></'+draggingBlock.type()+'>';
+						} else if (draggingBlock is Textdisplay) {
+							xmllist[draggingBlockIndex] = '<'+draggingBlock.type()+' x="'+draggingBlock.x+'" y="'+(draggingBlock.y+currenty)+'" text="'+draggingBlock.internaltext()+'"></'+draggingBlock.type()+'>';
+						} else {
+							xmllist[draggingBlockIndex] = '<'+draggingBlock.type()+' x="'+draggingBlock.x+'" y="'+(draggingBlock.y+currenty)+'" width="'+draggingBlock.w+'" height="'+draggingBlock.h+'"></'+draggingBlock.type()+'>';
+						}
+						
 					}
 				}
 				if ( Math.abs((main.stage.mouseX-cboxx)) < 10 || Math.abs(((main.stage.mouseY+currenty)-ststo)) < 10) { //creates boxes, adds to rectlist and main.stage, when makes xml representation and adds it
@@ -355,6 +399,8 @@
 				i.y+=n;
 			}
 			playerspawn.y+=n;
+			bggrid.y+=n;
+			drawGrid();
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
@@ -370,7 +416,7 @@
 			main.stop();
 			trace(outputXML("new_level").toXMLString());
 			main.playSpecific(JumpDieCreateMain.ONLINE);
-			currentgame = new GameEngine(main,this,outputXML("new_level"),"new level",true,1);
+			currentgame = new GameEngine(main,this,outputXML("new_level"),"new level",true);
 		}
 		
 		
@@ -381,13 +427,14 @@
 				main.addChild(s);
 			}
 			main.addChild(playerspawn);
+			main.addChildAt(bggrid,main.getChildIndex(this)+1);
 			editorKeyListeners();
 			makeui();
 			main.playSpecific(JumpDieCreateMain.LEVELEDITOR_MUSIC);
 		}
 		
 		public function outputXML(name:String):XML {
-			var textout = '<level name="'+name+'">';
+			var textout = '<level name="'+name+'" bg="'+this.bg+'">';
 			for each (var s:String in xmllist) {
 					textout += s;
 			}
@@ -416,6 +463,7 @@
 		public var selectorbutton:Sprite;
 		public var infobutton:Sprite;
 		public var helpbutton:Sprite;
+		public var bgbutton:Sprite;
 		
 		public function makeui() {//every _button is a wrapper, first child(0) is button (always there), second child(1) is buttonmessage(if exist)
 			menubutton = new Sprite;
@@ -491,6 +539,16 @@
 											clearButtonMessage();
 											helpbutton.addChild( new ButtonMessage("help",passhelper));
 										});
+										
+			bgbutton = new Sprite;
+			bgbutton.addChild(makeBitmapWrapper(bgbuttonimg));
+			bgbutton.x = 144; bgbutton.y = 502;
+			main.addChild(bgbutton);
+			bgbutton.getChildAt(0).addEventListener(MouseEvent.CLICK,function(){
+											clearButtonMessage();
+											helpbutton.addChild( new ButtonMessage("bg",passhelper));
+										});
+			
 			main.stage.focus = main.stage;
 			
 		}
@@ -531,7 +589,17 @@
 		
 		public override function destroy() { //return to main menu
 			clear();
-			main.curfunction = new JumpDieCreateMenu(main);
+			var newtextobject:ConfirmationWindow = new ConfirmationWindow("Are you sure you want to quit and erase all your work?",this,
+				function(){ //yes
+					main.curfunction = new JumpDieCreateMenu(main);
+					main.removeChild(newtextobject);
+				},
+				function(){ //no
+					remake();
+					main.removeChild(newtextobject);
+				}
+			);
+			main.addChild(newtextobject);
 		}
 		
 		public function clear() { //remove all from stage, remove all listeners
@@ -557,9 +625,9 @@
 		}
 		
 		private function colorByType(currenttype:Number):uint { //helper for finding ghost fill color
-			if (currenttype == WALL || currenttype == TRACK || currenttype == TRACKWALL ) {
+			if (currenttype == WALL || currenttype == TRACK || currenttype == TRACKWALL || currenttype == ACTIVATETRACKWALL) {
 				return 0x0000FF;
-			} else if (currenttype == DEATHBLOCK || currenttype == TRACKBLADE || currenttype == FLOWERBOSS) {
+			} else if (currenttype == DEATHBLOCK || currenttype == TRACKBLADE || currenttype == FLOWERBOSS || currenttype == ROCKETBOSS || currenttype == ROCKETLAUNCHER || currenttype == LevelEditor.LASERCCW || currenttype == LevelEditor.LASERCW) {
 				return 0xFF0000;
 			} else if (currenttype == BOOST || currenttype == BOOSTFRUIT) {
 				return 0xFFFF00;
@@ -593,8 +661,16 @@
 				return TRACKBLADE;
 			} else if (t == "flowerboss") {
 				return FLOWERBOSS;
+			} else if (t == "bossactivate") {
+				return ROCKETBOSS;
+			} else if (t == "activatetrackwall") {
+				return ACTIVATETRACKWALL;
+			} else if (t == "rocketlauncher") {
+				return ROCKETLAUNCHER;
+			} else if (t == "laserlauncher") {
+				return LASERCW;
 			} else {
-				trace("error in convertToType(string), this is a LevelEditor Function");
+				//trace("error in convertToType(string), this is a LevelEditor Function");
 				return -999;
 			}
 		}
@@ -622,6 +698,10 @@
 						[Embed(source='..//img//button//help.png')]
 		private var mb6:Class;
 		private var helpbuttonimg:Bitmap = new mb6;
+		
+								[Embed(source='..//img//button//bg.png')]
+		private var mb7:Class;
+		private var bgbuttonimg:Bitmap = new mb7;
 		
 	}
 	

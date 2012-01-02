@@ -44,7 +44,6 @@
 			cstage = stage;
 			mute = false;
 			curfunction = new JumpDieCreateMenu(this);
-			
 		}
 		
 		public function menuStart(menupos:Number) {

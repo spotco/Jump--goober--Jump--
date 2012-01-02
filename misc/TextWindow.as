@@ -24,13 +24,15 @@
 		
 		public var displaytext:TextField;
 		public var entryfield:TextField;
-		public var ok:Sprite;
-		public var no:Sprite;
+		public var ok = new Sprite;
 		public var currentfunction:CurrentFunction;
 		public var gamefont:TextFormat;
 		
 		//default for message, text entry box and confirmation button
-		public function TextWindow(questiontext:String,currentfunction:CurrentFunction,nfunction:Function) {
+		public function TextWindow(questiontext:String,currentfunction:CurrentFunction,nfunction:Function,stop:Boolean = false) {
+			if (stop) {
+				return;
+			}
 			gamefont = JumpDieCreateMain.getTextFormat(13);
 			
 			makewindow(questiontext);
@@ -42,14 +44,13 @@
 			entryfield.defaultTextFormat = gamefont;entryfield.setTextFormat(gamefont);
 			addChild(entryfield);
 			
-			ok = new Sprite();
 			ok.x = 310; ok.y = 276;
 			ok.addChild(okbutton);
 			ok.addEventListener(MouseEvent.CLICK,nfunction);
 			addChild(ok);
 		}
 		
-		private function makewindow(questiontext:String) {
+		public function makewindow(questiontext:String) {
 			this.currentfunction = currentfunction;
 			
 			this.addChild(JumpDieCreateMenu.titlebg);

@@ -76,7 +76,7 @@
 				main.playSpecific(JumpDieCreateMain.ONLINE);
 				startsong = false;
 			}
-			currentGame = new GameEngine(main,this,currentlevelxml,nom,false,1);
+			currentGame = new GameEngine(main,this,currentlevelxml,nom,false);
 		}
 		
 		public override function nextLevel(hitgoal:Boolean) {

@@ -33,7 +33,7 @@
 			this.y = y;
 			this.w = w;
 			this.h = h;
-			this.graphics.beginFill(0x00FF00,0.5);
+			this.graphics.beginFill(0xFF0000,0.5);
 			this.graphics.drawRect(0,0,w,h);
 			this.hp = hp;
 			this.maxhp = hp;

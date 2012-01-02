@@ -36,8 +36,47 @@
 				this.x = -95;
 				addChild(messagebgR);
 				help(helpphase);
+			} else if (type == "bg") {
+				this.x = -48;
+				addChild(messagebgR);
+				bg();
 			}
 
+		}
+		
+		public function bg() {
+			var s0:Sprite = leveleditor.makeBitmapWrapper(this.bg1sel);
+			s0.x = 10; s0.y = 5;
+			s0.addEventListener(MouseEvent.CLICK,function(){leveleditor.bg = 1;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s0);
+			
+			var s1:Sprite = leveleditor.makeBitmapWrapper(this.bg2sel);
+			s1.x = 64; s1.y = 5;
+			s1.addEventListener(MouseEvent.CLICK,function(){leveleditor.bg = 2;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s1);
+			
+			var s2:Sprite = leveleditor.makeBitmapWrapper(this.bg3sel);
+			s2.x = 118; s2.y = 5;
+			s2.addEventListener(MouseEvent.CLICK,function(){leveleditor.bg = 3;leveleditor.unmakeui();leveleditor.makeui();});
+			addChild(s2);
+			
+			var drawbox:Sprite;
+			var boxgrafix:Sprite = new Sprite;
+			if (leveleditor.bg == 2) {
+				drawbox = s1;
+			} else if (leveleditor.bg == 3) {
+				drawbox = s2;
+			} else {
+				drawbox = s0;
+			}
+			drawbox.addChild(boxgrafix);
+			var w = drawbox.width;
+			var h = drawbox.height;
+			boxgrafix.graphics.lineStyle(4,0x000000);
+			boxgrafix.graphics.lineTo(w,0);
+			boxgrafix.graphics.lineTo(w,h);
+			boxgrafix.graphics.lineTo(0,h);
+			boxgrafix.graphics.lineTo(0,0);
 		}
 		
 		public function help(helpphase:Number){
@@ -80,94 +119,119 @@
 		}
 		
 		public function selector(){
+			var msg:TextField = new TextField();
+			msg.embedFonts = true; msg.selectable = false; msg.x = 85; msg.y = 5; msg.antiAliasType = AntiAliasType.ADVANCED;msg.width = 75; msg.height = 100;
+			msg.defaultTextFormat = textFormat;msg.setTextFormat(textFormat); msg.wordWrap = true;
+			msg.text = "";
+			this.addChild(msg);
+			
+			
 			var s0:Sprite = leveleditor.makeBitmapWrapper(blue);
 			s0.x = 10; s0.y = 10;
 			s0.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.WALL;leveleditor.unmakeui();leveleditor.makeui();});
+			s0.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Wall";});
 			addChild(s0);
 			
 			var s1:Sprite = leveleditor.makeBitmapWrapper(red);
 			s1.x = 25; s1.y = 10;
 			s1.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.DEATHBLOCK;leveleditor.unmakeui();leveleditor.makeui();});
+			s1.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Spikey Vines";});
 			addChild(s1);
 			
 			var s2:Sprite = leveleditor.makeBitmapWrapper(yellow);
 			s2.x = 40; s2.y = 10;
 			s2.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.BOOST;leveleditor.unmakeui();leveleditor.makeui();});
+			s2.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Boost Pad";});
 			addChild(s2);
 			
 			var s3:Sprite = leveleditor.makeBitmapWrapper(green);
 			s3.x = 55; s3.y = 10;
 			s3.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.GOAL;leveleditor.unmakeui();leveleditor.makeui();});
+			s3.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Goal";});
 			addChild(s3);
 			
 			var s4:Sprite = leveleditor.makeBitmapWrapper(texticon);
 			s4.x = 70; s4.y = 10;
 			s4.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TEXT;leveleditor.unmakeui();leveleditor.makeui();});
+			s4.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Text Bug";});
 			addChild(s4);
 			
 			var s5:Sprite = leveleditor.makeBitmapWrapper(deleteicon);
 			s5.x = 70; s5.y = 25;
 			s5.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.DELETE;leveleditor.unmakeui();leveleditor.makeui();});
+			s5.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Delete";});
 			addChild(s5);
 			
 			var s6:Sprite = leveleditor.makeBitmapWrapper(moveicon);
 			s6.x = 55; s6.y = 25;
 			s6.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.MOVE;leveleditor.unmakeui();leveleditor.makeui();});
+			s6.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Move";});
 			addChild(s6);
 			
 			var s7:Sprite = leveleditor.makeBitmapWrapper(boostfruiticon);
 			s7.x = 10; s7.y = 25;
 			s7.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.BOOSTFRUIT;leveleditor.unmakeui();leveleditor.makeui();});
+			s7.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Jump Fruit";});
 			addChild(s7);
 			
 			var s8:Sprite = leveleditor.makeBitmapWrapper(trackicon);
 			s8.x = 10; s8.y = 40;
 			s8.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACK;leveleditor.unmakeui();leveleditor.makeui();});
+			s8.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Moving Track";});
 			addChild(s8);
 			
 			var s9:Sprite = leveleditor.makeBitmapWrapper(trackwallicon);
 			s9.x = 25; s9.y = 40;
 			s9.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACKWALL;leveleditor.unmakeui();leveleditor.makeui();});
+			s9.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Moving Wall";});
 			addChild(s9);
 			
 			var s10:Sprite = leveleditor.makeBitmapWrapper(trackbladeicon);
 			s10.x = 40; s10.y = 40;
 			s10.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACKBLADE;leveleditor.unmakeui();leveleditor.makeui();});
+			s10.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Moving Blade";});
 			addChild(s10);
 			
 			var s11:Sprite = leveleditor.makeBitmapWrapper(bossplanticon);
 			s11.x = 55; s11.y = 40;
 			s11.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.FLOWERBOSS;leveleditor.unmakeui();leveleditor.makeui();});
+			s11.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="World 1 Boss";});
 			addChild(s11);
 			
 			var s12:Sprite = leveleditor.makeBitmapWrapper(bosscloudicon);
 			s12.x = 70; s12.y = 40;
 			s12.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.CLOUDBOSS;leveleditor.unmakeui();leveleditor.makeui();});
+			s12.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="World 2 Boss";});
 			addChild(s12);
 			
 			var s13:Sprite = leveleditor.makeBitmapWrapper(rocketlaunchericon);
 			s13.x = 10; s13.y = 55;
 			s13.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ROCKETLAUNCHER;leveleditor.unmakeui();leveleditor.makeui();});
+			s13.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Rocket Launcher";});
 			addChild(s13);
 			
 			var s14:Sprite = leveleditor.makeBitmapWrapper(lasercwicon);
 			s14.x = 25; s14.y = 55;
 			s14.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.LASERCW;leveleditor.unmakeui();leveleditor.makeui();});
+			s14.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Clockwise Laser";});
 			addChild(s14);
 			
 			var s15:Sprite = leveleditor.makeBitmapWrapper(laserccwicon);
 			s15.x = 40; s15.y = 55;
 			s15.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.LASERCCW;leveleditor.unmakeui();leveleditor.makeui();});
+			s15.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Counterclockwise Laser";});
 			addChild(s15);
 			
 			var s16:Sprite = leveleditor.makeBitmapWrapper(activatetrackwallicon);
 			s16.x = 55; s16.y = 55;
 			s16.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ACTIVATETRACKWALL;leveleditor.unmakeui();leveleditor.makeui();});
+			s16.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Mobile Wall";});
 			addChild(s16);
 			
 			var s17:Sprite = leveleditor.makeBitmapWrapper(rocketbossicon);
 			s17.x = 70; s17.y = 55;
 			s17.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ROCKETBOSS;leveleditor.unmakeui();leveleditor.makeui();});
+			s17.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="World 3 Boss";});
 			addChild(s17);
 		}
 		
@@ -197,7 +261,6 @@
 		[Embed(source='..//img//editoricon//nexthelp.png')]
 		private var mb4:Class;
 		private var nexthelp:Bitmap = new mb4;
-		
 		
 		[Embed(source='..//img//editoricon//blue.png')]
 		public var i1:Class;
@@ -248,29 +311,41 @@
 		private var mb11:Class;
 		public var bossplanticon:Bitmap = new mb11;
 		
-				[Embed(source='..//img//editoricon//bosscloud.png')]
+		[Embed(source='..//img//editoricon//bosscloud.png')]
 		private var mb12:Class;
 		public var bosscloudicon:Bitmap = new mb12;
 		
-						[Embed(source='..//img//editoricon//rocketlauncher.png')]
+		[Embed(source='..//img//editoricon//rocketlauncher.png')]
 		private var mb13:Class;
 		public var rocketlaunchericon:Bitmap = new mb13;
 		
-						[Embed(source='..//img//editoricon//lasercw.png')]
+		[Embed(source='..//img//editoricon//lasercw.png')]
 		private var mb14:Class;
 		public var lasercwicon:Bitmap = new mb14;
 		
-						[Embed(source='..//img//editoricon//laserccw.png')]
+		[Embed(source='..//img//editoricon//laserccw.png')]
 		private var mb15:Class;
 		public var laserccwicon:Bitmap = new mb15;
 		
-						[Embed(source='..//img//editoricon//activatetrackwall.png')]
+		[Embed(source='..//img//editoricon//activatetrackwall.png')]
 		private var mb16:Class;
 		public var activatetrackwallicon:Bitmap = new mb16;
 		
-						[Embed(source='..//img//editoricon//rocketboss.png')]
+		[Embed(source='..//img//editoricon//rocketboss.png')]
 		private var mb17:Class;
 		public var rocketbossicon:Bitmap = new mb17;
+		
+		[Embed(source='..//img//editoricon//bg1sel.png')]
+		private var mb18:Class;
+		public var bg1sel:Bitmap = new mb18;
+		
+		[Embed(source='..//img//editoricon//bg2sel.png')]
+		private var mb19:Class;
+		public var bg2sel:Bitmap = new mb19;
+		
+		[Embed(source='..//img//editoricon//bg3sel.png')]
+		private var mb20:Class;
+		public var bg3sel:Bitmap = new mb20;
 		
 	}
 	

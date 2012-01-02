@@ -24,6 +24,8 @@
 			baseimg.x = -75/2;
 			baseimg.y = -68/2;
 			this.addChild(baseimg);
+			this.w = 20;
+			this.h = 20;
 			
 			//this.graphics.beginFill(0x00FF00,0.5);
 			//this.graphics.drawCircle(0,0,400);
