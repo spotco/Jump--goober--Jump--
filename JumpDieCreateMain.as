@@ -42,13 +42,15 @@
 			Security.allowDomain("spotcos.com");
             Security.allowInsecureDomain("spotcos.com");
 			cstage = stage;
-			mute = false;
+			mute = true;
 			curfunction = new JumpDieCreateMenu(this);
 		}
 		
 		public function menuStart(menupos:Number) {
 			curfunction.destroy();
-			stop();
+			if (menupos != WORLD1 && menupos != WORLD2 && menupos != WORLD3) {
+				stop();
+			}
 			if (menupos == WORLD1) {
 				curfunction = new TutorialGame(this);
 			} else if (menupos == LEVELEDITOR) {
@@ -191,10 +193,17 @@
 		[Embed(source='misc//Bienvenu.ttf', embedAsCFF="false", fontName='Game', fontFamily="Game", mimeType='application/x-font')] 
       	public static var bar:String;
 		
-		public static function getTextFormat(size:Number):TextFormat {
+		[Embed(source='misc//acknowtt.ttf', embedAsCFF="false", fontName='Menu', fontFamily="Menu", mimeType='application/x-font')] 
+      	public static var foo:String;
+		
+		public static function getTextFormat(size:Number,type:Number = 1):TextFormat {
 			var textFormat:TextFormat = new TextFormat();
-			textFormat.font = "Game";
-           	textFormat.size = size;
+			if (type == 2) {
+				textFormat.font = "Menu";
+			} else {
+				textFormat.font = "Game";
+			}
+			textFormat.size = size;
 			return textFormat;
 		}
 		

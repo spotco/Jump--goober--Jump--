@@ -15,6 +15,8 @@
 		public var theta:Number;
 		public var c:Number;
 		
+		public var buttonmaster:LevelSelectButton;
+		
 	}
 	
 }

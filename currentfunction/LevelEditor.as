@@ -18,6 +18,8 @@
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import flash.text.Font;
+	import flash.text.AntiAliasType;
 	
 	public class LevelEditor extends CurrentFunction {
 		public var main:JumpDieCreateMain;
@@ -59,6 +61,8 @@
 		public static var ROCKETBOSS:Number = 17;
 		
 		public var currenttype:Number;
+		
+		private var gamefont:TextFormat = JumpDieCreateMain.getTextFormat(11);
 		
 		
 		public function LevelEditor(main:JumpDieCreateMain) {
@@ -113,6 +117,10 @@
 				s.y = i;
 				s.alpha = 0.3;
 				s.selectable = false;
+				s.embedFonts = true;
+				s.antiAliasType = AntiAliasType.ADVANCED;
+				s.defaultTextFormat = gamefont;
+				s.setTextFormat(gamefont);
 				bggrid.addChild(s);
 			}
 			for (i = 0; i <= 500; i+= 50) {
@@ -225,7 +233,7 @@
 			mousePreviewDrawer.graphics.endFill();
 		}
 		
-		public function onMouseUp(e:MouseEvent) {
+		public function onMouseUp(e:MouseEvent) { //this method is not structured well, lol
 			if (mousePreviewAnimateTimer != null) {
 				mousePreviewAnimateTimer.stop();
 			}

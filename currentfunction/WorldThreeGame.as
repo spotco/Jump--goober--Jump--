@@ -26,27 +26,23 @@
 		
 		
 		public function WorldThreeGame(main:JumpDieCreateMain) {
+			this.thisnametext = "World 3";
+			
 			super(main);
+			this.thisworld = 3;
 		}
 		
-		public override function startLevel() {
-			if (clvl >= levels.length) {
-				clvl = 0;
+		public override function getsong() {
+			if (clvl == 5 || clvl == 9 || clvl == 11) {
+				main.playSpecific(JumpDieCreateMain.BOSSSONG);
+			} else {
+				main.playSpecific(JumpDieCreateMain.SONG3);
 			}
-			currentGame = null;
-			if (switchsong) {
-				if (clvl == 4 || clvl == 8 || clvl == 10) {
-					main.playSpecific(JumpDieCreateMain.BOSSSONG);
-				} else {
-					main.playSpecific(JumpDieCreateMain.SONG3);
-				}
-				switchsong = false;
-			}
-			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,3);
 		}
 		
 		public override function makeLevelArray() {
 			levels = new Array();
+			levels.push(new XML);
 			levels.push(getXML(new l1()));
 			levels.push(getXML(new l2()));
 			levels.push(getXML(new l3()));
@@ -61,18 +57,12 @@
 		}
 		
 		public override function playWinSound() {
-				if (clvl == 4 || clvl == 8 || clvl == 10) {
-					main.playSpecific(JumpDieCreateMain.BOSSENDSONG,false);
-				} else {
-					main.playSpecific(JumpDieCreateMain.SONG3END,false);
-				}
+			if (clvl == 5 || clvl == 9 || clvl == 11) {
+				main.playSpecific(JumpDieCreateMain.BOSSENDSONG,false);
+			} else {
+				main.playSpecific(JumpDieCreateMain.SONG3END,false);
+			}
 			
-		}
-		
-		private static function getXML(input:Object) : XML {
-   			var ba:ByteArrayAsset = ByteArrayAsset(input);
-   			var xml:XML = new XML( ba.readUTFBytes( ba.length ) );
-   			return xml;    
 		}
 				
 		[Embed(source="..//misc//world_3//level1.xml", mimeType="application/octet-stream")]

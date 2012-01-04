@@ -26,27 +26,22 @@
 		
 		
 		public function WorldTwoGame(main:JumpDieCreateMain) {
+			this.thisnametext = "World 2";
 			super(main);
+			this.thisworld = 2;
 		}
 		
-		public override function startLevel() {
-			if (clvl >= levels.length) {
-				clvl = 0;
+		public override function getsong() {
+			if (clvl == 7 || clvl == 11) {
+				main.playSpecific(JumpDieCreateMain.BOSSSONG);
+			} else {
+				main.playSpecific(JumpDieCreateMain.SONG2);
 			}
-			currentGame = null;
-			if (switchsong) {
-				if (clvl == 6 || clvl == 10) {
-					main.playSpecific(JumpDieCreateMain.BOSSSONG);
-				} else {
-					main.playSpecific(JumpDieCreateMain.SONG2);
-				}
-				switchsong = false;
-			}
-			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,2);
 		}
 		
 		public override function makeLevelArray() {
 			levels = new Array();
+			levels.push(new XML);
 			levels.push(getXML(new l1()));
 			levels.push(getXML(new l2()));
 			levels.push(getXML(new l3()));
@@ -61,7 +56,7 @@
 		}
 		
 		public override function playWinSound() {
-				if (clvl == 6 || clvl == 10) {
+				if (clvl == 7 || clvl == 11) {
 					main.playSpecific(JumpDieCreateMain.BOSSENDSONG,false);
 				} else {
 					main.playSpecific(JumpDieCreateMain.SONG2END,false);
