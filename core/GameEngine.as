@@ -50,9 +50,11 @@
 		public var bg:Bitmap; //the current background
 		var bgcounter:Number = 0;
 		
+		private var hasskip:Boolean;
+		
 		var usebackbutton:Boolean;
 		//loads and creates game given xml file, adds self to main param
-		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = -1) {
+		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = -1, hasskip:Boolean = true) {
 			trace("gameengine start");
 			this.usebackbutton = usebackbutton;
 			if (useBg == 1 || Number(clvlxml.@bg) == 1) {
@@ -67,6 +69,7 @@
 			bg.y = -940;
 			main.addChild(bg);
 			
+			this.hasskip = hasskip;
 			
 			displayname = name;
 			this.curfunction = curfunction;
@@ -201,7 +204,9 @@
 				skipbutton.addChild(skipbuttonimg);
 			}
 			skipbutton.x = 410; skipbutton.y = 503;
-			main.addChild(skipbutton);
+			if (this.hasskip) {
+				main.addChild(skipbutton);
+			}
 			skipbutton.addEventListener(MouseEvent.CLICK,function(){loadnextlevel(false);});
 			
 			leveldisplayimg.x = -10; leveldisplayimg.y = 503; 
@@ -254,11 +259,14 @@
 					main.setChildIndex(b,main.numChildren-1);
 				}
 			}
+			main.setChildIndex(testguy,main.numChildren-1);
 			main.setChildIndex(leveldisplayimg,main.numChildren-1);
 			main.setChildIndex(leveldisplay,main.numChildren-1);
 			main.setChildIndex(menubutton,main.numChildren-1);
-			main.setChildIndex(skipbutton,main.numChildren-1);
-			main.setChildIndex(testguy,main.numChildren-1);
+			if (skipbutton.stage != null) {
+				main.setChildIndex(skipbutton,main.numChildren-1);
+			}
+			
 		}
 		
 		//memory saving mathods, dunno why they have to be >='s (if not they break :( )
@@ -280,7 +288,8 @@
 		}
 		
 		private function checkOffScreenDeath() : Boolean { //checks if fallen offscreen
-			if (testguy.y > 490 || testguy.x < -25 || testguy.x > 525 || testguy.y < -300) {
+			//if (testguy.y > 490 || testguy.x < -25 || testguy.x > 525 || testguy.y < -300) {
+			if (testguy.x < -25 || testguy.x > 525 || testguy.y > 505 || testguy.y < -300) {
 				timer.stop();
 				reload(); //offscreen
 				return true;
@@ -337,7 +346,7 @@
 		private function inputStackMove() { //move based on top key in keystack
 			var topkey = storekey[storekey.length-1];
 			if (storekey.length > 0) {
-				if (topkey == Keyboard.LEFT) {
+				if (topkey == Keyboard.LEFT || topkey == Keyboard.A) {
 					if (testguy.vx < -5) {
 						//testguy.vx+=1;
 					} else if (testguy.vx > 5)  {
@@ -346,7 +355,7 @@
 						testguy.vx = -5;
 					}
 
-				} else if (topkey == Keyboard.RIGHT) {
+				} else if (topkey == Keyboard.RIGHT || topkey == Keyboard.D) {
 
 					if (testguy.vx < -5) {
 						testguy.vx+=1;
@@ -355,7 +364,7 @@
 					} else {
                			testguy.vx = 5;
 					}
-				} else if (topkey == Keyboard.SPACE && ( (testguy.canJump && testguy.hashitwall || testguy.justtouched > 0)||testguy.boost > 0)) {
+				} else if (  (topkey == Keyboard.SPACE || topkey == Keyboard.ENTER || topkey == Keyboard.W || topkey == Keyboard.Z) && ( (testguy.canJump && testguy.hashitwall || testguy.justtouched > 0)||testguy.boost > 0)) {
 					if (!testguy.jumpavailable) { //cooldown not off, stop
 						return;
 					} else { //else set cooldown on, set cooldown to time

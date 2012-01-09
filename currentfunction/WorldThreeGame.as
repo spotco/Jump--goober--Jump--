@@ -31,6 +31,12 @@
 			super(main);
 			this.thisworld = 3;
 		}
+
+		public override function getsave() {
+			trace("world 3");
+			this.maxlvl = main.localdata.data.world3;
+			trace("maxlvl:"+this.maxlvl);
+		}
 		
 		public override function getsong() {
 			if (clvl == 5 || clvl == 9 || clvl == 11) {

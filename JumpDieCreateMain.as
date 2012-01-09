@@ -36,14 +36,28 @@
 		public var curfunction:CurrentFunction;
 		public var mute:Boolean;
 		public var cstage:Stage;
+		public var localdata:SharedObject;
 		
 		public function JumpDieCreateMain(stage:Stage) {
 			var _mochiads_game_id:String = "2b4163180653a1e6";
 			Security.allowDomain("spotcos.com");
             Security.allowInsecureDomain("spotcos.com");
 			cstage = stage;
-			mute = true;
+			mute = false;
 			curfunction = new JumpDieCreateMenu(this);
+			localdata = SharedObject.getLocal("JumpDieOrCreateSPOTCO");
+			
+			verifysave();
+		}
+		
+		private function verifysave() {
+			if (!localdata.data.world1 || !localdata.data.world2 || !localdata.data.world3) {
+				localdata.data.world1 = 1;
+				localdata.data.world2 = 1;
+				localdata.data.world3 = 1;
+				trace("save init");
+			}
+			
 		}
 		
 		public function menuStart(menupos:Number) {

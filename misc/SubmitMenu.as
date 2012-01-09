@@ -145,7 +145,7 @@
 			okbutton.addChild(TextWindow.okbutton);
 			okbutton.addEventListener(MouseEvent.CLICK, function() {
 									  		leveleditor.clear();
-											leveleditor.remake();
+											leveleditor.main.curfunction = new JumpDieCreateMenu(leveleditor.main);
 									  });
 			displayarea.addChild(okbutton);
 		}

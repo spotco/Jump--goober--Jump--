@@ -31,6 +31,12 @@
 			this.thisworld = 2;
 		}
 		
+		public override function getsave() {
+			trace("world 2");
+			this.maxlvl = main.localdata.data.world2;
+			trace("maxlvl:"+this.maxlvl);
+		}
+		
 		public override function getsong() {
 			if (clvl == 7 || clvl == 11) {
 				main.playSpecific(JumpDieCreateMain.BOSSSONG);

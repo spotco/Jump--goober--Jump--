@@ -22,10 +22,6 @@
 	import currentfunction.*;
 	import misc.*;
 	
-	//TODO
-	//1. Add keyboard controls for world menu
-	//2. Add save to flash cookies
-	
 	public class TutorialGame extends CurrentFunction {
 		public var levels:Array;
 		public var main:JumpDieCreateMain;
@@ -33,21 +29,82 @@
 		public var currentGame:GameEngine;
 		public var switchsong:Boolean;
 		
+		public var buttonarray:Array = new Array;
+		
 		public var thisnametext:String;
 		public var thisworld:Number;
 		private var selectorguy:Guy = new Guy(0,0);
+		
+		public var maxlvl:Number;
 		
 		public function TutorialGame(main:JumpDieCreateMain) {
 			if (!thisnametext) {
 				thisnametext = "World 1";
 				thisworld = 1;
 			}
+			
 			makeLevelArray();
 			this.main = main;
 			this.main.addChild(this);
+			getsave();
 			selectorguy.x = 114;
 			selectorguy.y = 159;
 			levelSelect();
+		}
+		
+		public function getsave() {
+			trace("world 1");
+			this.maxlvl = main.localdata.data.world1;
+			trace("maxlvl:"+this.maxlvl);
+		}
+		
+		private function makeKbListeners() {
+			this.main.cstage.addEventListener(KeyboardEvent.KEY_UP, kblmanager);
+			this.main.cstage.focus = this.stage;
+		}
+		
+		private function kblmanager(e:KeyboardEvent) {
+			if (e.keyCode == Keyboard.UP) {
+				clvl--;
+				if (clvl == 0) {
+					clvl = -1;
+				} else if (clvl < -1) {
+					clvl = 11;
+				}
+				if (clvl > maxlvl) {
+					clvl = maxlvl;
+				}
+				moveclvl();
+			} else if (e.keyCode == Keyboard.DOWN) {
+				clvl++;
+				if (clvl > 11) {
+					clvl = -1;
+				} else if (clvl == 0) {
+					clvl = 1;
+				}
+				if (clvl > maxlvl) {
+					clvl = -1;
+				}
+				moveclvl();
+			} else if (e.keyCode == Keyboard.SPACE) {
+				if (clvl == -1) {
+					destroy();
+				} else {
+					playGame();
+				}
+			}
+		}
+		
+		private function moveclvl() {
+			var tar:LevelSelectButton;
+			for each(var b:LevelSelectButton in this.buttonarray) {
+				if (b.clvl == this.clvl) {
+					tar = b;
+					break;
+				}
+			}
+			selectorguy.x = (tar).x - 26;
+			selectorguy.y = (tar).y;
 		}
 		
 		public function levelSelect() {
@@ -67,6 +124,14 @@
 					container = new LevelSelectButton(168,303,i);
 				}
 				
+				this.buttonarray.push(container);
+				this.addChild(container);
+				
+				if (container.clvl > this.maxlvl) {
+					container.alpha = 0.3;
+					continue;
+				}
+				
 				container.addEventListener(MouseEvent.CLICK,function(e:Event){
 					if (e.target is TextField) {
 						return;
@@ -79,18 +144,16 @@
 					if (e.target is TextField) {
 						return;
 					}
-					selectorguy.x = (e.target.buttonmaster).x - 26;
-					selectorguy.y = (e.target.buttonmaster).y;
 					clvl = e.target.buttonmaster.clvl;
+					moveclvl();
 				});
 								   
-				this.addChild(container);
+				
 			}
 			
-			var backbutton:Sprite = new Sprite;
+			var backbutton:LevelSelectButton = new LevelSelectButton(227,349,-1);
+			backbutton.removeChild(backbutton.text);
 			backbutton.addChild(new GameEngine.mb2 as Bitmap);
-			backbutton.x = 227;
-			backbutton.y = 349;
 			this.addChild(backbutton);
 			
 			backbutton.addEventListener(MouseEvent.CLICK, function() {
@@ -98,15 +161,18 @@
 			});
 			
 			backbutton.addEventListener(MouseEvent.MOUSE_OVER, function(e:Event) {
-				selectorguy.x = (e.target).x - 26;
-				selectorguy.y = (e.target).y;
 				clvl = -1;
+				moveclvl();
 			});
 			
+			this.buttonarray.push(backbutton);
+			
 			this.addChild(selectorguy);
+			makeKbListeners();
 		}
-		
+				
 		public function playGame() {
+			this.main.cstage.removeEventListener(KeyboardEvent.KEY_UP, kblmanager);
 			numDeath = 0;
 			starttime = new Date();
 			switchsong = true;
@@ -117,10 +183,12 @@
 		
 		public override function startLevel() {
 			if (clvl >= levels.length) {
-				clvl = 1;
+				/*clvl = 1;
 				main.addChild(this);
+				makeKbListeners();
 				main.stop();
-				main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
+				main.playSpecific(JumpDieCreateMain.MENU_MUSIC);*/
+				destroy();
 				return;
 			}
 			currentGame = null;
@@ -128,8 +196,8 @@
 				getsong();
 				switchsong = false;
 			}
-			trace(this.thisworld);
-			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,this.thisworld);
+			var noskip:Boolean = this.clvl < this.maxlvl;
+			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,this.thisworld,noskip);
 		}
 		
 		public function getsong() {
@@ -142,6 +210,7 @@
 		
 		public override function nextLevel(hitgoal:Boolean) {
 			//hitgoal = true;
+			
 			if (hitgoal) {
 				var endtime:Date = new Date();
 				var sectotal:Number = (endtime.hours - starttime.hours)*60*60 + (endtime.minutes - starttime.minutes)*60 + (endtime.seconds - starttime.seconds);
@@ -153,6 +222,30 @@
 					displaytime += (sectotal%60);
 				}
 				trace("numDeath:"+numDeath);
+				
+				//save progress
+				if (thisworld == 1) { 
+					main.localdata.data.world1 = Math.max(this.clvl+1,main.localdata.data.world1);
+					trace("written to world 1:"+main.localdata.data.world1);
+				} else if (thisworld == 2) {
+					main.localdata.data.world2 = Math.max(this.clvl+1,main.localdata.data.world2);
+					trace("written to world 2:"+main.localdata.data.world2);
+				} else if (thisworld == 3) {
+					main.localdata.data.world3 = Math.max(this.clvl+1,main.localdata.data.world3);
+					trace("written to world 3:"+main.localdata.data.world3);
+				}
+				
+				//save best time
+				var stostr:String = thisworld+"-"+this.clvl;
+				if (main.localdata.data[stostr]) {
+					main.localdata.data[stostr] = Math.min(main.localdata.data[stostr],sectotal);
+				} else {
+					main.localdata.data[stostr] = sectotal;
+				}
+				main.localdata.flush();
+				trace("best time for("+stostr+"):"+main.localdata.data[stostr]);
+				
+				
 				
 				main.addChild(JumpDieCreateMenu.titlebg);
 				main.addChild(JumpDieCreateMenu.getTextBubble());
@@ -188,7 +281,7 @@
 				winanim.start();
 				main.stop();
 				playWinSound();
-				main.stage.addEventListener(KeyboardEvent.KEY_DOWN, winscreencontinue);
+				main.stage.addEventListener(KeyboardEvent.KEY_UP, winscreencontinue);
 				main.stage.focus = main.stage;
 				return;
 			} else {
@@ -210,7 +303,7 @@
 				while(main.numChildren > 0) {
 					main.removeChildAt(0);
 				}
-				main.stage.removeEventListener(KeyboardEvent.KEY_DOWN, winscreencontinue);
+				main.stage.removeEventListener(KeyboardEvent.KEY_UP, winscreencontinue);
 				loadNextLevel();
 			}
 		}
@@ -227,6 +320,7 @@
 			while(main.numChildren > 0) {
 				main.removeChildAt(0);
 			}
+			this.main.cstage.removeEventListener(KeyboardEvent.KEY_UP, kblmanager);
 			main.curfunction = null;
 			this.currentGame = null;
 			this.levels = null;

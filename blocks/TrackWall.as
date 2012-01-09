@@ -79,35 +79,28 @@
 					var hitfriction:Boolean = false;
 					if (this.frictionbox.hitTestObject(g.testguy)) { //if guy is right above the block pulldown and remember to do extra check
 						g.testguy.y+=this.speed;
-						/*if (guyhitting(g)) {
-							g.testguy.y-=this.speed;
-						}*/
 						
 						hitfriction = true;
 						
-						/*while(this.hitbox.hitTestObject(g.testguy)) {
-							g.testguy.y-=0.1;
-						}*/
-						
 					}
 					this.y+=this.speed;
-					if (hitfriction) { //extra check for ABOVE case
-						//g.testguy.vy = 0;
+					if (hitfriction) { //push for above
 						while(this.hitbox.hitTestObject(g.testguy) && g.testguy.y < this.y) {
 							g.testguy.y-=0.1;
 						}
+						for each (var b:Wall in g.walls) { //for frictionbox drag down into another wall
+							while (g.testguy.hitTestObject(b.hitbox)) {
+								g.testguy.y-=0.1;
+							}
+						}
 					}
-					while (this.hitbox.hitTestObject(g.testguy) && g.testguy.y > this.y) { //extra check for below case
+					while (this.hitbox.hitTestObject(g.testguy) && g.testguy.y > this.y) { //push for below
 						g.testguy.y+=0.1;
 					}
 					
 					if (this.y-g.currenty+this.h/2 > Math.max(this.start,this.end)) {
 						directiontoggle = !directiontoggle;
 					}
-					/*if (this.hitbox.hitTestObject(g.testguy)) {
-						g.testguy.y+=this.speed;
-						return checkSmash(g);
-					}*/
 					return checkSmash(g);
 				}
 				
