@@ -430,13 +430,13 @@
 		private var leveldisplayimg:Bitmap = new mb4;
 		
 		[Embed(source='..//img//block//bg1.png')]
-		private var bg1:Class;
+		public static var bg1:Class;
 		
 		[Embed(source='..//img//block//bg2.png')]
-		private var bg2:Class;
+		public static var bg2:Class;
 		
 		[Embed(source='..//img//block//bg3.png')]
-		private var bg3:Class;
+		public static var bg3:Class;
 
 	}
 	

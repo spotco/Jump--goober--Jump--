@@ -5,8 +5,7 @@
     import flash.ui.Keyboard;
     import flash.utils.Timer;
     import flash.events.TimerEvent;
-    import flash.text.TextField;
-    import flash.text.TextFormat;
+    import flash.text.*;
     import flash.geom.Rectangle;
 	import flash.net.*;
 	import flash.xml.*;
@@ -27,7 +26,7 @@
 		private var mutebutton;
 		
 		public var menupos:Number;
-		private var cursor:Guy;
+		//private var cursor:Guy;
 		
 		public var use_menu:Array;
 		
@@ -35,7 +34,10 @@
 		private var world_menu:Array;
 		private var online_menu:Array;
 		
+		private var desc:Object = new Object();
+		
 		public function JumpDieCreateMenu(main:JumpDieCreateMain) {
+			initdesc();
 			initmenu();
 			this.main = main;
 			sound = (new MySound) as Sound;
@@ -118,11 +120,17 @@
 		}
 		
 		public function keyPressed(e:KeyboardEvent) {
-			if (e.keyCode == Keyboard.DOWN && menupos < use_menu.length-1) {
+			if (e.keyCode == Keyboard.DOWN/* && menupos < use_menu.length-1*/) {
 				menupos++;
+				if (menupos >= this.use_menu.length) {
+					menupos = 0;
+				}
 				updateCursor();
-			} else if (e.keyCode == Keyboard.UP && menupos > 0) {
+			} else if (e.keyCode == Keyboard.UP/* && menupos > 0*/) {
 				menupos--;
+				if (menupos < 0) {
+					menupos = this.use_menu.length - 1;
+				}
 				updateCursor();
 			} else if (e.keyCode == Keyboard.SPACE) {
 				activate();
@@ -142,7 +150,71 @@
 				sound.play(0,1);
 			}
 			use_menu[menupos].guycursor = new Guy(use_menu[menupos].guycursorX,use_menu[menupos].guycursorY);
+			if (desc[getopt()]) {
+				var t:Sprite = getoptiondesc(desc[getopt()]);
+				use_menu[menupos].guycursor.addChild(t)
+			}
 			use_menu[menupos].addChild(use_menu[menupos].guycursor);
+		}
+		
+		private function getoptiondesc(t:String):Sprite {
+			var text:TextField = new TextField;
+			var besttimebubble:Sprite = new Sprite;
+			text.embedFonts = true;
+            text.antiAliasType = AntiAliasType.ADVANCED;
+			text.text = t;
+			text.wordWrap = true;
+			text.selectable=false;
+			text.setTextFormat(JumpDieCreateMain.getTextFormat(10));
+			var textbubblepic:Bitmap = new Textdisplay.t2 as Bitmap;
+			besttimebubble.addChild(textbubblepic);
+			besttimebubble.addChild(text);
+			textbubblepic.scaleX = -0.8;
+			text.width = textbubblepic.width;
+			text.height = textbubblepic.height;
+			textbubblepic.alpha = 0.9;
+			text.x = -textbubblepic.width+5;
+			text.y = 3;
+			besttimebubble.x = 3;
+			besttimebubble.y = -besttimebubble.height+3;
+			return besttimebubble;
+		}
+		
+		private function getopt():String {
+			if (this.use_menu == this.main_menu) {
+				if (this.menupos == 0) {
+					return "adventure";
+				} else if (this.menupos == 1) {
+					return "online";
+				} else if (this.menupos == 2) {
+					return "level editor";
+				}
+				
+			} else if (this.use_menu == this.online_menu) {
+				if (this.menupos == 0) {
+					return "random online";
+				}
+				
+			} else if (this.use_menu == this.world_menu) {
+				if (this.menupos == 0) {
+					return "world 1";
+				} else if (this.menupos == 1) {
+					return "world 2";
+				} else if (this.menupos == 2) {
+					return "world 3";
+				}
+			}
+			return "";
+		}
+		
+		private function initdesc() {
+			desc["adventure"] = "Play the levels!\nLots of surprises await!";
+			desc["online"] = "Browse and play user-made levels online!";
+			desc["level editor"] = "Create and submit your own levels!";
+			desc["random online"] = "Play a randomly selected level.";
+			desc["world 1"] = "The first world and tutorial! You don't want to skip this!";
+			desc["world 2"] = "The second world!\nIt only gets harder from here!";
+			desc["world 3"] = "The third and final world! Only for the truly hardcore.";
 		}
 		
 		public override function destroy() {

@@ -52,9 +52,10 @@
 		
 		public function makewindow(questiontext:String) {
 			this.currentfunction = currentfunction;
-			
 			this.addChild(JumpDieCreateMenu.titlebg);
-			this.addChild(JumpDieCreateMenu.getTextBubble());
+			var b:Bitmap = JumpDieCreateMenu.getTextBubble();
+			b.alpha = 0.7;
+			this.addChild(b);
 			
 			displaytext = new TextField();
 			displaytext.embedFonts = true;displaytext.antiAliasType = AntiAliasType.ADVANCED;

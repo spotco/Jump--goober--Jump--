@@ -21,6 +21,7 @@
 	import flash.text.Font;
 	import flash.text.AntiAliasType;
 	
+	//this is a monster
 	public class LevelEditor extends CurrentFunction {
 		public var main:JumpDieCreateMain;
 		public var playerspawn:Guy;
@@ -63,6 +64,8 @@
 		public var currenttype:Number;
 		
 		private var gamefont:TextFormat = JumpDieCreateMain.getTextFormat(11);
+		
+		private var ingame:Boolean = false;
 		
 		
 		public function LevelEditor(main:JumpDieCreateMain) {
@@ -421,14 +424,22 @@
 		
 		public override function startLevel() { //converts to xml, then runs gameengine with it
 			clear();
-			main.stop();
 			trace(outputXML("new_level").toXMLString());
-			main.playSpecific(JumpDieCreateMain.ONLINE);
+			
+			this.starttime = new Date;
+			
+			if (!this.ingame) { //for continuous music playing
+				this.ingame = true;
+				main.stop();
+				main.playSpecific(JumpDieCreateMain.ONLINE);
+			}
 			currentgame = new GameEngine(main,this,outputXML("new_level"),"new level",true);
 		}
 		
 		
 		public function remake() { //called after game is over (either backbutton or no to submit), remakes ui and re-add all to main.stage
+			this.ingame = false;
+			this.starttime = null;
 			main.addChild(this);
 			main.addChild(mousePreviewDrawer);
 			for each (var s:Sprite in rectList) {
@@ -628,7 +639,9 @@
 			if (!hitgoal) {
 				remake();
 			} else {
-				var submitmenu:SubmitMenu = new SubmitMenu(this); //will eventually call back remake()
+				var time:Number = (new Date).time - this.starttime.time;
+				trace("time: "+time);
+				var submitmenu:SubmitMenu = new SubmitMenu(this,time); //will eventually call back remake()
 			}
 		}
 		
@@ -687,27 +700,27 @@
 		private var mb1:Class;
 		private var menubuttonimg:Bitmap = new mb1;
 		
-				[Embed(source='..//img//button//play.png')]
+		[Embed(source='..//img//button//play.png')]
 		private var mb2:Class;
 		private var playbuttonimg:Bitmap = new mb2;
 		
-						[Embed(source='..//img//button//undo.png')]
+		[Embed(source='..//img//button//undo.png')]
 		private var mb3:Class;
 		private var undobuttonimg:Bitmap = new mb3;
 		
-						[Embed(source='..//img//button//blank.png')]
+		[Embed(source='..//img//button//blank.png')]
 		private var mb4:Class;
 		private var blankbuttonimg:Bitmap = new mb4;
 		
-						[Embed(source='..//img//button//info.png')]
+		[Embed(source='..//img//button//info.png')]
 		private var mb5:Class;
 		private var infobuttonimg:Bitmap = new mb5;
 		
-						[Embed(source='..//img//button//help.png')]
+		[Embed(source='..//img//button//help.png')]
 		private var mb6:Class;
 		private var helpbuttonimg:Bitmap = new mb6;
 		
-								[Embed(source='..//img//button//bg.png')]
+		[Embed(source='..//img//button//bg.png')]
 		private var mb7:Class;
 		private var bgbuttonimg:Bitmap = new mb7;
 		

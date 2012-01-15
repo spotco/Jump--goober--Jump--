@@ -36,11 +36,13 @@
 		private var nameentry:TextField = new TextField;
 		
 		private var okbutton:Sprite;
+		private var time:Number;
 		
-		public function SubmitMenu(leveleditor:LevelEditor) {
+		public function SubmitMenu(leveleditor:LevelEditor,time:Number) {
 			this.leveleditor = leveleditor;
 			this.leveleditor.main.addChild(this);
 			this.leveleditor.main.addChild(displayarea);
+			this.time = time;
 			makebg();
 			makeasksubmit();
 		}
@@ -105,6 +107,10 @@
 				okbutton.visible = true;
 				errordisplayarea.text = "Error with your user name.";
 				return;
+			} else if (this.time < 5000) {
+				okbutton.visible = true;
+				errordisplayarea.text = "Level is too short. Make it longer.";
+				return;				
 			}
 			
 			errordisplayarea.text = "Submitting...";
@@ -127,14 +133,14 @@
 			var loader:URLLoader = new URLLoader();
 			configureErrors(loader);
 			loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, function(e:HTTPStatusEvent) {
-										httpstatus = e.status;
-										trace(e.status);
-										if (e.status == 200) {
-											loader.addEventListener(Event.COMPLETE,uploadcomplete);
-										} else if (e.status == 406) {
-											errordisplayarea.text = "DB error: Name already used or duplicate exists.";
-										}
-									});
+				httpstatus = e.status;
+				trace(e.status);
+				if (e.status == 200) {
+					loader.addEventListener(Event.COMPLETE,uploadcomplete);
+				} else if (e.status == 406) {
+					errordisplayarea.text = "DB error: Name already used or duplicate exists.";
+				}
+			});
     		loader.load(request);
 		}
 		
@@ -192,6 +198,7 @@
 		private function makebg() {
 			bg.addChild(JumpDieCreateMenu.titlebg);
 			var spbubble:Bitmap = JumpDieCreateMenu.getTextBubble();
+			spbubble.alpha = 0.8;
 			bg.addChild(spbubble);
 			var backbutton:Sprite = new Sprite;
 			backbutton.addChild(GameEngine.backbuttonimg);

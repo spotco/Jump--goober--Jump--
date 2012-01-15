@@ -30,6 +30,11 @@
 			
 			super(main);
 			this.thisworld = 3;
+			moveclvl();
+		}
+		
+		public override function getScrollingBg():Bitmap {
+			return new GameEngine.bg3 as Bitmap;
 		}
 
 		public override function getsave() {

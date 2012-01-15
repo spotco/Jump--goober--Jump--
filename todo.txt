@@ -1,4 +1,0 @@
-diff bg for level select
-best times in level select
-world complete display
-time limit min for level editor submit

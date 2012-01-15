@@ -31,7 +31,7 @@
 		private var bug1:Bitmap = new t1();
 		
 				[Embed(source='..//img//block//textbug//speechbubble.png')]
-		private var t2:Class;
+		public static var t2:Class;
 		private var spbubble:Bitmap = new t2();
 		
 			  	[Embed(source='..//misc//Bienvenu.ttf', embedAsCFF="false", fontName='Game', fontFamily="Game", mimeType='application/x-font')] 

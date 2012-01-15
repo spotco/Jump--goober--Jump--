@@ -37,11 +37,34 @@
 		
 		public var maxlvl:Number;
 		
+		private var besttimebubble:Sprite = new Sprite;
+		private var text:TextField = new TextField;
+		private var textbubblepic:Bitmap;
+		
+		
 		public function TutorialGame(main:JumpDieCreateMain) {
 			if (!thisnametext) {
 				thisnametext = "World 1";
 				thisworld = 1;
 			}
+			
+			text.embedFonts = true;
+            text.antiAliasType = AntiAliasType.ADVANCED;
+			text.text = "best time lol??";
+			text.wordWrap = true;
+			text.selectable=false;
+			text.setTextFormat(JumpDieCreateMain.getTextFormat(10));
+			textbubblepic = new Textdisplay.t2 as Bitmap;
+			textbubblepic.scaleX = -0.7;
+			textbubblepic.scaleY = 0.8;
+			besttimebubble.addChild(textbubblepic);
+			besttimebubble.addChild(text);
+			text.width = textbubblepic.width;
+			text.height = textbubblepic.height;
+			text.x = -84;
+			text.y = 3;
+			besttimebubble.visible = false;
+			selectorguy.addChild(besttimebubble);
 			
 			makeLevelArray();
 			this.main = main;
@@ -50,6 +73,13 @@
 			selectorguy.x = 114;
 			selectorguy.y = 159;
 			levelSelect();
+			
+			if (this.maxlvl >= 12) {
+				trace("World complete!");
+				var wc:TextField = LevelSelectButton.makeLevelSelectText(20,15,"World Complete!");
+				wc.setTextFormat(JumpDieCreateMain.getTextFormat(60,2));
+				this.addChild(wc);
+			}
 		}
 		
 		public function getsave() {
@@ -95,7 +125,7 @@
 			}
 		}
 		
-		private function moveclvl() {
+		public function moveclvl() {
 			var tar:LevelSelectButton;
 			for each(var b:LevelSelectButton in this.buttonarray) {
 				if (b.clvl == this.clvl) {
@@ -103,13 +133,59 @@
 					break;
 				}
 			}
-			selectorguy.x = (tar).x - 26;
-			selectorguy.y = (tar).y;
+			if (clvl >= 6 && clvl <= 10) {
+				selectorguy.x = (tar).x - 26+125;
+				selectorguy.y = (tar).y;
+				
+				textbubblepic.scaleX = 0.7;
+				this.besttimebubble.x = 20;
+				this.besttimebubble.y = -50;
+				text.x = 10;
+			} else {
+				selectorguy.x = (tar).x - 26;
+				selectorguy.y = (tar).y;
+				textbubblepic.scaleX = -0.7;
+				this.besttimebubble.x = 0;
+				this.besttimebubble.y = -50;
+				text.x = -100;
+				
+			}
+			
+			var stostr:String = this.thisworld+"-"+this.clvl;
+			if (main.localdata.data[stostr]) {
+				this.text.text = "Best time:\n"+main.localdata.data[stostr];
+				text.setTextFormat(JumpDieCreateMain.getTextFormat(10));
+				this.besttimebubble.visible = true;
+			} else {
+				this.besttimebubble.visible = false;
+			}
+		}
+		
+		public function getScrollingBg():Bitmap {
+			return new GameEngine.bg1 as Bitmap;
 		}
 		
 		public function levelSelect() {
-			this.addChild(new JumpDieCreateMenu.t1c as Bitmap);
-			this.addChild(JumpDieCreateMenu.getTextBubble());
+			//this.addChild(new JumpDieCreateMenu.t1c as Bitmap);
+			var scrollingBg:Bitmap = getScrollingBg();
+			scrollingBg.y = -1050;
+			var scrolltimer:Timer = new Timer(40);
+			scrolltimer.addEventListener(TimerEvent.TIMER, function() {
+				if (scrollingBg.stage == null) {
+					scrolltimer.stop();
+				}
+				scrollingBg.y+=1;
+				if (scrollingBg.y >= 0) {
+					scrollingBg.y = -1050;
+				}
+			});
+			scrolltimer.start();
+			this.addChild(scrollingBg);
+			this.addChild(new transbg as Bitmap);
+			
+			var bgmenu:Bitmap = JumpDieCreateMenu.getTextBubble();
+			bgmenu.alpha = 0.7;
+			this.addChild(bgmenu);
 			var nametext:TextField = LevelSelectButton.makeLevelSelectText(215,131,this.thisnametext);
 			nametext.setTextFormat(JumpDieCreateMain.getTextFormat(16));
 			this.addChild(nametext);
@@ -169,6 +245,8 @@
 			
 			this.addChild(selectorguy);
 			makeKbListeners();
+			
+			moveclvl();
 		}
 				
 		public function playGame() {
@@ -214,6 +292,7 @@
 			if (hitgoal) {
 				var endtime:Date = new Date();
 				var sectotal:Number = (endtime.hours - starttime.hours)*60*60 + (endtime.minutes - starttime.minutes)*60 + (endtime.seconds - starttime.seconds);
+				var msectotal:Number = endtime.time - starttime.time;
 				trace("timeSec:"+sectotal);
 				var displaytime:String = Math.floor(sectotal/60) + ":";
 				if (sectotal%60 < 10) {
@@ -221,7 +300,21 @@
 				} else {
 					displaytime += (sectotal%60);
 				}
+				var msdisplaytimecalc:Number = (((msectotal%1000)/1000)*1000/1000)*1000;
+				if (msdisplaytimecalc < 10) {
+					displaytime += ":00"+msdisplaytimecalc;
+				} else if (msdisplaytimecalc < 100) {
+					displaytime += ":0"+msdisplaytimecalc;
+				} else {
+					displaytime += ":"+msdisplaytimecalc;
+				}
+				
 				trace("numDeath:"+numDeath);
+				
+				/*msectotal = msectotal/1000 + ((msectotal%1000)/1000);
+				msectotal = Math.round(msectotal*1000)/1000;
+
+				trace("timeMS:"+msectotal);*/
 				
 				//save progress
 				if (thisworld == 1) { 
@@ -238,9 +331,32 @@
 				//save best time
 				var stostr:String = thisworld+"-"+this.clvl;
 				if (main.localdata.data[stostr]) {
-					main.localdata.data[stostr] = Math.min(main.localdata.data[stostr],sectotal);
+					//main.localdata.data[stostr] = Math.min(main.localdata.data[stostr],msectotal);
+					var saveddat:Array = main.localdata.data[stostr].split(":");
+					var savedsum:Number = 0;
+					for (var i = 0; i < saveddat.length; i++) {
+						if (i == 0) {
+							savedsum+=(60000*Number(saveddat[i]));
+						} else if (i == 1) {
+							savedsum+=(1000*Number(saveddat[i]));
+						} else if (i == 2) {
+							savedsum+=(Number(saveddat[i]));
+						} else {
+							trace("saved data parsing error!!!");
+						}
+					}
+					if (saveddat.length != 3) {
+						savedsum = msectotal+1;
+					}
+					trace("saved:"+savedsum);
+					trace("new:"+msectotal);
+					if (savedsum > msectotal) {
+						trace("new record");
+						main.localdata.data[stostr] = displaytime;
+					}
 				} else {
-					main.localdata.data[stostr] = sectotal;
+					//main.localdata.data[stostr] = msectotal;
+					main.localdata.data[stostr] = displaytime;
 				}
 				main.localdata.flush();
 				trace("best time for("+stostr+"):"+main.localdata.data[stostr]);
@@ -254,25 +370,32 @@
 				displaytext.embedFonts = true;
             	displaytext.antiAliasType = AntiAliasType.ADVANCED;
 				displaytext.selectable = false;
-				displaytext.text = "Time: "+displaytime+"\nDeaths: "+numDeath+"\n\nPress Space\nto Continue";
-				displaytext.x = 170; displaytext.y = 225; displaytext.width = 230; displaytext.height = 400;
+				displaytext.text = "  Time: "+displaytime+"\n    Deaths: "+numDeath;
+				displaytext.x = 140; 
+				displaytext.y = 225; 
+				displaytext.width = 230; displaytext.height = 400;
 				displaytext.defaultTextFormat = JumpDieCreateMain.getTextFormat(20);
 				displaytext.setTextFormat(JumpDieCreateMain.getTextFormat(20));
 				main.addChild(displaytext);
 				
 				var displayflash:Timer = new Timer(1000);
+				var haslistener:Boolean = false;
 				displayflash.addEventListener(TimerEvent.TIMER, function(){
-											  		if (displaytext.wordWrap) {
-														displaytext.text = "Time: "+displaytime+"\nDeaths: "+numDeath+"\n\nPress Space\nto Continue";
-													} else {
-														displaytext.text = "Time: "+displaytime+"\nDeaths: "+numDeath;
-													}
-													displaytext.wordWrap = !displaytext.wordWrap;
-													if (displaytext.stage == null) {
-														displayflash.stop();
-													}
-													//trace("lol");
-											  });
+						if (!displaytext.wordWrap) {
+							displaytext.text = "  Time: "+displaytime+"\n    Deaths: "+numDeath+"\n\n    Press Space\n    to Continue";
+						} else {
+							displaytext.text = "  Time: "+displaytime+"\n    Deaths: "+numDeath;
+						}
+						displaytext.wordWrap = !displaytext.wordWrap;
+						if (displaytext.stage == null) {
+							displayflash.stop();
+						}
+						if (!haslistener) {
+							haslistener = true;
+							main.stage.addEventListener(KeyboardEvent.KEY_UP, winscreencontinue);
+							main.stage.focus = main.stage;
+						}
+				  });
 				displayflash.start();
 				
 				var winanim:WinAnimation = new WinAnimation();
@@ -281,8 +404,6 @@
 				winanim.start();
 				main.stop();
 				playWinSound();
-				main.stage.addEventListener(KeyboardEvent.KEY_UP, winscreencontinue);
-				main.stage.focus = main.stage;
 				return;
 			} else {
 				loadNextLevel();
@@ -349,6 +470,9 @@
    			var xml:XML = new XML( ba.readUTFBytes( ba.length ) );
    			return xml;    
 		}
+
+		[Embed(source='..//img//misc//transparentmenu.png')]
+		private var transbg:Class;
 				
 		[Embed(source="..//misc//world_1//level1.xml", mimeType="application/octet-stream")]
 		private var l1:Class;

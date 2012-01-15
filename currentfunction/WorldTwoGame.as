@@ -29,6 +29,11 @@
 			this.thisnametext = "World 2";
 			super(main);
 			this.thisworld = 2;
+			moveclvl();
+		}
+		
+		public override function getScrollingBg():Bitmap {
+			return new GameEngine.bg2 as Bitmap;
 		}
 		
 		public override function getsave() {
