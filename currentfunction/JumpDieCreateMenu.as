@@ -42,7 +42,9 @@
 			this.main = main;
 			sound = (new MySound) as Sound;
 			menupos = 0;
-			main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
+			if (!main.pmenufix) {
+				main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
+			}
 			titlelogo.x = 70; titlelogo.y = 17;
 			main.addChild(titlebg);
 			main.addChild(titlelogo);

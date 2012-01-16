@@ -261,12 +261,54 @@
 		
 		public override function startLevel() {
 			if (clvl >= levels.length) {
-				/*clvl = 1;
-				main.addChild(this);
-				makeKbListeners();
 				main.stop();
-				main.playSpecific(JumpDieCreateMain.MENU_MUSIC);*/
-				destroy();
+				var complt:Sprite = new Sprite;
+				var compltbg:Bitmap;
+				if (this.thisworld == 1) {
+					compltbg = new TutorialGame.complete1 as Bitmap;
+				} else if (this.thisworld == 2) {
+					compltbg = new TutorialGame.complete2 as Bitmap;
+				} else if (this.thisworld == 3) {
+					compltbg = new TutorialGame.complete3 as Bitmap;
+				}
+				
+				
+				var f:Function = function(e:KeyboardEvent) {
+					if (e.keyCode == Keyboard.SPACE) {
+						main.stage.removeEventListener(KeyboardEvent.KEY_UP, f);
+						if (thisworld == 3) {
+							credits();
+						} else {
+							destroy();
+						}
+					}
+				}
+				var wait:Timer = new Timer(400);
+				wait.addEventListener(TimerEvent.TIMER,function() {
+					main.stage.addEventListener(KeyboardEvent.KEY_UP, f);
+					wait.stop();
+				});
+				wait.start();
+				
+				var wc:TextField = LevelSelectButton.makeLevelSelectText(60,470,"World "+this.thisworld+" complete!");
+				wc.setTextFormat(JumpDieCreateMain.getTextFormat(45,2));
+				
+				
+				var wcd:TextField = LevelSelectButton.makeLevelSelectText(wc.x+wc.width,wc.y+30,"(Press space to continue)");
+				wcd.setTextFormat(JumpDieCreateMain.getTextFormat(10));
+				wcd.x -= wcd.width;
+				
+				
+				var textbg:Sprite = new Sprite;
+				textbg.graphics.beginFill(0xFFFFFF,0.5);
+				textbg.graphics.drawRect(wc.x,wc.y+10,wc.width,wc.height+wcd.height);
+				
+				complt.addChild(compltbg);
+				complt.addChild(textbg);
+				complt.addChild(wc);
+				complt.addChild(wcd);
+				main.addChild(complt);
+				
 				return;
 			}
 			currentGame = null;
@@ -276,6 +318,49 @@
 			}
 			var noskip:Boolean = this.clvl < this.maxlvl;
 			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,this.thisworld,noskip);
+		}
+		
+		public function credits() {
+			trace("credits");
+			while(main.numChildren > 0) {
+				main.removeChildAt(0);
+			}
+			var creditslist:Bitmap = (new TutorialGame.creditslist as Bitmap);
+			creditslist.y = 0;
+			creditslist.alpha = 0;
+			main.addChild(new JumpDieCreateMenu.t1c as Bitmap);
+			main.addChild(creditslist);
+			main.addChild(new transbg as Bitmap);
+			
+			var wcd:TextField = LevelSelectButton.makeLevelSelectText(0,0,"(Press space to skip)");
+			wcd.setTextFormat(JumpDieCreateMain.getTextFormat(10));
+			wcd.x = 500-wcd.width;
+			wcd.y = 520-wcd.height;
+			main.addChild(wcd);
+			
+			var t:Timer = new Timer(50);
+			var f:Function =  function(e:KeyboardEvent) {
+				if (e.keyCode == Keyboard.SPACE) {
+					creditslist.y = -1950;
+				}
+			}
+			
+			main.playSpecific(JumpDieCreateMain.ONLINE);
+			t.addEventListener(TimerEvent.TIMER, function(){
+				if (creditslist.y > -100 && creditslist.alpha < 1) {
+					creditslist.alpha+=0.025;
+				} else if (creditslist.y > -1950) {
+					creditslist.y-=3;
+				} else if (creditslist.alpha > 0) {
+					creditslist.alpha-=0.010;
+				} else {
+					t.stop();
+					main.stage.removeEventListener(KeyboardEvent.KEY_UP,f);
+					destroy();
+				}
+			});
+			main.stage.addEventListener(KeyboardEvent.KEY_UP,f);
+			t.start();
 		}
 		
 		public function getsong() {
@@ -445,7 +530,7 @@
 			main.curfunction = null;
 			this.currentGame = null;
 			this.levels = null;
-			main.stop();
+			//main.stop();
 			main.curfunction = new JumpDieCreateMenu(main);
 		}
 		
@@ -472,7 +557,19 @@
 		}
 
 		[Embed(source='..//img//misc//transparentmenu.png')]
-		private var transbg:Class;
+		private static var transbg:Class;
+		
+		[Embed(source='..//img//misc//creditslist.png')]
+		private static var creditslist:Class;
+		
+		[Embed(source='..//img//misc//complete1.png')]
+		public static var complete1:Class;
+		
+		[Embed(source='..//img//misc//complete2.png')]
+		public static var complete2:Class;
+		
+		[Embed(source='..//img//misc//complete3.png')]
+		public static var complete3:Class;
 				
 		[Embed(source="..//misc//world_1//level1.xml", mimeType="application/octet-stream")]
 		private var l1:Class;

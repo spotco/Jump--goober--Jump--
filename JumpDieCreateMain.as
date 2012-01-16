@@ -42,6 +42,7 @@
 			var _mochiads_game_id:String = "2b4163180653a1e6";
 			Security.allowDomain("spotcos.com");
             Security.allowInsecureDomain("spotcos.com");
+			stage.quality = StageQuality.LOW;
 			cstage = stage;
 			mute = false;
 			curfunction = new JumpDieCreateMenu(this);
@@ -80,9 +81,19 @@
 			}
 		}
 		
+		public var pmenufix:Boolean = false;
+		
 		//oh yeah, and the main is the sound manager lol
 		public function playSpecific(tar:Number,repeat:Boolean = true) {
 			if (!mute) {
+				if (tar == MENU_MUSIC && pmenufix) {
+					return;
+				} else  if (tar == MENU_MUSIC && !pmenufix) {
+					pmenufix = true;
+				} else {
+					pmenufix = false;
+				}
+				
 				if (sc) {
 					sc.stop();
 				}
