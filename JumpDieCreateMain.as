@@ -44,7 +44,7 @@
             Security.allowInsecureDomain("spotcos.com");
 			stage.quality = StageQuality.LOW;
 			cstage = stage;
-			mute = false;
+			mute = true;
 			curfunction = new JumpDieCreateMenu(this);
 			localdata = SharedObject.getLocal("JumpDieOrCreateSPOTCO");
 			

@@ -45,7 +45,7 @@
 			if (!main.pmenufix) {
 				main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
 			}
-			titlelogo.x = 70; titlelogo.y = 17;
+			titlelogo.x = 70; titlelogo.y = 15;
 			main.addChild(titlebg);
 			main.addChild(titlelogo);
 			main.addChild(menubuttonwrapper);
@@ -227,17 +227,17 @@
 		}
 		
 		private function initmenu() {
-			main_menu = new Array(new MenuOption(250,230,adventure,ADVENTURE),
-								  new MenuOption(250,280,online,ONLINE),
-								  new MenuOption(250,330,leveleditor,JumpDieCreateMain.LEVELEDITOR));
+			main_menu = new Array(new MenuOption(250,260,adventure,ADVENTURE),
+								  new MenuOption(250,310,online,ONLINE),
+								  new MenuOption(250,360,leveleditor,JumpDieCreateMain.LEVELEDITOR));
 			
-			world_menu = new Array(new MenuOption(250,210,world1,JumpDieCreateMain.WORLD1),
-								   new MenuOption(250,260,world2,JumpDieCreateMain.WORLD2),
-								   new MenuOption(250,310,world3,JumpDieCreateMain.WORLD3),
-								   new MenuOption(250,360,(new backdata) as Bitmap,BACK_TO_MAIN));
+			world_menu = new Array(new MenuOption(250,240,world1,JumpDieCreateMain.WORLD1),
+								   new MenuOption(250,290,world2,JumpDieCreateMain.WORLD2),
+								   new MenuOption(250,340,world3,JumpDieCreateMain.WORLD3),
+								   new MenuOption(250,390,(new backdata) as Bitmap,BACK_TO_MAIN));
 			
-			online_menu = new Array(new MenuOption(250,210,playrandom,JumpDieCreateMain.RANDOMONLINE),
-								   new MenuOption(250,360,(new backdata) as Bitmap,BACK_TO_MAIN));
+			online_menu = new Array(new MenuOption(250,250,playrandom,JumpDieCreateMain.RANDOMONLINE),
+								   new MenuOption(250,400,(new backdata) as Bitmap,BACK_TO_MAIN));
 		}
 		
 		public static var ADVENTURE:Number = -3;

@@ -230,7 +230,6 @@
 			//trace(main.numChildren);
 			leveldisplay.text = displayname;
 			inputStackMove(); //moves testguy based on top key in input stack
-			gameScroll(); //scrolls all the current blocks and player
 			testguy.update(walls,justWallJumped); //loops through walls and checks collision, also updates player position based on velocity (not smart, I know)
 			justWallJumped = false;
 			if (checkOffScreenDeath()) { //check if has fallen offscreen
@@ -249,6 +248,7 @@
 					clearBelow(b,a,a.indexOf(b));
 				}
 			}
+			gameScroll(); //scrolls all the current blocks and player
 			moveUiToFront();
 			
 		}
