@@ -64,7 +64,7 @@
 			vx*=.99;//friction
 			vy*=.99;
 			vy+=1;
-			
+			this.vy = roundDec(this.vy,1);
 			var checkDepth:Number = 5;
 			for (var i = 0; i < Math.abs(vy); i+=checkDepth) { //move y by vy, break into chunks of 1 and remainder
 				this.y += SIG_ONE(vy-i,checkDepth);
@@ -83,8 +83,31 @@
 					canJump = true;
 					yhit = true;
 					this.y = roundDec(this.y,1); //round position to one decimal
+					
+					
+					var limit = Math.abs(vy)/.1;
+					var count = 0;
+					
+					var inity = this.y;
+					var sum = 0;
+					
 					while (hitTestObject(walls[i].hitbox) && vy != 0) {  //move reverse direction in increments of vy until not hit
-						this.y = this.y - SIG(vy);
+						//this.y = this.y - SIG(vy);
+						sum+= SIG(vy);
+						this.y = inity - sum;
+						if (!hitTestObject(walls[i].hitbox)) {
+							break;
+						}
+						this.y = inity + sum;
+						if (!hitTestObject(walls[i].hitbox)) {
+							trace("break reverse");
+							break;
+						}
+						
+						count++;
+						/*if (count > limit && this.y > walls[i].y) {
+							trace("!!!y: "+this.y+" vy:"+this.vy+" wally:"+walls[i].y+" wallh:"+walls[i].h);
+						}*/
 					}
 					if (hitTestObject(walls[i].hitbox)) { //only for spawning inside block, I think
 						recursiveOut(walls,1);

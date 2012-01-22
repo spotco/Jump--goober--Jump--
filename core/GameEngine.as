@@ -16,6 +16,7 @@
 	import flash.xml.*;
 	import flash.media.Sound;
 	import flash.text.*;
+	import flash.system.*;
 	import blocks.*;
 	import core.*;
 	import currentfunction.*;
@@ -227,15 +228,16 @@
 		private var justWallJumped:Boolean = false;
 		//START GAME ENGINE CODE
 		public function update(e:TimerEvent) { //main update cycle
+		trace(System.totalMemory);
 			//trace(main.numChildren);
 			leveldisplay.text = displayname;
 			inputStackMove(); //moves testguy based on top key in input stack
-			testguy.update(walls,justWallJumped); //loops through walls and checks collision, also updates player position based on velocity (not smart, I know)
+			
 			justWallJumped = false;
 			if (checkOffScreenDeath()) { //check if has fallen offscreen
 				return;
 			}
-			
+			testguy.update(walls,justWallJumped); //loops through walls and checks collision, also updates player position based on velocity (not smart, I know)
 			for each(var a:Array in blocksarrays) {
 				for each(var b:BaseBlock in a) {
 					if (!b.activated) {
@@ -248,6 +250,7 @@
 					clearBelow(b,a,a.indexOf(b));
 				}
 			}
+			
 			gameScroll(); //scrolls all the current blocks and player
 			moveUiToFront();
 			
@@ -301,6 +304,9 @@
 		private function gameScroll() { //scrolls all blocks and player if player is certain height, a lot of wizardry here
 			//speed of scrolling based on distance between player and scrolling start point
 			var SCROLL_SPD = Guy.roundDec((250 - testguy.y)/9,1);
+			if (SCROLL_SPD < 0.5) {
+				return;
+			}
 			if (testguy.y < 250) {
 				bgcounter++;
 				if(bgcounter > 0 && bg.y < -1 /*&& Math.abs(testguy.vy) >= 3*/) {
@@ -411,6 +417,39 @@
 			timer.stop();
 			main.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			main.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			
+			
+			
+			for (var i = 0; i < blocksarrays.length; i++) {
+				for (var j = 0; j < blocksarrays[i].length; j++) {
+					blocksarrays[i][j]=null;
+				}
+			}
+			
+			this.deathwall = null;
+			this.boostlist = null;
+			this.textdisplays = null;
+			this.goals = null;
+			this.boostfruits = null;
+			this.tracks = null;
+			this.particles = null;
+			this.main = null;
+			this.testguy = null;
+			this.timer = null;
+			this.blocksarrays = null;
+			this.storekey = null;
+			this.leveldisplay = null;
+			trace(System.totalMemory);
+			/*try {
+			new LocalConnection().connect('foo');
+			new LocalConnection().connect('foo');
+			} catch (e:*) {}*/
+			System.gc();
+			System.gc();
+			trace("CLEAR");
+			trace(System.totalMemory);
+			
+			
 		}
 		
 		[Embed(source='..//img//button//menu.png')]
@@ -422,11 +461,11 @@
 		public static var backbuttonimg:Bitmap = new mb2;
 		
 		[Embed(source='..//img//button//skip.png')]
-		private var mb3:Class;
+		public static var mb3:Class;
 		private var skipbuttonimg:Bitmap = new mb3;
 		
 		[Embed(source='..//img//button//leveldisplay.png')]
-		private var mb4:Class;
+		public static var mb4:Class;
 		private var leveldisplayimg:Bitmap = new mb4;
 		
 		[Embed(source='..//img//block//bg1.png')]

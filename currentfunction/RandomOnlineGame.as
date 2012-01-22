@@ -24,6 +24,8 @@
 		
 		var loadingmessagedisplay:TextField;
 		
+		var currentlevelinfo:Object;
+		
 		var error:Boolean = false;
 		var die:Boolean = false;
 		var dietimer:Timer;
@@ -39,12 +41,11 @@
 		public function getNewLevel() {
 			dietimer = new Timer(100);
 			dietimer.addEventListener(TimerEvent.TIMER,function(){
-									  		if(die) {
-												destroy();
-											}
-									  });
+					if(die) {
+						destroy();
+					}
+			  });
 			dietimer.start();
-			
 			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/getrandomid.php');
 			urlRequest.data = makeUrlVars();
 			var urlLoader:URLLoader = new URLLoader();
@@ -54,9 +55,29 @@
 		}
 		
 		public function idRecieved(evt:Event) {
+			if (die) {
+				return;
+			}
+			
+			var tarxml:XML = (new XML(evt.target.data)).level[0];
+			
+			currentlevelinfo = new Object;
+			currentlevelinfo.id = tarxml.@id;
+			currentlevelinfo.creator_name = tarxml.@creator_name;
+			currentlevelinfo.level_name = tarxml.@level_name;
+			currentlevelinfo.date_created = tarxml.@date_created;
+			
+			currentlevelinfo.playcount = tarxml.@playcount;
+			currentlevelinfo.ratingavg = tarxml.@ratingavg;
+			currentlevelinfo.ratingcount = tarxml.@ratingcount;
+			
+			trace("LEVEL_NAME: "+currentlevelinfo.level_name);
+			trace("CREATOR_NAME: "+currentlevelinfo.creator_name);
+			trace("DATE_CREATED: "+currentlevelinfo.date_created);
+			
 			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/getbyid.php');
 			var vars:URLVariables = makeUrlVars();
-			vars.id = evt.target.data;
+			vars.id = currentlevelinfo.id;
 			urlRequest.data = vars;
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE, newLevelRecieved);
@@ -71,6 +92,9 @@
 		}
 		
 		public override function startLevel() {
+			if (die) {
+				return;
+			}
 			var nom:String = currentlevelxml.@name;
 			if (startsong) {
 				main.playSpecific(JumpDieCreateMain.ONLINE);
@@ -80,7 +104,14 @@
 		}
 		
 		public override function nextLevel(hitgoal:Boolean) {
-			//main.playSpecific(JumpDieCreateMain.ONLINEEND);
+			if (hitgoal) {
+				new ReviewSubmitMenu(this,processNext,main,currentlevelinfo);
+			} else {
+				processNext();
+			}
+		}
+		
+		public function processNext() {
 			dietimer.stop();
 			makeloadbg();
 			startsong = true;
@@ -103,23 +134,22 @@
 		}		
 		
 		public override function destroy() {
-			if (currentGame != null || error) {
+			die = true;
+			//if (currentGame != null || error) {
 				while(main.numChildren > 0) {
 					main.removeChildAt(0);
 				}
 				main.stop();
-				if (currentGame != null) {
-					currentGame.clear();
-				}
 				dietimer.stop();
 				main.curfunction = new JumpDieCreateMenu(main);
-			}
+			//}
 		}
 		
 		private function makeloadbg() {
 			var bg:Sprite = new Sprite;
 			bg.addChild(JumpDieCreateMenu.titlebg);
 			var spbubble:Bitmap = JumpDieCreateMenu.getTextBubble();
+			spbubble.alpha = 0.8;
 			bg.addChild(spbubble);
 			var backbutton:Sprite = new Sprite;
 			bg.addChild(backbutton);
@@ -130,7 +160,7 @@
 			backbutton.addChild(GameEngine.backbuttonimg);
 			backbutton.y = 503;
 			backbutton.addEventListener(MouseEvent.CLICK,function() {
-											die = true;
+											destroy();
 										});
 			bg.addChild(backbutton);
 			

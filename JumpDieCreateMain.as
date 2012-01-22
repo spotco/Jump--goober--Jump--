@@ -21,7 +21,7 @@
 	import flash.display.Loader;
 	import flash.net.URLRequest;
 	import flash.events.Event;
-	import flash.system.Security;
+	import flash.system.*;
 	import blocks.*;
 	import core.*;
 	import currentfunction.*;
@@ -44,11 +44,17 @@
             Security.allowInsecureDomain("spotcos.com");
 			stage.quality = StageQuality.LOW;
 			cstage = stage;
-			mute = true;
+			mute = false;
 			curfunction = new JumpDieCreateMenu(this);
 			localdata = SharedObject.getLocal("JumpDieOrCreateSPOTCO");
 			
 			verifysave();
+			
+			var s:Timer = new Timer(500);
+			s.addEventListener(TimerEvent.TIMER, function() {
+							   trace(System.totalMemory);
+							   });
+							   s.start();
 		}
 		
 		private function verifysave() {
@@ -63,7 +69,7 @@
 		
 		public function menuStart(menupos:Number) {
 			curfunction.destroy();
-			if (menupos != WORLD1 && menupos != WORLD2 && menupos != WORLD3) {
+			if (menupos != WORLD1 && menupos != WORLD2 && menupos != WORLD3 && menupos!= MOSTPLAYEDONLINE && menupos!= NEWESTONLINE && menupos!= SPECIFICONLINE) {
 				stop();
 			}
 			if (menupos == WORLD1) {
@@ -72,12 +78,16 @@
 				curfunction = new LevelEditor(this);
 			} else if (menupos == RANDOMONLINE) {
 				curfunction = new RandomOnlineGame(this);
-			} else if (menupos == ENTERNAMEONLINE) {
-				curfunction = new JumpDieCreateMenu(this);
 			} else if (menupos == WORLD2) {
 				curfunction = new WorldTwoGame(this);
 			} else if (menupos == WORLD3) {
 				curfunction = new WorldThreeGame(this);
+			} else if (menupos == MOSTPLAYEDONLINE) {
+				curfunction = new BrowseMostPlayedGame(this);
+			} else if (menupos == NEWESTONLINE) {
+				curfunction = new BrowseMostRecentGame(this);
+			} else if (menupos == SPECIFICONLINE) {
+				curfunction = new BrowseSpecificGame(this);
 			}
 		}
 		
@@ -148,14 +158,15 @@
 			}
 		}
 		
-		public static var LEVELEDITOR:Number = 2;
-		public static var RANDOMONLINE:Number = 3;
-		public static var TOPONLINE:Number = 0;
-		public static var ENTERNAMEONLINE:Number = 5;
+		public static var LEVELEDITOR:Number = 38817;
+		public static var RANDOMONLINE:Number = 11293;
+		public static var MOSTPLAYEDONLINE:Number = 1232333;
+		public static var NEWESTONLINE:Number = 77333;
+		public static var SPECIFICONLINE:Number = 828264;
 		
-		public static var WORLD1:Number = 6;
-		public static var WORLD2:Number = 7;
-		public static var WORLD3:Number = 8;
+		public static var WORLD1:Number = 1283;
+		public static var WORLD2:Number = 876423;
+		public static var WORLD3:Number = 908974;
 		
 		public static var MENU_MUSIC:Number = 44141;
 		public static var LEVELEDITOR_MUSIC:Number = 12312;

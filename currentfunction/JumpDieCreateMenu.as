@@ -34,6 +34,9 @@
 		private var world_menu:Array;
 		private var online_menu:Array;
 		
+		private var statusdisplaycontainer:Sprite = new Sprite;
+		private var statusdisplay = new TextField();
+		
 		private var desc:Object = new Object();
 		
 		public function JumpDieCreateMenu(main:JumpDieCreateMain) {
@@ -57,6 +60,43 @@
 			main.cstage.addEventListener(KeyboardEvent.KEY_UP,keyPressed);
 			main.cstage.focus = main.cstage;
 			makemutebutton();
+			
+			checkonline();
+		}
+		
+		private function checkonline() {
+			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/getnumlevels.php');
+			var vars:URLVariables = new URLVariables;
+			vars.nocache = new Date().getTime(); 
+			urlRequest.data = vars;
+			var urlLoader:URLLoader = new URLLoader();
+			urlLoader.addEventListener(Event.COMPLETE, updateonlinestatus);
+			urlLoader.load(urlRequest);
+			
+			var s:Bitmap = new GameEngine.mb4 as Bitmap;
+			s.scaleX = 2.3;
+			statusdisplaycontainer.addChild(s);
+			statusdisplay.embedFonts = true;
+            statusdisplay.antiAliasType = AntiAliasType.ADVANCED;
+            statusdisplay.x = 12; statusdisplay.y = 2;
+            statusdisplay.width = 500;
+			statusdisplay.selectable = false;
+			statusdisplay.text = "SERVER STATUS: OFFLINE";
+			statusdisplay.setTextFormat(JumpDieCreateMain.getTextFormat(10));
+			statusdisplay.defaultTextFormat = JumpDieCreateMain.getTextFormat(10);
+			
+			statusdisplaycontainer.addChild(statusdisplay);
+			main.addChild(statusdisplaycontainer);
+			
+			statusdisplaycontainer.x = -10;
+			statusdisplaycontainer.y = 504;
+			statusdisplaycontainer.visible = false;
+		}
+		
+		private function updateonlinestatus(e:Event) {
+			var t:XML = new XML(e.target.data);
+			statusdisplay.text = "SERVER STATUS: ONLINE with currently "+(t.numlevels.@val-1)+" levels!";
+			trace(t.numlevels.@val);
 		}
 		
 		public function activate() {
@@ -104,6 +144,7 @@
 										main.mute = !main.mute; 
 										changemutebuttonicon();
 										if (!main.mute) {
+											main.pmenufix = false;
 											main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
 										}
 										});
@@ -157,6 +198,11 @@
 				use_menu[menupos].guycursor.addChild(t)
 			}
 			use_menu[menupos].addChild(use_menu[menupos].guycursor);
+			if (use_menu == online_menu) {
+				statusdisplaycontainer.visible = true;
+			} else {
+				statusdisplaycontainer.visible = false;
+			}
 		}
 		
 		private function getoptiondesc(t:String):Sprite {
@@ -195,6 +241,12 @@
 			} else if (this.use_menu == this.online_menu) {
 				if (this.menupos == 0) {
 					return "random online";
+				} else if (this.menupos == 1) {
+					return "newest online";
+				} else if (this.menupos == 2) {
+					return "most plays online";
+				} else if (this.menupos == 3) {
+					return "specific online";
 				}
 				
 			} else if (this.use_menu == this.world_menu) {
@@ -217,6 +269,9 @@
 			desc["world 1"] = "The first world and tutorial! You don't want to skip this!";
 			desc["world 2"] = "The second world!\nIt only gets harder from here!";
 			desc["world 3"] = "The third and final world! Only for the truly hardcore.";
+			desc["newest online"] = "Browse the newest submitted levels online!";
+			desc["most plays online"] = "Browse the most played levels online!";
+			desc["specific online"] = "Enter a specific level to play online!";
 		}
 		
 		public override function destroy() {
@@ -231,13 +286,16 @@
 								  new MenuOption(250,310,online,ONLINE),
 								  new MenuOption(250,360,leveleditor,JumpDieCreateMain.LEVELEDITOR));
 			
-			world_menu = new Array(new MenuOption(250,240,world1,JumpDieCreateMain.WORLD1),
-								   new MenuOption(250,290,world2,JumpDieCreateMain.WORLD2),
-								   new MenuOption(250,340,world3,JumpDieCreateMain.WORLD3),
-								   new MenuOption(250,390,(new backdata) as Bitmap,BACK_TO_MAIN));
+			world_menu = new Array(new MenuOption(250,260,world1,JumpDieCreateMain.WORLD1),
+								   new MenuOption(250,310,world2,JumpDieCreateMain.WORLD2),
+								   new MenuOption(250,360,world3,JumpDieCreateMain.WORLD3),
+								   new MenuOption(250,410,(new backdata) as Bitmap,BACK_TO_MAIN));
 			
 			online_menu = new Array(new MenuOption(250,250,playrandom,JumpDieCreateMain.RANDOMONLINE),
-								   new MenuOption(250,400,(new backdata) as Bitmap,BACK_TO_MAIN));
+									new MenuOption(250,300,newestsubmitted,JumpDieCreateMain.NEWESTONLINE),
+									new MenuOption(250,350,mostplayed,JumpDieCreateMain.MOSTPLAYEDONLINE),
+									new MenuOption(250,400,entername,JumpDieCreateMain.SPECIFICONLINE),
+								   new MenuOption(250,450,(new backdata) as Bitmap,BACK_TO_MAIN));
 		}
 		
 		public static var ADVENTURE:Number = -3;
@@ -295,9 +353,13 @@
 		private var a8:Class;
 		private var playrandom:Bitmap = new a8();
 		
-						[Embed(source='..//img//misc//toprated.png')]
+						[Embed(source='..//img//misc//mostplayed.png')]
 		private var a9:Class;
-		private var toprated:Bitmap = new a9();
+		private var mostplayed:Bitmap = new a9();
+		
+								[Embed(source='..//img//misc//newestsubmitted.png')]
+		private var a11:Class;
+		private var newestsubmitted:Bitmap = new a11();
 		
 								[Embed(source='..//img//misc//entername.png')]
 		private var a10:Class;

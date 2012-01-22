@@ -26,7 +26,7 @@
 	LEFT JOIN level_playcount lp ON lp.level_id = l.id
 	WHERE l.id > 0
 	ORDER BY l.date_created DESC
-	LIMIT 10 OFFSET $offset;
+	LIMIT 5 OFFSET $offset;
 	
 	");
 	

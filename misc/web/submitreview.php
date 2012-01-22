@@ -13,4 +13,9 @@
 		INSERT INTO level_review (level_id, rating)
 		VALUES ($level,$review);
 	");
+	if ($query) {
+		echo 'success';
+	} else {
+		echo 'failure';
+	}
 ?>
