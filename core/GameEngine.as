@@ -91,9 +91,14 @@
 			
 			main.stage.focus = main.stage;
 			timer = new Timer(30); //start update cycle
-            timer.addEventListener(TimerEvent.TIMER, update);
+            timer.addEventListener(TimerEvent.TIMER,update);
             timer.start();
+			System.disposeXML(clvlxml);
+			
+			initmem = (System.totalMemory*0.0009765625)/1024;
 		}
+		
+		var initmem:Number;
 		
 		public function loadfromXML(clvlxml:XML) { //loads and adds blocks from xml, called from constructor
 			deathwall = new Array();
@@ -228,7 +233,6 @@
 		private var justWallJumped:Boolean = false;
 		//START GAME ENGINE CODE
 		public function update(e:TimerEvent) { //main update cycle
-		trace(System.totalMemory);
 			//trace(main.numChildren);
 			leveldisplay.text = displayname;
 			inputStackMove(); //moves testguy based on top key in input stack
@@ -253,7 +257,9 @@
 			
 			gameScroll(); //scrolls all the current blocks and player
 			moveUiToFront();
-			
+			if (((System.totalMemory*0.0009765625)/1024)>initmem*1.5){
+				JumpDieCreateMain.gc();
+			}
 		}
 		
 		public function moveUiToFront() {
@@ -304,9 +310,9 @@
 		private function gameScroll() { //scrolls all blocks and player if player is certain height, a lot of wizardry here
 			//speed of scrolling based on distance between player and scrolling start point
 			var SCROLL_SPD = Guy.roundDec((250 - testguy.y)/9,1);
-			if (SCROLL_SPD < 0.5) {
+			/*if (SCROLL_SPD < 0.5) {
 				return;
-			}
+			}*/
 			if (testguy.y < 250) {
 				bgcounter++;
 				if(bgcounter > 0 && bg.y < -1 /*&& Math.abs(testguy.vy) >= 3*/) {
@@ -402,6 +408,7 @@
 			clear();
 			curfunction.numDeath++;
 			curfunction.startLevel();
+			this.curfunction = null;
 		}
 		
 		public function loadnextlevel(hitgoal:Boolean) { //callback to curfunction, next
@@ -411,45 +418,31 @@
 		
 		public function clear() { //clears all from stage and removes keylisteners, called when player dies or otherwise ending game
 			trace("gameengine end");
-			while(main.numChildren > 0) {
-    			main.removeChildAt(0);
-			}
+			JumpDieCreateMain.clearDisplay(main);
 			timer.stop();
 			main.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			main.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-			
-			
-			
-			for (var i = 0; i < blocksarrays.length; i++) {
-				for (var j = 0; j < blocksarrays[i].length; j++) {
-					blocksarrays[i][j]=null;
+			for (var i = 0; i < this.blocksarrays.length; i++) {
+				for (var j = 0; j < this.blocksarrays[i].length; j++) {
+					(blocksarrays[i])[j] = null;
 				}
+				blocksarrays[i] = null;
 			}
-			
+			this.bg = null;
+			this.main = null;
 			this.deathwall = null;
+			this.boostfruits = null;
 			this.boostlist = null;
 			this.textdisplays = null;
+			this.walls = null;
 			this.goals = null;
-			this.boostfruits = null;
 			this.tracks = null;
 			this.particles = null;
-			this.main = null;
-			this.testguy = null;
 			this.timer = null;
-			this.blocksarrays = null;
-			this.storekey = null;
 			this.leveldisplay = null;
-			trace(System.totalMemory);
-			/*try {
-			new LocalConnection().connect('foo');
-			new LocalConnection().connect('foo');
-			} catch (e:*) {}*/
-			System.gc();
-			System.gc();
-			trace("CLEAR");
-			trace(System.totalMemory);
+			this.storekey = null;
 			
-			
+			JumpDieCreateMain.gc();
 		}
 		
 		[Embed(source='..//img//button//menu.png')]

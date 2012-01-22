@@ -46,10 +46,11 @@
 		}
 		
 		private function submitplaycount() {
-			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/updateplaycount.php');
+			var urlRequest:URLRequest = new URLRequest(JumpDieCreateMain.ONLINE_DB_URL+'updateplaycount.php');
 			var vars:URLVariables = new URLVariables;
 			vars.nocache = new Date().getTime(); 
 			vars["level"] = currentlevelinfo.id;
+			vars["checksum"] = JumpDieCreateMain.getChecksum("updateplaycount",currentlevelinfo.id);
 			urlRequest.data = vars;
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE, function(e) {
@@ -59,18 +60,18 @@
 		}
 		
 		private function submitrating(r:Number) {
-			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/submitreview.php');
+			var urlRequest:URLRequest = new URLRequest(JumpDieCreateMain.ONLINE_DB_URL+'submitreview.php');
 			var vars:URLVariables = new URLVariables;
 			vars.nocache = new Date().getTime(); 
 			vars["level"] = currentlevelinfo.id;
 			vars["rating"] = r;
+			vars["checksum"] = JumpDieCreateMain.getChecksum("submitreview",currentlevelinfo.id);
 			urlRequest.data = vars;
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE, function(e) {
 				trace(e.target.data);
 			});
 			urlLoader.load(urlRequest);
-			
 			var dispinfo:String = "Rating submitted!\n\n";
 			dispinfo+="Level Name: "+currentlevelinfo.level_name+"\n";
 			dispinfo+="Creator Name: "+currentlevelinfo.creator_name+"\n";
@@ -144,7 +145,7 @@
 			dispinfo+="Rate it!";
 			
 			var bg:Sprite = new Sprite;
-			bg.addChild(JumpDieCreateMenu.titlebg);
+			bg.addChild(new JumpDieCreateMenu.t1c as Bitmap);
 			var spbubble:Bitmap = JumpDieCreateMenu.getTextBubble();
 			spbubble.alpha = 0.8;
 			bg.addChild(spbubble);

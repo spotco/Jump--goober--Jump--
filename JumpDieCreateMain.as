@@ -38,6 +38,8 @@
 		public var cstage:Stage;
 		public var localdata:SharedObject;
 		
+		public static var ONLINE_DB_URL:String =  "http://spotcos.com/jumpdiecreate/dbscripts/";
+		
 		public function JumpDieCreateMain(stage:Stage) {
 			var _mochiads_game_id:String = "2b4163180653a1e6";
 			Security.allowDomain("spotcos.com");
@@ -50,14 +52,50 @@
 			
 			verifysave();
 			
-			var s:Timer = new Timer(500);
-			s.addEventListener(TimerEvent.TIMER, function() {
-							   trace(System.totalMemory);
-							   });
-							   s.start();
+			//tracemem();
+		}
+		
+		public static function clearDisplay(s:Sprite) {
+			while(s.numChildren > 0) {
+				if (s.getChildAt(0) is Bitmap) {
+					(s.getChildAt(0) as Bitmap).bitmapData.dispose();
+				}
+				s.removeChildAt(0);
+			}
+		}
+		
+		public static function getChecksum(a:String, b:Number):Number {
+			var s = 0;
+			for (var i = 0; i < a.length; i++) {
+				s+=a.charCodeAt(i);
+			}
+			s=s%b;
+			return s;
+		}
+		
+		public static function tracemem() {
+			var s:Timer = new Timer(100);
+			s.addEventListener(TimerEvent.TIMER,function() {
+				trace((System.totalMemory*0.0009765625)/1024);
+			});
+			s.start();
+		}
+		
+		public static function gc() {
+			System.gc();
+			System.gc();
+			try {
+			new LocalConnection().connect('foo');
+			new LocalConnection().connect('foo');
+			} catch (e:*) {}
 		}
 		
 		private function verifysave() {
+			if (false) {
+				localdata.data.world1 = 12;
+				localdata.data.world2 = 12;
+				localdata.data.world3 = 12;
+			}
 			if (!localdata.data.world1 || !localdata.data.world2 || !localdata.data.world3) {
 				localdata.data.world1 = 1;
 				localdata.data.world2 = 1;

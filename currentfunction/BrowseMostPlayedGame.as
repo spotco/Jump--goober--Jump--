@@ -17,6 +17,7 @@
 	import misc.*;
 	import flash.text.engine.SpaceJustifier;
 	import flash.sampler.NewObjectSample;
+	import flash.system.System;
 	
 	public class BrowseMostPlayedGame extends CurrentFunction {
 		var currentgame:GameEngine;
@@ -67,7 +68,7 @@
 		}
 		
 		public function getXMLListURL():String {
-			return 'http://spotcos.com/jumpdiecreate/dbscripts/getmostplayed.php';
+			return JumpDieCreateMain.ONLINE_DB_URL+'getmostplayed.php';
 		}
 		
 		public function getSelectionDisplayMode():Boolean {
@@ -170,9 +171,9 @@
 		}
 		
 		private function remakeUI() {
-			while(main.numChildren > 0) {
-				main.removeChildAt(0);
-			}
+			JumpDieCreateMain.clearDisplay(main);
+			
+			main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
 			main.addChild(this.bg);
 			main.addChild(this.browsedisplay);
 			main.addChild(this.loadingdisplay);
@@ -227,10 +228,16 @@
 		}
 		
 		public override function destroy() {
-			while(main.numChildren > 0) {
-				main.removeChildAt(0);
-			}
+			flash.system.System.disposeXML(this.cxml);
+			flash.system.System.disposeXML(this.clvlxml);
+			JumpDieCreateMain.clearDisplay(main);
+			JumpDieCreateMain.clearDisplay(bg);
+			JumpDieCreateMain.clearDisplay(this.browsedisplay);
+			this.selectionarray = null;
+			this.bg = null;
+			this.browsedisplay = null;
 			main.curfunction = new JumpDieCreateMenu(main);
+			this.main = null;
 		}
 		
 				[Embed(source='..//img//button//next.png')]

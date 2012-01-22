@@ -12,4 +12,13 @@ function sqlconnect() {
 	}
 }
 
+function evalChecksum($a,$b,$test) {
+	$s = 0;
+	for($i = 0; $i < strlen($a); $i++) {
+		$s += ord(substr($a,$i));
+	}
+	$s = $s % $b;
+	return $s == $test;
+}
+
 ?>

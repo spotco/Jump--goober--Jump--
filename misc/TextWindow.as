@@ -52,7 +52,7 @@
 		
 		public function makewindow(questiontext:String) {
 			this.currentfunction = currentfunction;
-			this.addChild(JumpDieCreateMenu.titlebg);
+			this.addChild(new JumpDieCreateMenu.t1c as Bitmap);
 			var b:Bitmap = JumpDieCreateMenu.getTextBubble();
 			b.alpha = 0.7;
 			this.addChild(b);

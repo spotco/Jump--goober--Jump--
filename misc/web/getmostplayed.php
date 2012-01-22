@@ -5,7 +5,7 @@
 	error_reporting(0);
 
 	sqlconnect();
-	if (isset($_REQUEST["offset"])) {
+	if (isset($_REQUEST["offset"]) && is_numeric($_REQUEST["offset"])) {
 		$offset = $_REQUEST["offset"];
 	} else {
 		$offset = 0;

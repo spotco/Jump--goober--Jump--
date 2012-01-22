@@ -63,6 +63,7 @@
 				cx+=dx;
 				cy+=dy;
 			}
+			newp.graphics.endFill();
 			
 			laserSight.graphics.clear();
 			

@@ -126,7 +126,7 @@
 			urlvars.level_data = levelcontents;
 			urlvars.pass = "jumpdiecreatesubmit";
 			
-			var request:URLRequest= new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/submit.php');
+			var request:URLRequest= new URLRequest(JumpDieCreateMain.ONLINE_DB_URL+'submit.php');
 			request.data = urlvars;
 			request.method = URLRequestMethod.POST;
 			
@@ -196,7 +196,7 @@
 		}
 		
 		private function makebg() {
-			bg.addChild(JumpDieCreateMenu.titlebg);
+			bg.addChild(new JumpDieCreateMenu.t1c as Bitmap);
 			var spbubble:Bitmap = JumpDieCreateMenu.getTextBubble();
 			spbubble.alpha = 0.8;
 			bg.addChild(spbubble);

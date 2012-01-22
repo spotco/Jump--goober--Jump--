@@ -38,6 +38,7 @@
 		private var statusdisplay = new TextField();
 		
 		private var desc:Object = new Object();
+		private var titlelogo:Bitmap;
 		
 		public function JumpDieCreateMenu(main:JumpDieCreateMain) {
 			initdesc();
@@ -48,8 +49,9 @@
 			if (!main.pmenufix) {
 				main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
 			}
+			titlelogo = new l1 as Bitmap;
 			titlelogo.x = 70; titlelogo.y = 15;
-			main.addChild(titlebg);
+			main.addChild(new t1c as Bitmap);
 			main.addChild(titlelogo);
 			main.addChild(menubuttonwrapper);
 			use_menu = main_menu;
@@ -62,10 +64,11 @@
 			makemutebutton();
 			
 			checkonline();
+			JumpDieCreateMain.gc();
 		}
 		
 		private function checkonline() {
-			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/getnumlevels.php');
+			var urlRequest:URLRequest = new URLRequest(JumpDieCreateMain.ONLINE_DB_URL+'getnumlevels.php');
 			var vars:URLVariables = new URLVariables;
 			vars.nocache = new Date().getTime(); 
 			urlRequest.data = vars;
@@ -96,7 +99,6 @@
 		private function updateonlinestatus(e:Event) {
 			var t:XML = new XML(e.target.data);
 			statusdisplay.text = "SERVER STATUS: ONLINE with currently "+(t.numlevels.@val-1)+" levels!";
-			trace(t.numlevels.@val);
 		}
 		
 		public function activate() {
@@ -275,9 +277,7 @@
 		}
 		
 		public override function destroy() {
-			while(main.numChildren > 0) {
-    			main.removeChildAt(0);
-			}
+			JumpDieCreateMain.clearDisplay(main);
 			main.stage.removeEventListener(KeyboardEvent.KEY_UP, keyPressed);
 		}
 		
@@ -304,14 +304,12 @@
 		
 		[Embed(source='..//img//misc//menubg0.png')]
 		public static var t1c:Class;
-		public static var titlebg:Bitmap = new t1c();
 		
 						[Embed(source='..//img//misc//menububble.png')]
 		public static var menububble:Class;
 		
 				[Embed(source='..//img//misc//titlelogo.png')]
 		private var l1:Class;
-		private var titlelogo:Bitmap = new l1();
 		
 		[Embed(source='..//img//soundon.png')]
 		private var mb1:Class;

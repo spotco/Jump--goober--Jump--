@@ -341,7 +341,7 @@
 					}
 				}
 				if ( Math.abs((main.stage.mouseX-cboxx)) < 10 || Math.abs(((main.stage.mouseY+currenty)-ststo)) < 10) { //creates boxes, adds to rectlist and main.stage, when makes xml representation and adds it
-					trace("too thin");
+					//trace("too thin");
 				} else if (currenttype==WALL) {
 					var newwall:Wall = new Wall(cboxx,cboxy,main.stage.mouseX-cboxx,main.stage.mouseY-cboxy);
 					xmllist.push('<wall x="'+cboxx+'" y="'+ststo+'" width="'+(main.stage.mouseX-cboxx)+'" height="'+((main.stage.mouseY+currenty)-ststo)+'"></wall>');
@@ -484,6 +484,28 @@
 		public var helpbutton:Sprite;
 		public var bgbutton:Sprite;
 		
+		var gB:ButtonMessage = new ButtonMessage("",this);
+		//note, keep this order the same as the constant numbers
+		var iconBitmap:Array = new Array(gB.blue,
+										 gB.red,
+										 gB.yellow,
+										 gB.green,
+										 gB.texticon,
+										 gB.deleteicon,
+										 gB.moveicon,
+										 gB.boostfruiticon,
+										 gB.trackicon,
+										 gB.trackwallicon,
+										 gB.trackbladeicon,
+										 gB.bossplanticon,
+										 gB.bosscloudicon,
+										 gB.rocketlaunchericon,
+										 gB.lasercwicon,
+										 gB.laserccwicon,
+										 gB.activatetrackwallicon,
+										 gB.rocketbossicon
+								);
+		
 		public function makeui() {//every _button is a wrapper, first child(0) is button (always there), second child(1) is buttonmessage(if exist)
 			menubutton = new Sprite;
 			menubutton.addChild(menubuttonimg);
@@ -504,28 +526,6 @@
 			undobutton.addEventListener(MouseEvent.CLICK,function(){undo();});
 			
 			var passhelper:LevelEditor = this;
-			
-			var gB:ButtonMessage = new ButtonMessage("",this);
-			//note, keep this order the same as the constant numbers
-			var iconBitmap:Array = new Array(gB.blue,
-											 gB.red,
-											 gB.yellow,
-											 gB.green,
-											 gB.texticon,
-											 gB.deleteicon,
-											 gB.moveicon,
-											 gB.boostfruiticon,
-											 gB.trackicon,
-											 gB.trackwallicon,
-											 gB.trackbladeicon,
-											 gB.bossplanticon,
-											 gB.bosscloudicon,
-											 gB.rocketlaunchericon,
-											 gB.lasercwicon,
-											 gB.laserccwicon,
-											 gB.activatetrackwallicon,
-											 gB.rocketbossicon
-									);
 			
 			selectorbutton = new Sprite;
 			var selectorbuttonelements:Sprite = new Sprite;
@@ -604,27 +604,47 @@
 			main.removeChild(infobutton);
 			main.removeChild(helpbutton);
 			
+			menubutton = null;
+			playbutton = null;
+			undobutton = null;
+			selectorbutton = null;
+			infobutton = null;
+			helpbutton = null;
+			
 		}
 		
 		public override function destroy() { //return to main menu
 			clear();
 			var newtextobject:ConfirmationWindow = new ConfirmationWindow("Are you sure you want to quit and erase all your work?",this,
 				function(){ //yes
-					main.curfunction = new JumpDieCreateMenu(main);
 					main.removeChild(newtextobject);
+					main.curfunction = new JumpDieCreateMenu(main);
+					gcfinalize();
 				},
 				function(){ //no
 					remake();
 					main.removeChild(newtextobject);
+					newtextobject = null;
 				}
 			);
 			main.addChild(newtextobject);
 		}
 		
+		private function gcfinalize() {
+			this.main = null;
+			this.playerspawn = null;
+			this.xmllist = null;
+			this.currentgame = null;
+			this.mousePreviewAnimateTimer = null;
+			this.mousePreviewDrawer = null;
+			this.rectList = null;
+			this.bggrid = null;
+			this.gB = null;
+			this.iconBitmap = null;
+		}
+		
 		public function clear() { //remove all from stage, remove all listeners
-			while(main.numChildren > 0) {
-    			main.removeChildAt(0);
-			}
+			JumpDieCreateMain.clearDisplay(main);
 			clearlisteners();
 		}
 		

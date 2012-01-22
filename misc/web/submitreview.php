@@ -9,6 +9,13 @@
 	} else {
 		die("bad param");
 	}
+	
+	if (isset($_REQUEST["checksum"]) && evalChecksum("submitreview",$_REQUEST["level"],$_REQUEST["checksum"])) {
+		echo("success1");
+	} else {
+		die("checksum fail");
+	}
+	
 	$query = mysql_query("
 		INSERT INTO level_review (level_id, rating)
 		VALUES ($level,$review);

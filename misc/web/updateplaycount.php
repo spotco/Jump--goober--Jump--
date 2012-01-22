@@ -8,6 +8,13 @@
 	} else {
 		die("bad param");
 	}
+	
+	if (isset($_REQUEST["checksum"]) && evalChecksum("updateplaycount",$_REQUEST["level"],$_REQUEST["checksum"])) {
+		echo("success");
+	} else {
+		die("checksum fail");
+	}
+	
 	$query = mysql_query("
 		SELECT level_id FROM level_playcount
 		WHERE level_id = $level;

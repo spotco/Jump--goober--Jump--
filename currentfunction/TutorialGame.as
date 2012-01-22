@@ -322,9 +322,8 @@
 		
 		public function credits() {
 			trace("credits");
-			while(main.numChildren > 0) {
-				main.removeChildAt(0);
-			}
+			JumpDieCreateMain.clearDisplay(main);
+			
 			var creditslist:Bitmap = (new TutorialGame.creditslist as Bitmap);
 			creditslist.y = 0;
 			creditslist.alpha = 0;
@@ -448,7 +447,7 @@
 				
 				
 				
-				main.addChild(JumpDieCreateMenu.titlebg);
+				main.addChild(new JumpDieCreateMenu.t1c as Bitmap);
 				main.addChild(JumpDieCreateMenu.getTextBubble());
 				
 				var displaytext:TextField = new TextField; 
@@ -506,9 +505,7 @@
 		
 		function winscreencontinue(e:KeyboardEvent){
 			if (e.keyCode == Keyboard.SPACE) {
-				while(main.numChildren > 0) {
-					main.removeChildAt(0);
-				}
+				JumpDieCreateMain.clearDisplay(main);
 				main.stage.removeEventListener(KeyboardEvent.KEY_UP, winscreencontinue);
 				loadNextLevel();
 			}
@@ -523,14 +520,16 @@
 		}
 		
 		public override function destroy() {
-			while(main.numChildren > 0) {
-				main.removeChildAt(0);
-			}
+			JumpDieCreateMain.clearDisplay(main);
 			this.main.cstage.removeEventListener(KeyboardEvent.KEY_UP, kblmanager);
 			main.curfunction = null;
 			this.currentGame = null;
 			this.levels = null;
 			//main.stop();
+			for(var xml:XML in levels) {
+				flash.system.System.disposeXML(xml);
+			}
+			
 			main.curfunction = new JumpDieCreateMenu(main);
 		}
 		

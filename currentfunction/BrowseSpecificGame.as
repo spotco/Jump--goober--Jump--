@@ -57,7 +57,7 @@
 		}
 		
 		public override function getXMLListURL():String {
-			return 'http://spotcos.com/jumpdiecreate/dbscripts/getbyname.php';
+			return JumpDieCreateMain.ONLINE_DB_URL+'getbyname.php';
 		}
 		
 		public override function addURLParam(a:URLVariables):URLVariables {

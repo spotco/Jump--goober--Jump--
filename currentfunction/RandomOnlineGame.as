@@ -11,6 +11,7 @@
 	import flash.net.*;
 	import flash.xml.*;
 	import flash.media.Sound;
+	import flash.system.*;
 		import blocks.*;
 	import core.*;
 	import currentfunction.*;
@@ -46,7 +47,7 @@
 					}
 			  });
 			dietimer.start();
-			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/getrandomid.php');
+			var urlRequest:URLRequest = new URLRequest(JumpDieCreateMain.ONLINE_DB_URL+'getrandomid.php');
 			urlRequest.data = makeUrlVars();
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE, idRecieved);
@@ -71,11 +72,11 @@
 			currentlevelinfo.ratingavg = tarxml.@ratingavg;
 			currentlevelinfo.ratingcount = tarxml.@ratingcount;
 			
-			trace("LEVEL_NAME: "+currentlevelinfo.level_name);
+			/*trace("LEVEL_NAME: "+currentlevelinfo.level_name);
 			trace("CREATOR_NAME: "+currentlevelinfo.creator_name);
-			trace("DATE_CREATED: "+currentlevelinfo.date_created);
+			trace("DATE_CREATED: "+currentlevelinfo.date_created);*/
 			
-			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/getbyid.php');
+			var urlRequest:URLRequest = new URLRequest(JumpDieCreateMain.ONLINE_DB_URL+'getbyid.php');
 			var vars:URLVariables = makeUrlVars();
 			vars.id = currentlevelinfo.id;
 			urlRequest.data = vars;
@@ -135,19 +136,20 @@
 		
 		public override function destroy() {
 			die = true;
-			//if (currentGame != null || error) {
-				while(main.numChildren > 0) {
-					main.removeChildAt(0);
-				}
-				main.stop();
-				dietimer.stop();
-				main.curfunction = new JumpDieCreateMenu(main);
-			//}
+			JumpDieCreateMain.clearDisplay(main);
+			main.stop();
+			dietimer.stop();
+			main.curfunction = new JumpDieCreateMenu(main);
+			System.disposeXML(this.currentlevelxml);
+			this.currentGame = null;
+			this.main = null;
+			this.dietimer = null;
+			this.currentlevelinfo = null;
 		}
 		
 		private function makeloadbg() {
 			var bg:Sprite = new Sprite;
-			bg.addChild(JumpDieCreateMenu.titlebg);
+			bg.addChild(new JumpDieCreateMenu.t1c as Bitmap);
 			var spbubble:Bitmap = JumpDieCreateMenu.getTextBubble();
 			spbubble.alpha = 0.8;
 			bg.addChild(spbubble);

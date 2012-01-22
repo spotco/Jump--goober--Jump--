@@ -25,7 +25,7 @@
 		}
 		
 		public override function getXMLListURL():String {
-			return 'http://spotcos.com/jumpdiecreate/dbscripts/getrecent.php';
+			return JumpDieCreateMain.ONLINE_DB_URL+'getrecent.php';
 		}
 		
 		public override function getSelectionDisplayMode():Boolean {
