@@ -150,6 +150,41 @@
 			return false;
 		}
 		
+		public override function simpleupdate(g:GameEngine) {
+			if (!hasFoundDirection) {
+				hasFoundDirection = true;
+				findTrack(g);
+			}
+			if (speed == 0) {
+				return false;
+			}
+			if (this.direction == Track.VERT) {
+				if (directiontoggle) { //up
+					this.y-=this.speed;
+					if (this.y-g.currenty+this.h/2 < Math.min(this.start,this.end)) {
+						directiontoggle = !directiontoggle;
+					}
+				} else { //down
+					this.y+=this.speed;
+					if (this.y-g.currenty+this.h/2 > Math.max(this.start,this.end)) {
+						directiontoggle = !directiontoggle;
+					}
+				}
+			} else if (this.direction == Track.HORIZ) {
+				if (directiontoggle) { //left
+					this.x-=this.speed;
+					if (this.x+this.w/2 < Math.min(this.start,this.end)) {
+						directiontoggle = !directiontoggle;
+					}
+				} else { //right
+					this.x+=this.speed;
+					if (this.x+this.w/2 > Math.max(this.start,this.end)) {
+						directiontoggle = !directiontoggle;
+					}
+				}
+			}
+		}
+		
 		private function guyhitting(g:GameEngine):Boolean {
 			for each (var w:Wall in g.walls) {
 				if (w != this && g.testguy.hitTestObject(w.hitbox)) {

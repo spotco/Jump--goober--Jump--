@@ -63,8 +63,15 @@
 			main.cstage.focus = main.cstage;
 			makemutebutton();
 			
+			makelogo();
+			
 			checkonline();
 			JumpDieCreateMain.gc();
+		}
+		
+		private function makelogo() {
+			var logo:TextField = SubmitMenu.maketextdisplay(0,505,"SPOTCO(www.spotcos.com)",12,200,30);
+			main.addChild(logo);
 		}
 		
 		private function checkonline() {

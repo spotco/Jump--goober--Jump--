@@ -309,6 +309,7 @@
 		public static function SIG_ONE(n:Number,tar:Number):Number {
 			if (Math.abs(n) > tar) {
 				if (n < 0) {
+
 					return -tar;
 				} else if (n > 0) {
 					return tar;

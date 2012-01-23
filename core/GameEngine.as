@@ -37,6 +37,10 @@
 		public var tracks:Array;
 		public var particles:Array;
 		
+		public var particlesreuse:Array;
+		public var rocketparticlesreuse:Array;
+		public var bulletsreuse:Array;
+		
 		public var testguy:Guy; //player, dunno why it's called testguy (another old jump or die thing?)
 		
 		public var timer:Timer;
@@ -91,9 +95,8 @@
 			
 			main.stage.focus = main.stage;
 			timer = new Timer(30); //start update cycle
-            timer.addEventListener(TimerEvent.TIMER,update);
+            timer.addEventListener(TimerEvent.TIMER,update,false,100,false);
             timer.start();
-			System.disposeXML(clvlxml);
 			
 			initmem = (System.totalMemory*0.0009765625)/1024;
 		}
@@ -109,6 +112,11 @@
 			boostfruits = new Array();
 			tracks = new Array();
 			particles = new Array();
+			
+			this.particlesreuse = new Array();
+			this.rocketparticlesreuse = new Array();
+			this.bulletsreuse = new Array();
+			
 			for each (var node:XML in clvlxml.boost) {
 				var boosk:Boost = new Boost(node.@x,node.@y,node.@width,node.@height);
 				boostlist.push(boosk);
@@ -231,9 +239,11 @@
 		}
 		
 		private var justWallJumped:Boolean = false;
+		var gctimer:Number = 0;
 		//START GAME ENGINE CODE
 		public function update(e:TimerEvent) { //main update cycle
 			//trace(main.numChildren);
+			//trace(((System.totalMemory*0.0009765625)/1024));
 			leveldisplay.text = displayname;
 			inputStackMove(); //moves testguy based on top key in input stack
 			
@@ -242,23 +252,36 @@
 				return;
 			}
 			testguy.update(walls,justWallJumped); //loops through walls and checks collision, also updates player position based on velocity (not smart, I know)
+			
+			
 			for each(var a:Array in blocksarrays) {
 				for each(var b:BaseBlock in a) {
 					if (!b.activated) {
 						continue;
 					}
-					if (b.update(this)) {
-						return;
+					if (b.y > -500 && b.y < 1000) {
+						if (b.update(this)) {
+							return;
+						}
+					} else if (b.y <= -500) {
+						b.simpleupdate(this);
 					}
 					clearAbove(b);
 					clearBelow(b,a,a.indexOf(b));
 				}
 			}
 			
+			//trace("updates: "+c+" mainchildren:"+main.numChildren);
+			
 			gameScroll(); //scrolls all the current blocks and player
 			moveUiToFront();
-			if (((System.totalMemory*0.0009765625)/1024)>initmem*1.5){
+			if (gctimer > 0) {
+				gctimer--;
+			}
+			if ( ((System.totalMemory*0.0009765625)/1024)>initmem*1.5 && gctimer == 0){
+				trace("GARBAGE COLLECT");
 				JumpDieCreateMain.gc();
+				gctimer = 500;
 			}
 		}
 		
@@ -283,9 +306,11 @@
 			if (b.y <= -500 && b.stage != null) {
 				main.removeChild(b);
 				b.memRemoved = true;
+				b.visible = false;
 			} else if (b.y >= -500 && b.y <= 1000 && b.stage == null && b.memRemoved) {
 				main.addChild(b);
 				b.memRemoved = false;
+				b.visible = true;
 			}
 		}
 		
@@ -293,6 +318,7 @@
 			if(b.y >= 1000 && b.stage != null) {
 				main.removeChild(b);
 				a.splice(i,1);
+				b.visible = false;
 			}
 		}
 		
@@ -328,6 +354,9 @@
 				}
 				testguy.y +=SCROLL_SPD;
 				currenty += SCROLL_SPD;
+			}
+			if (bg.y > 0) {
+				bg.y = 0;
 			}
 		}
 		
@@ -441,7 +470,9 @@
 			this.timer = null;
 			this.leveldisplay = null;
 			this.storekey = null;
-			
+			this.particlesreuse = null;
+			this.rocketparticlesreuse = null;
+			this.bulletsreuse = null;
 			JumpDieCreateMain.gc();
 		}
 		

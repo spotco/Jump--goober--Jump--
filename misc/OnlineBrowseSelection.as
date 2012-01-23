@@ -47,7 +47,7 @@
 					star.addChild(new ReviewSubmitMenu.starempty as Bitmap);
 				}
 				star.x = 164+31*i;
-				star.y = 31;
+				star.y = 30;
 				this.addChild(star);
 			}
 		}

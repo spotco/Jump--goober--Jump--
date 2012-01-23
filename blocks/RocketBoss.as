@@ -68,6 +68,10 @@
 			this.scaleY = 0.75;
 		}
 		
+		public override function simpleupdate(g:GameEngine){
+			update(g);
+		}
+		
 		public override function update(g:GameEngine):Boolean {
 			var dx:Number = Math.sin(bossbody.rotation*(Math.PI/180));
 			var dy:Number = -Math.cos(bossbody.rotation*(Math.PI/180));
@@ -145,7 +149,15 @@
 		
 		private function dieExplode(g:GameEngine) {
 			for (var i = 0; i < 6; i++) {
-				var particle:RocketParticle = new RocketParticle;
+				
+				var particle:RocketParticle;
+				
+				if (g.rocketparticlesreuse.length == 0) {
+					particle = new RocketParticle;
+				} else {
+					particle = g.rocketparticlesreuse.pop();
+				}
+				
 				var randSpd = Math.random()*10;
 				particle.graphics.beginFill(0xcc6666);
 				particle.graphics.drawCircle(0,0,3*Math.random());
@@ -159,7 +171,15 @@
 			}
 			if (deathanimcounter == 0) {
 				for (var i = 0; i < 24; i++) {
-					var particle:RocketParticle = new RocketParticle;
+					
+					var particle:RocketParticle;
+					
+					if (g.rocketparticlesreuse.length == 0) {
+						particle = new RocketParticle;
+					} else {
+						particle = g.rocketparticlesreuse.pop();
+					}
+					
 					var randSpd = Math.random()*10;
 					particle.graphics.beginFill(0xcc6666);
 					particle.graphics.drawCircle(0,0,7*Math.random());
@@ -214,7 +234,15 @@
 			if (doParticles) {
 				dx = dx*5;
 				dy = dy*5;
-				var newp:RocketParticle = new RocketParticle();
+				
+				var newp:RocketParticle;
+				
+				if (g.rocketparticlesreuse.length == 0) {
+					newp = new RocketParticle;
+				} else {
+					newp = g.rocketparticlesreuse.pop();
+				}
+				
 				newp.x = this.x + (dx* -12);
 				newp.y = this.y + (dy* -12);
 				newp.vx = -dx+(Math.random()*6)-1.5;

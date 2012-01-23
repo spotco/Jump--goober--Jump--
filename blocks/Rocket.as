@@ -65,7 +65,14 @@
 				}
 			}
 			
-			var newp:RocketParticle = new RocketParticle();
+			var newp:RocketParticle;
+			
+			if (g.rocketparticlesreuse.length == 0) {
+				newp = new RocketParticle;
+			} else {
+				newp = g.rocketparticlesreuse.pop();
+			}
+			
 			newp.x = this.x +(dx* -2);
 			newp.y = this.y +(dy* -2);
 			newp.vx = -dx+(Math.random()*3)-1.5;
@@ -79,7 +86,14 @@
 		
 		public function explode(g:GameEngine) {
 			for (var i = 0; i < 24; i++) {
-				var particle:RocketParticle = new RocketParticle;
+				var particle:RocketParticle;
+				
+				if (g.rocketparticlesreuse.length == 0) {
+					particle = new RocketParticle;
+				} else {
+					particle = g.rocketparticlesreuse.pop();
+				}
+				
 				var randSpd = Math.random()*10;
 				particle.graphics.beginFill(0xcc6666);
 				particle.graphics.drawCircle(0,0,3*Math.random());

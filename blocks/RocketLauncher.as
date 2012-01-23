@@ -71,7 +71,15 @@
 					var dy:Number = +Math.cos(launcherContainer.rotation*(Math.PI/180))*40;
 					var dx:Number = -Math.sin(launcherContainer.rotation*(Math.PI/180))*40;
 					for (var i = 0; i < 24; i++) {
-						var particle:RocketParticle = new RocketParticle;
+						var particle:RocketParticle;
+						
+						if (g.rocketparticlesreuse.length == 0) {
+							particle = new RocketParticle;
+						} else {
+							particle = g.rocketparticlesreuse.pop();
+						}
+						
+						
 						var randSpd = Math.random()*10;
 						particle.graphics.beginFill(0xcc6666);
 						particle.graphics.drawCircle(0,0,5*Math.random());

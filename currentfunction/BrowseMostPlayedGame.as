@@ -76,6 +76,9 @@
 		}
 		
 		private function makexmldisplay(e:Event) {
+			if (cxml != null) {
+				System.disposeXML(cxml);
+			}
 			cxml = new XML(e.target.data);
 			browsedisplay = new Sprite;
 			this.selectionarray = new Array;
@@ -146,6 +149,9 @@
 		}
 		
 		private function newLevelRecieved(e:Event) {
+			if (clvlxml != null) {
+				System.disposeXML(clvlxml);
+			}
 			this.clvlxml = new XML(e.target.data);
 			main.removeChild(this.browsedisplay);
 			main.removeChild(this.loadingdisplay);

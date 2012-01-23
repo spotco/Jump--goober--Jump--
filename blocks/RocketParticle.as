@@ -31,6 +31,9 @@
 					g.main.removeChild(this);
 				}
 				g.particles.splice(g.particles.indexOf(this),1);
+				this.graphics.clear();
+				this.alpha = 1;
+				g.rocketparticlesreuse.push(this);
 				
 			}
 			this.vy+=ax;

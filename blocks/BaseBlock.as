@@ -37,6 +37,10 @@
 			return false;			
 		}
 		
+		public function simpleupdate(g:GameEngine) {
+			
+		}
+		
 		public function gameScroll(scroll_spd:Number) {
 			this.y += scroll_spd;
 		}

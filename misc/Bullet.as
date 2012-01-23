@@ -36,6 +36,7 @@
 				}
 				if (this.stage != null) {
 					g.main.removeChild(this);
+					g.bulletsreuse.push(this);
 					//trace("bullet removed");
 				}
 				//this.visible = false;

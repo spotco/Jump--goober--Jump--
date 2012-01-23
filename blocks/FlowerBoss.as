@@ -66,7 +66,16 @@
 					bulletspeed-=2;
 				}
 				var angle:Number = -(headwrapper.rotation+90);
-				var newbullet:Bullet = new Bullet(this.x + 253,this.y - 48,-Math.cos(angle*(Math.PI/180))*7,-Math.sin(angle*(Math.PI/180))*7);
+				var newbullet:Bullet;
+				if (g.bulletsreuse.length == 0) {
+					newbullet = new Bullet(this.x + 253,this.y - 48,-Math.cos(angle*(Math.PI/180))*7,-Math.sin(angle*(Math.PI/180))*7);
+				} else {
+					newbullet = g.bulletsreuse.pop();
+					newbullet.x = this.x + 253;
+					newbullet.y = this.y - 48;
+					newbullet.vx = -Math.cos(angle*(Math.PI/180))*7;
+					newbullet.vy = -Math.sin(angle*(Math.PI/180))*7;
+				}
 				g.deathwall.push(newbullet);
 				g.main.addChild(newbullet);
 				

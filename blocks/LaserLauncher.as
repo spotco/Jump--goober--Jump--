@@ -40,11 +40,19 @@
 						this.removeChild(p);
 					}
 					particletrail.splice(particletrail.indexOf(p),1);
+					p.graphics.clear();
+					p.alpha = 1;
+					g.particlesreuse.push(p);
 				}
 				
 			}
 			
-			var newp:Particle = new Particle;
+			var newp:Particle;
+			if (g.particlesreuse.length == 0) {
+				newp = new Particle;
+			} else {
+				newp = g.particlesreuse.pop();
+			}
 			this.addChild(newp);
 			particletrail.push(newp);
 			newp.graphics.beginFill(0xFF0000);
@@ -73,6 +81,10 @@
 				laserSight.graphics.lineTo(0,dist);
 			}
 			return false;
+		}
+		
+		public override function simpleupdate(g:GameEngine) {
+			launcherContainer.rotation+=rotspd;
 		}
 		
 		public override function type():String {

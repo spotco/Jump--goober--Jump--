@@ -12,6 +12,7 @@
 		public var animarray:Array;
 		public var animframe:Number;
 		public var animslowtimer:Number;
+		
 
 		public function Boost(x:Number,y:Number,w:Number,h:Number) {
 			//boost pad that accelerates upward (used to provide extra jumps)
@@ -32,9 +33,9 @@
 			animframe = 0;
 			animslowtimer = 0;
 			animarray = [makeBitmap(yellowblock0), makeBitmap(yellowblock1),makeBitmap(yellowblock2),makeBitmap(yellowblock3),makeBitmap(yellowblock4)];
-			graphics.beginBitmapFill(animarray[animframe]);
-			graphics.drawRect(0, 0, this.w,this.h);
-			graphics.endFill();
+				graphics.beginBitmapFill(animarray[0]);
+				graphics.drawRect(0, 0, this.w,this.h);
+				graphics.endFill();
 		}
 		
 		public override function update(g:GameEngine):Boolean {
@@ -59,7 +60,7 @@
 				graphics.clear();
 				graphics.beginBitmapFill(animarray[animframe]);
 				graphics.drawRect(0, 0, this.w,this.h);
-				graphics.endFill(); 
+				graphics.endFill();
 				animframe++;
 				if (animframe > animarray.length-1) {
 					animframe = 0;

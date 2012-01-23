@@ -61,7 +61,7 @@
 			if (this.stage != null) {
 				g.main.setChildIndex(this,g.main.numChildren-1);
 			}
-			backgroundupdate();
+			backgroundupdate(g);
 			if (tracking) {
 				cloudflash(0);
 				cloudtrack(g.testguy.x,7);
@@ -128,11 +128,15 @@
 			}
 		}
 		
-		private function backgroundupdate() {
+		private function backgroundupdate(g:GameEngine) {
 			//trace(particlesarray.length + " " + backgroundcontainer.numChildren);
-			
 			for (var i = 1; i < (Math.random()*snowspeed); i++) {
-				var newp:Particle = new Particle;
+				var newp:Particle;
+				if (g.particlesreuse.length == 0) {
+					newp = new Particle;
+				} else {
+					newp = g.particlesreuse.pop();
+				}
 				newp.vx = 7;
 				newp.vy = 5;
 				if (Math.round(Math.random()*10)>5) {
@@ -151,6 +155,11 @@
 				if ((p.x > 500 || p.y > 520)&& p.stage != null ) {
 					backgroundcontainer.removeChild(p);
 					particlesarray.splice(particlesarray.indexOf(p),1);
+					p.graphics.clear();
+					p.alpha = 1;
+					p.x = 0;
+					p.y = 0;
+					g.particlesreuse.push(p);
 				}
 			}
 		}

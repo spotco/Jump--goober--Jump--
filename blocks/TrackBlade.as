@@ -36,8 +36,13 @@
 		}
 		
 		public override function update(g:GameEngine):Boolean {
-			wrapper.rotation+=8;
-			
+			return rupdate(g,false);
+		}
+		
+		private function rupdate(g:GameEngine,simple:Boolean):Boolean {
+			if (!simple) {
+				wrapper.rotation+=8;
+			}
 			if (this.stage != null) {
 				g.main.setChildIndex(this,g.main.numChildren-1);
 			}
@@ -77,7 +82,7 @@
 				}
 				
 			}
-			if (hitbox.hitTestObject(g.testguy)) {
+			if (!simple && hitbox.hitTestObject(g.testguy)) {
 				if (!g.main.mute) { g.main.explodesound.play(); }
 				g.timer.stop();
 				g.testguy.explode();
@@ -88,6 +93,10 @@
 			}
 			
 			return false;
+		}
+		
+		public override function simpleupdate(g:GameEngine) {
+			rupdate(g,true);
 		}
 		
 		private function findTrack(g:GameEngine) {
