@@ -45,17 +45,17 @@
 		}
 		
 		public override function update(g:GameEngine):Boolean {
-			if (g.testguy.hitTestObject(this.frictionbox)) {
+			if (g.testguy.hitbox.hitTestObject(this.frictionbox)) {
 				this.direction = Track.VERT;
 				this.directiontoggle = true;
 				this.speed = 3;
 				isactive = true;
-			} else if (g.testguy.hitTestObject(this.lefthitbox)) {
+			} else if (g.testguy.hitbox.hitTestObject(this.lefthitbox)) {
 				this.direction = Track.HORIZ;
 				this.directiontoggle = true;
 				this.speed = 3;
 				isactive = true;
-			} else if (g.testguy.hitTestObject(this.righthitbox)) {
+			} else if (g.testguy.hitbox.hitTestObject(this.righthitbox)) {
 				this.direction = Track.HORIZ;
 				this.directiontoggle = false;
 				this.speed = 3;

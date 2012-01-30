@@ -1,0 +1,6 @@
+fix world 1 bg graphics fade
+ingame mute button
+menu  button other side UI fix
+level editor block selector BIGGER
+more obvious leveleditor moveup/down
+add more to credits(new logo, sound by spotco)

@@ -6,6 +6,7 @@
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import flash.media.SoundTransform;
 	
 	public class Boost extends BaseBlock {
 		
@@ -38,17 +39,30 @@
 				graphics.endFill();
 		}
 		
+		var playstatus = false;
+		var playcooldown = 0;
+		static var t:SoundTransform = new SoundTransform(0.5);
+		
 		public override function update(g:GameEngine):Boolean {
 			if (this.stage != null) {
 				g.main.setChildIndex(this,g.main.getChildIndex(g.bg)+1);
 			}
 			this.updateAnimation();
-			if (g.testguy.hitTestObject(this)) {
+			if (playcooldown > 0) {
+				playcooldown--;
+			}
+			var hit = g.testguy.hitTestObject(this);
+			if (hit) {
+				if (!playstatus && playcooldown == 0) {
+					g.main.playsfx(JumpDieCreateMain.boostsound,t);
+					playcooldown = 35;
+				}
 				if (g.testguy.vy > -20) {
 					g.testguy.vy -= 3;
 				}
 				g.testguy.jumpCounter+=4;
 			}
+			playstatus = hit;
 			return false;
 		}
 		

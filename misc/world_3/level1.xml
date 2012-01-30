@@ -7,8 +7,8 @@
   <wall x="453" y="-80" width="38" height="-219"/>
   <boostfruit x="282" y="-267" width="24" height="28" text=""/>
   <wall x="55" y="-353" width="-40" height="-222"/>
-  <textfield x="18" y="-120" width="156" height="70" text="It looks like this is still working. Better watch out!"/>
-  <textfield x="307" y="133" text="These are some ancient ruins. What treasures could lie ahead?"/>
+  <textfield x="18" y="-120" width="156" height="70" text="Yikes! Better watch out!"/>
+  <textfield x="307" y="133" text="These are some ancient ruins. What could lie ahead?"/>
   <boostfruit x="243" y="-574" width="24" height="28" text=""/>
   <wall x="441" y="-657" width="43" height="-220"/>
   <wall x="321" y="-813" width="-232" height="-36"/>

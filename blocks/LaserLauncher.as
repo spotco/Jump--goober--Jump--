@@ -6,6 +6,9 @@
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import flash.media.SoundTransform;
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
 	
 	public class LaserLauncher extends RocketLauncher {
 		
@@ -19,6 +22,7 @@
 			laserSight.y = 32-68/2-9;
 			launcherContainer.addChild(laserSight);
 			this.rotspd = rotspd;
+			
 		}
 		
 		public override function update(g:GameEngine):Boolean {
@@ -59,7 +63,7 @@
 			
 			outerLoop: while(Math.sqrt(Math.pow(cx-this.x,2)+Math.pow(cy-this.y,2))<300) {
 				for each (var wall:Wall in g.walls) {
-					if (g.testguy.hitTestPoint(cx,cy)) {
+					if (g.testguy.hitbox.hitTestPoint(cx,cy)) {
 						return guyhit(g);
 					}
 					if (wall.hitbox.hitTestPoint(cx,cy)) {
@@ -67,6 +71,9 @@
 						break;
 					}
 				}
+
+				
+				
 				newp.graphics.drawCircle(0-this.x+cx,0-this.y+cy,3*Math.random());
 				cx+=dx;
 				cy+=dy;
@@ -82,6 +89,7 @@
 			}
 			return false;
 		}
+		
 		
 		public override function simpleupdate(g:GameEngine) {
 			launcherContainer.rotation+=rotspd;

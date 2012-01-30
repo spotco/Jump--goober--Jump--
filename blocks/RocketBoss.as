@@ -109,6 +109,7 @@
 			}
 			
 			if (x < -100 || x > 600 || y < -100 || y > 600) {
+				g.main.playsfx(JumpDieCreateMain.rocketbosssound);
 				side = !side;
 				if (side == LEFT) {
 					this.x = -99;
@@ -126,7 +127,7 @@
 		
 		private function die(g):Boolean {
 			//do manual 2 circle hitbox calculation to improve accuracy
-			var calcdist:Number = Math.sqrt(Math.pow((this.x+hitbox.x)-(g.testguy.x+g.testguy.width/2),2) + Math.pow((this.y+hitbox.y)-(g.testguy.y+g.testguy.height/2),2));
+			var calcdist:Number = Math.sqrt(Math.pow((this.x+hitbox.x)-(g.testguy.x+g.testguy.width/2),2) + Math.pow((this.y+hitbox.y)-(g.testguy.y+2+g.testguy.height/2),2));
 			if (calcdist < (50+5)) {
 				return guyhit(g);
 			} else {

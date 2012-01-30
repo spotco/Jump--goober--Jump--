@@ -92,6 +92,7 @@
 					(r as Rocket).explode(g);
 				}
 			}
+			g.main.playsfx(JumpDieCreateMain.rocketbossdiesound);
 			theboss.tempdeathanim();
 		}
 		

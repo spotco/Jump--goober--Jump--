@@ -35,6 +35,8 @@
 		
 		var startsong = true;
 		
+		var KILL = false;
+		
 		public function BrowseMostPlayedGame(main:JumpDieCreateMain,noload:Boolean = false) {
 			this.main = main;
 			initbg();
@@ -102,6 +104,10 @@
 				});
 				this.selectionarray.push(o);
 				o.addEventListener(MouseEvent.CLICK, function(e:MouseEvent) {
+					if (KILL) {
+						return;
+					}
+					KILL = true;
 					loadwithid(e.currentTarget.info);   
 				});
 			}
@@ -153,9 +159,16 @@
 				System.disposeXML(clvlxml);
 			}
 			this.clvlxml = new XML(e.target.data);
-			main.removeChild(this.browsedisplay);
-			main.removeChild(this.loadingdisplay);
-			main.removeChild(this.bg);
+			if (this.browsedisplay.stage != null) {
+				main.removeChild(this.browsedisplay);
+			}
+			if (this.loadingdisplay.stage != null) {
+				main.removeChild(this.loadingdisplay);
+			}
+			if (this.bg.stage != null) {
+				main.removeChild(this.bg);
+			}
+			KILL = false;
 			startLevel();
 		}
 		

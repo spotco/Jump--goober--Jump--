@@ -21,6 +21,7 @@
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import flash.media.SoundTransform;
 	
 	public class GameEngine {
 		public var displayname:String;
@@ -275,14 +276,14 @@
 			
 			gameScroll(); //scrolls all the current blocks and player
 			moveUiToFront();
-			if (gctimer > 0) {
+			/*if (gctimer > 0) {
 				gctimer--;
 			}
 			if ( ((System.totalMemory*0.0009765625)/1024)>initmem*1.5 && gctimer == 0){
 				trace("GARBAGE COLLECT");
 				JumpDieCreateMain.gc();
 				gctimer = 500;
-			}
+			}*/
 		}
 		
 		public function moveUiToFront() {
@@ -324,7 +325,9 @@
 		
 		private function checkOffScreenDeath() : Boolean { //checks if fallen offscreen
 			//if (testguy.y > 490 || testguy.x < -25 || testguy.x > 525 || testguy.y < -300) {
+			
 			if (testguy.x < -25 || testguy.x > 525 || testguy.y > 505 || testguy.y < -300) {
+				this.main.playsfx(JumpDieCreateMain.fallsound,null);
 				timer.stop();
 				reload(); //offscreen
 				return true;
@@ -405,7 +408,7 @@
 					} else {
                			testguy.vx = 5;
 					}
-				} else if (  (topkey == Keyboard.SPACE || topkey == Keyboard.ENTER || topkey == Keyboard.W || topkey == Keyboard.Z) && ( (testguy.canJump && testguy.hashitwall || testguy.justtouched > 0)||testguy.boost > 0)) {
+				} else if (  (topkey == Keyboard.SPACE || topkey == Keyboard.ENTER || topkey == Keyboard.UP|| topkey == Keyboard.W || topkey == Keyboard.Z) && ( (testguy.canJump && testguy.hashitwall || testguy.justtouched > 0)||testguy.boost > 0)) {
 					if (!testguy.jumpavailable) { //cooldown not off, stop
 						return;
 					} else { //else set cooldown on, set cooldown to time
@@ -416,6 +419,7 @@
 						testguy.boost--;
 					}
 					storekey.pop();
+					
 					testguy.jumpCounter++; //dunno what this is for lol
 					testguy.vy = -15;
 					
@@ -427,10 +431,38 @@
 						//if wall is to the right, bounce off and this is to reduce friction-loss for next cycle
 						justWallJumped = true;
 					}
+					playjumpsound();
 				}
 			}
 		}
 		//END GAME ENGINE CODE
+		
+		var soundcount = 1;
+		var prevdate:Date = new Date();
+		var st:SoundTransform = new SoundTransform(0.5);
+		
+		private function playjumpsound() {
+			//var i:Number = Math.floor((Math.random()*4))+1;
+			var curdate:Date = new Date();
+			var diftime = curdate.getTime() - prevdate.getTime();
+			prevdate = curdate;
+			if (diftime < 600) {
+				soundcount++;
+			} else {
+				soundcount = 1;
+			}
+			var i = soundcount;
+			if (i == 1) {
+				this.main.playsfx(JumpDieCreateMain.jump1sound,st);
+			} else if (i == 2) {
+				this.main.playsfx(JumpDieCreateMain.jump2sound,st);
+			} else if (i == 3) {
+				this.main.playsfx(JumpDieCreateMain.jump3sound,st);
+			} else {
+				this.main.playsfx(JumpDieCreateMain.jump4sound,st);
+			}
+							   
+		}
 		
 		
 		public function reload() { //callback to curfunction, should reload game

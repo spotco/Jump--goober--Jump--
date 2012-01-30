@@ -87,7 +87,7 @@
 				g.main.setChildIndex(this,g.main.numChildren-1);
 			}
 			
-			if (g.testguy.hitTestObject(this)) {
+			if (g.testguy.innerhitbox.hitTestObject(this)) {
 				return guyhit(g);
 			}
 			return false;
@@ -95,7 +95,7 @@
 		
 		public static function guyhit(g:GameEngine):Boolean {
 			g.moveUiToFront();
-			if (!g.main.mute) { g.main.explodesound.play(); }
+			g.main.playsfx(JumpDieCreateMain.explodesound);
 			g.timer.stop();
 			g.testguy.explode();
 			g.timer = new Timer(1200,1);

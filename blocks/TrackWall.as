@@ -67,17 +67,17 @@
 					if (this.y-g.currenty+this.h/2 < Math.min(this.start,this.end)) {
 						directiontoggle = !directiontoggle;
 					}
-					if (this.hitbox.hitTestObject(g.testguy)) { 
+					if (this.hitbox.hitTestObject(g.testguy.hitbox)) { 
 						g.testguy.y-=this.speed;
 						//may need to check for up/down cases, but it seems like this works
-						while(this.hitbox.hitTestObject(g.testguy)) { //for non-standard sizes, keep moving until out (rounding error?)
+						while(this.hitbox.hitTestObject(g.testguy.hitbox)) { //for non-standard sizes, keep moving until out (rounding error?)
 							g.testguy.y-=0.1;
 						}
 						return checkSmash(g);
 					}
 				} else { //down
 					var hitfriction:Boolean = false;
-					if (this.frictionbox.hitTestObject(g.testguy)) { //if guy is right above the block pulldown and remember to do extra check
+					if (this.frictionbox.hitTestObject(g.testguy.hitbox)) { //if guy is right above the block pulldown and remember to do extra check
 						g.testguy.y+=this.speed;
 						
 						hitfriction = true;
@@ -85,16 +85,16 @@
 					}
 					this.y+=this.speed;
 					if (hitfriction) { //push for above
-						while(this.hitbox.hitTestObject(g.testguy) && g.testguy.y < this.y) {
+						while(this.hitbox.hitTestObject(g.testguy.hitbox) && g.testguy.y < this.y) {
 							g.testguy.y-=0.1;
 						}
 						for each (var b:Wall in g.walls) { //for frictionbox drag down into another wall
-							while (g.testguy.hitTestObject(b.hitbox)) {
+							while (g.testguy.hitbox.hitTestObject(b.hitbox)) {
 								g.testguy.y-=0.1;
 							}
 						}
 					}
-					while (this.hitbox.hitTestObject(g.testguy) && g.testguy.y > this.y) { //push for below
+					while (this.hitbox.hitTestObject(g.testguy.hitbox) && g.testguy.y > this.y) { //push for below
 						g.testguy.y+=0.1;
 					}
 					
@@ -112,14 +112,14 @@
 					if (this.x+this.w/2 < Math.min(this.start,this.end)) {
 						directiontoggle = !directiontoggle;
 					}
-					if (this.hitbox.hitTestObject(g.testguy)) {
+					if (this.hitbox.hitTestObject(g.testguy.hitbox)) {
 						g.testguy.x-=this.speed;
-						while(this.hitbox.hitTestObject(g.testguy)) {
+						while(this.hitbox.hitTestObject(g.testguy.hitbox)) {
 							g.testguy.x-=0.1;
 						}
 						return checkSmash(g);
 					}
-					if (this.frictionbox.hitTestObject(g.testguy)) {
+					if (this.frictionbox.hitTestObject(g.testguy.hitbox)) {
 						g.testguy.x-=this.speed;
 						if (guyhitting(g)) {
 							g.testguy.x+=this.speed;
@@ -131,14 +131,14 @@
 					if (this.x+this.w/2 > Math.max(this.start,this.end)) {
 						directiontoggle = !directiontoggle;
 					}
-					if (this.hitbox.hitTestObject(g.testguy)) {
+					if (this.hitbox.hitTestObject(g.testguy.hitbox)) {
 						g.testguy.x+=this.speed;
-						while(this.hitbox.hitTestObject(g.testguy)) {
+						while(this.hitbox.hitTestObject(g.testguy.hitbox)) {
 							g.testguy.x+=0.1;
 						}
 						return checkSmash(g);
 					}
-					if (this.frictionbox.hitTestObject(g.testguy)) {
+					if (this.frictionbox.hitTestObject(g.testguy.hitbox)) {
 						g.testguy.x+=this.speed;
 						if (guyhitting(g)) {
 							g.testguy.x-=this.speed;
@@ -187,7 +187,7 @@
 		
 		private function guyhitting(g:GameEngine):Boolean {
 			for each (var w:Wall in g.walls) {
-				if (w != this && g.testguy.hitTestObject(w.hitbox)) {
+				if (w != this && g.testguy.hitbox.hitTestObject(w.hitbox)) {
 					return true;
 				}
 			}
@@ -196,7 +196,7 @@
 		
 		private function checkSmash(g:GameEngine):Boolean {
 			for each(var w:Wall in g.walls) {
-				if (w.hitbox.hitTestObject(g.testguy)) {
+				if (w.hitbox.hitTestObject(g.testguy.hitbox)) {
 					return FalldownBlock.guyhit(g);
 				}
 			}

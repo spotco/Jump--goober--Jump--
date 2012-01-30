@@ -47,11 +47,10 @@
 			stage.quality = StageQuality.LOW;
 			cstage = stage;
 			mute = false;
-			curfunction = new JumpDieCreateMenu(this);
 			localdata = SharedObject.getLocal("JumpDieOrCreateSPOTCO");
 			
 			verifysave();
-			
+			curfunction = new JumpDieCreateMenu(this);
 			//tracemem();
 		}
 		
@@ -255,8 +254,65 @@
 		private var onlineend : Class;
 		
 		[Embed(source='snd//explode.mp3')] 		 
-		public var explode : Class;
-		public var explodesound:Sound = (new explode) as Sound;
+		private static var explode : Class;
+		public static var explodesound:Sound = (new explode) as Sound;
+		
+		[Embed(source='snd//cheer.mp3')] 		 
+		private static var cheer : Class;
+		public static var cheersound:Sound = (new cheer) as Sound;
+		
+		[Embed(source='snd//wow.mp3')] 		 
+		private static var wow : Class;
+		public static var wowsound:Sound = (new wow) as Sound;
+		
+		
+		[Embed(source='snd//fruit.mp3')] 		 
+		private static var fruit : Class;
+		public static var fruitsound:Sound = (new fruit) as Sound;
+		
+		[Embed(source='snd//thunder.mp3')] 		 
+		private static var thunder : Class;
+		public static var thundersound:Sound = (new thunder) as Sound;
+		
+		[Embed(source='snd//jump//jump1.mp3')] 		 
+		private static var jump1 : Class;
+		public static var jump1sound:Sound = (new jump1) as Sound;
+
+		[Embed(source='snd//jump//jump2.mp3')] 		 
+		private static var jump2 : Class;
+		public static var jump2sound:Sound = (new jump2) as Sound;
+		
+		[Embed(source='snd//jump//jump3.mp3')] 		 
+		private static var jump3 : Class;
+		public static var jump3sound:Sound = (new jump3) as Sound;
+		
+		[Embed(source='snd//jump//jump4.mp3')] 		 
+		private static var jump4 : Class;
+		public static var jump4sound:Sound = (new jump4) as Sound;
+		
+		[Embed(source='snd//fall.mp3')] 		 
+		private static var fall : Class;
+		public static var fallsound:Sound = (new fall) as Sound;
+		
+		[Embed(source='snd//rocketexplode.mp3')] 		 
+		private static var rocketexplode: Class;
+		public static var rocketexplodesound:Sound = (new rocketexplode) as Sound;
+		
+		[Embed(source='snd//shoot.mp3')] 		 
+		private static var shoot: Class;
+		public static var shootsound:Sound = (new shoot) as Sound;
+		
+		[Embed(source='snd//boost.mp3')] 		 
+		private static var boost: Class;
+		public static var boostsound:Sound = (new boost) as Sound;
+		
+		[Embed(source='snd//rocketboss.mp3')] 		 
+		private static var rocketboss: Class;
+		public static var rocketbosssound:Sound = (new rocketboss) as Sound;
+		
+		[Embed(source='snd//rocketbossdie.mp3')] 		 
+		private static var rocketbossdie: Class;
+		public static var rocketbossdiesound:Sound = (new rocketbossdie) as Sound;
 		
 		
 		[Embed(source='snd//leveleditor.mp3')] 		 
@@ -269,6 +325,13 @@
 		
 		[Embed(source='misc//acknowtt.ttf', embedAsCFF="false", fontName='Menu', fontFamily="Menu", mimeType='application/x-font')] 
       	public static var foo:String;
+		
+		public function playsfx(s:Sound,t:SoundTransform = null) {
+			if (mute) {
+				return;
+			}
+			s.play(0,1,t);
+		}
 		
 		public static function getTextFormat(size:Number,type:Number = 1):TextFormat {
 			var textFormat:TextFormat = new TextFormat();

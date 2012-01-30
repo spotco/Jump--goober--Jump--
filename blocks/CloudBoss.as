@@ -80,6 +80,9 @@
 					cloudflash(trackingtimer%10);
 					trackingtimer--;
 				} else { //thunder
+					if (trackingtimer == 10) {
+						g.main.playsfx(JumpDieCreateMain.thundersound);
+					}
 					thunderbody.visible = true;
 					if (trackingtimer > 5) {
 						thunderbody.alpha = ((10-trackingtimer)/5);

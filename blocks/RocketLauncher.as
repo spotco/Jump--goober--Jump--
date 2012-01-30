@@ -6,6 +6,7 @@
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import flash.media.SoundTransform;
 	
 	public class RocketLauncher extends FalldownBlock {
 		
@@ -67,10 +68,12 @@
 				chargeDot.alpha+=(1/reattack);
 				
 				if (chargeDot.alpha >= 1) {
+					g.main.playsfx(JumpDieCreateMain.shootsound);
 					chargeDot.alpha = 0;			
 					var dy:Number = +Math.cos(launcherContainer.rotation*(Math.PI/180))*40;
 					var dx:Number = -Math.sin(launcherContainer.rotation*(Math.PI/180))*40;
 					for (var i = 0; i < 24; i++) {
+						
 						var particle:RocketParticle;
 						
 						if (g.rocketparticlesreuse.length == 0) {

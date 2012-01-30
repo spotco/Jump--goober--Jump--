@@ -6,6 +6,7 @@
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import flash.media.SoundTransform;
 	
 	public class TrackBlade extends FalldownBlock {
 		
@@ -82,8 +83,8 @@
 				}
 				
 			}
-			if (!simple && hitbox.hitTestObject(g.testguy)) {
-				if (!g.main.mute) { g.main.explodesound.play(); }
+			if (!simple && hitbox.hitTestObject(g.testguy.innerhitbox)) {
+				g.main.playsfx(JumpDieCreateMain.explodesound);
 				g.timer.stop();
 				g.testguy.explode();
 				g.timer = new Timer(1200,1);

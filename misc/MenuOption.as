@@ -33,7 +33,7 @@
 		public function addEvents(menu:JumpDieCreateMenu) {
 			this.menu = menu;
 			var tmpref:MenuOption = this;
-			this.addEventListener(MouseEvent.MOUSE_OVER, onmouseover);
+			this.addEventListener(MouseEvent.ROLL_OVER, onmouseover);
 			this.addEventListener(MouseEvent.CLICK, onclick);
 		}
 		

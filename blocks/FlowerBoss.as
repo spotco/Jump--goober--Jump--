@@ -66,6 +66,7 @@
 					bulletspeed-=2;
 				}
 				var angle:Number = -(headwrapper.rotation+90);
+				g.main.playsfx(JumpDieCreateMain.shootsound);
 				var newbullet:Bullet;
 				if (g.bulletsreuse.length == 0) {
 					newbullet = new Bullet(this.x + 253,this.y - 48,-Math.cos(angle*(Math.PI/180))*7,-Math.sin(angle*(Math.PI/180))*7);
@@ -142,11 +143,11 @@
 		}
 		
 		private function checkhit(g:GameEngine):Boolean {
-			if (g.testguy.hitTestObject(this.hitboxbody) ||
-				g.testguy.hitTestObject(this.hitboxstem) ||
-				g.testguy.hitTestObject(this.hitboxhead)
+			if (g.testguy.innerhitbox.hitTestObject(this.hitboxbody) ||
+				g.testguy.innerhitbox.hitTestObject(this.hitboxstem) ||
+				g.testguy.innerhitbox.hitTestObject(this.hitboxhead)
 				) {
-				if (!g.main.mute) { g.main.explodesound.play(); }
+				g.main.playsfx(JumpDieCreateMain.explodesound);
 				g.timer.stop();
 				g.testguy.explode();
 				g.timer = new Timer(1200,1);

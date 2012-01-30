@@ -49,6 +49,9 @@
 				return false;
 			}
 			if (this.ready && g.testguy.hitTestObject(this.hitbox)) {
+				if (trailbox.alpha == 1) {
+					g.main.playsfx(JumpDieCreateMain.fruitsound);
+				}
 				g.testguy.boost = 3;
 				g.testguy.canJump = true;
 				this.eat(g);
@@ -75,6 +78,7 @@
 								trailbox.alpha = 1;
 								fadeTimer.stop();
 								fadeTimer = null;
+								//ready = true;
 							}
 							updateAnimation();
 						});

@@ -26,7 +26,7 @@
 		private var mutebutton;
 		
 		public var menupos:Number;
-		//private var cursor:Guy;
+		private var cursor:Guy = new Guy(0,0);
 		
 		public var use_menu:Array;
 		
@@ -189,21 +189,38 @@
 			}
 		}
 		
+		var lastsound:Date = new Date;
+		
 		public function updateCursor() {
 			var oldpos:Number = -1;
 			for each(var o:MenuOption in use_menu) {
 				if (o.guycursor != null) {
 					oldpos = use_menu.indexOf(o);
-					o.removeChild(o.guycursor);
+					if (this.cursor.parent == o) {
+						o.removeChild(this.cursor);
+					}
 					o.guycursor = null;
 				}
 			}
-			if (!main.mute && oldpos != -1 && oldpos != menupos) {
-				sound.play(0,1);
+			for (var i = 0; i < this.cursor.numChildren; i++) {
+				if (this.cursor.getChildAt(i).name == "removeme") {
+					this.cursor.removeChildAt(i);
+				}
 			}
-			use_menu[menupos].guycursor = new Guy(use_menu[menupos].guycursorX,use_menu[menupos].guycursorY);
+			
+			var cur:Date = new Date();
+			if (oldpos != -1 && oldpos != menupos && Math.abs(cur.getTime()-lastsound.getTime()) > 50) {
+			//if (Math.abs(cur.getTime()-lastsound.getTime()) > 500) {
+				main.playsfx(sound);
+				lastsound = cur;
+			}
+			//use_menu[menupos].guycursor = new Guy(use_menu[menupos].guycursorX,use_menu[menupos].guycursorY-2);
+			use_menu[menupos].guycursor = this.cursor;
+			this.cursor.x = use_menu[menupos].guycursorX;
+			this.cursor.y = use_menu[menupos].guycursorY-2;
 			if (desc[getopt()]) {
 				var t:Sprite = getoptiondesc(desc[getopt()]);
+				t.name = "removeme";
 				use_menu[menupos].guycursor.addChild(t)
 			}
 			use_menu[menupos].addChild(use_menu[menupos].guycursor);
@@ -327,8 +344,8 @@
 		private var muteon:Bitmap = new mb2();
 		
 		[Embed(source='..//snd//beep.mp3')] 		 
-		private var MySound : Class;
-		private var sound : Sound;
+		private static var MySound : Class;
+		public static var sound : Sound;
 		
 		[Embed(source='..//img//misc//adventure.png')]
 		private var a1:Class;

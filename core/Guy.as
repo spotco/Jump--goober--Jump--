@@ -21,6 +21,8 @@
 		public var JUSTTOUCHED_ERROR_TIME = 5;
 		
 		public var guydisplay:Sprite = new Sprite;
+		public var hitbox:Sprite = new Sprite;
+		public var innerhitbox:Sprite = new Sprite;
 		
 			
 		public function Guy(initx:Number, inity:Number) {
@@ -34,6 +36,17 @@
 			vx = 0; vy = 0;
 			guydisplay.addChild(guy);
 			addChild(guydisplay);
+			hitbox.graphics.beginFill(0xFF0000,0);
+			hitbox.graphics.drawRect(0,2,26,22);
+			addChild(hitbox);
+			
+			guydisplay.y = 2;
+			this.guyslideleft.x = -1;
+			this.guyslideright.x = 1;
+			
+			innerhitbox.graphics.beginFill(0xFF0000,0);
+			innerhitbox.graphics.drawRect(1,4,24,20);
+			this.addChild(innerhitbox);
 		}
 		
 		public function changePos(chx:Number, chy:Number) {
@@ -78,7 +91,7 @@
 			
 			var yhit:Boolean = false;
 			for(var i = 0; i < walls.length; i++) { 
-				if (hitTestObject(walls[i].hitbox)) { //if hitting a wall
+				if (this.hitbox.hitTestObject(walls[i].hitbox)) { //if hitting a wall
 					justtouched = JUSTTOUCHED_ERROR_TIME;
 					canJump = true;
 					yhit = true;
@@ -91,15 +104,15 @@
 					var inity = this.y;
 					var sum = 0;
 					
-					while (hitTestObject(walls[i].hitbox) && vy != 0) {  //move reverse direction in increments of vy until not hit
+					while (this.hitbox.hitTestObject(walls[i].hitbox) && vy != 0) {  //move reverse direction in increments of vy until not hit
 						//this.y = this.y - SIG(vy);
 						sum+= SIG(vy);
 						this.y = inity - sum;
-						if (!hitTestObject(walls[i].hitbox)) {
+						if (!this.hitbox.hitTestObject(walls[i].hitbox)) {
 							break;
 						}
 						this.y = inity + sum;
-						if (!hitTestObject(walls[i].hitbox)) {
+						if (!this.hitbox.hitTestObject(walls[i].hitbox)) {
 							trace("break reverse");
 							break;
 						}
@@ -109,7 +122,7 @@
 							trace("!!!y: "+this.y+" vy:"+this.vy+" wally:"+walls[i].y+" wallh:"+walls[i].h);
 						}*/
 					}
-					if (hitTestObject(walls[i].hitbox)) { //only for spawning inside block, I think
+					if (this.hitbox.hitTestObject(walls[i].hitbox)) { //only for spawning inside block, I think
 						recursiveOut(walls,1);
 						return;
 					}
@@ -132,7 +145,7 @@
 			
 			var xhit:Boolean = false;
 			for(i = 0; i < walls.length; i++) {
-				if (hitTestObject(walls[i].hitbox)) {
+				if (this.hitbox.hitTestObject(walls[i].hitbox)) {
 					justtouched = JUSTTOUCHED_ERROR_TIME;
 					isItSlide = true;
 					if (!justWallJumped) {
@@ -140,10 +153,10 @@
 					}
 					xhit = true;
 					this.x = roundDec(this.x,1);
-					while (hitTestObject(walls[i].hitbox) && vx != 0) {
+					while (this.hitbox.hitTestObject(walls[i].hitbox) && vx != 0) {
 						this.x = this.x - SIG(vx);
 					}
-					if (hitTestObject(walls[i].hitbox)) { //if stuck inside object, recursive out
+					if (this.hitbox.hitTestObject(walls[i].hitbox)) { //if stuck inside object, recursive out
 						recursiveOut(walls,1);
 						return;
 					}
@@ -167,7 +180,7 @@
 				
 		private function checkCollision(walls:Array):Boolean {
 			for each(var w:Wall in walls) {
-				if (Math.abs(w.y-this.y) < 700 && hitTestObject(w.hitbox)) {
+				if (Math.abs(w.y-this.y) < 700 && this.hitbox.hitTestObject(w.hitbox)) {
 					return true;
 				}
 			}

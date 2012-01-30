@@ -50,17 +50,22 @@
 				return;
 			}
 			
-			if (this.hitbox.hitTestObject(g.testguy)) {
+			/*if (this.hitbox.hitTestObject(g.testguy)) {
 				return guyhit(g);
+			}*/
+			if (super.update(g)) {
+				return true;
 			}
 			for each(var w:Wall in g.walls) {
 				if (this.hitbox.hitTestObject(w.hitbox)) {
+					g.main.playsfx(JumpDieCreateMain.rocketexplodesound);
 					return explode(g);
 				}
 			}
 			for each(var b:FalldownBlock in g.deathwall) {
 				if (b is RocketBoss && this.hitbox.hitTestObject(b)) {
 					(b as RocketBoss).hitByRocket();
+					g.main.playsfx(JumpDieCreateMain.rocketexplodesound);
 					return explode(g);
 				}
 			}

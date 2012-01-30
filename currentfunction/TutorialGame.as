@@ -95,6 +95,7 @@
 		
 		private function kblmanager(e:KeyboardEvent) {
 			if (e.keyCode == Keyboard.UP) {
+				//main.playsfx(JumpDieCreateMenu.sound);
 				clvl--;
 				if (clvl == 0) {
 					clvl = -1;
@@ -106,6 +107,7 @@
 				}
 				moveclvl();
 			} else if (e.keyCode == Keyboard.DOWN) {
+				//main.playsfx(JumpDieCreateMenu.sound);
 				clvl++;
 				if (clvl > 11) {
 					clvl = -1;
@@ -217,10 +219,14 @@
 				});
 				
 				container.addEventListener(MouseEvent.MOUSE_OVER,function(e:Event) {
+					var prev = clvl;
 					if (e.target is TextField) {
 						return;
 					}
 					clvl = e.target.buttonmaster.clvl;
+					/*if (prev != clvl) {
+						main.playsfx(JumpDieCreateMenu.sound);
+					}*/
 					moveclvl();
 				});
 								   
@@ -264,6 +270,7 @@
 				main.stop();
 				var complt:Sprite = new Sprite;
 				var compltbg:Bitmap;
+				this.main.playsfx(JumpDieCreateMain.wowsound);
 				if (this.thisworld == 1) {
 					compltbg = new TutorialGame.complete1 as Bitmap;
 				} else if (this.thisworld == 2) {
@@ -374,6 +381,7 @@
 			//hitgoal = true;
 			
 			if (hitgoal) {
+				this.main.playsfx(JumpDieCreateMain.cheersound);
 				var endtime:Date = new Date();
 				var sectotal:Number = (endtime.hours - starttime.hours)*60*60 + (endtime.minutes - starttime.minutes)*60 + (endtime.seconds - starttime.seconds);
 				var msectotal:Number = endtime.time - starttime.time;
@@ -448,7 +456,13 @@
 				
 				
 				main.addChild(new JumpDieCreateMenu.t1c as Bitmap);
-				main.addChild(JumpDieCreateMenu.getTextBubble());
+				var bub:Bitmap = JumpDieCreateMenu.getTextBubble();
+				bub.alpha = 0.7;
+				main.addChild(bub);
+				
+				var wc:TextField = LevelSelectButton.makeLevelSelectText(20,15,"Level Complete!");
+				wc.setTextFormat(JumpDieCreateMain.getTextFormat(60,2));
+				main.addChild(wc);
 				
 				var displaytext:TextField = new TextField; 
 				displaytext.embedFonts = true;
@@ -488,6 +502,7 @@
 				winanim.start();
 				main.stop();
 				playWinSound();
+				main.addChild(new Fireworks);
 				return;
 			} else {
 				loadNextLevel();
