@@ -105,134 +105,182 @@
 			this.addChild(msg);
 			var blockcount:Array = new Array(0,0,0,0,0); //0 wall, 1 death, 2 boost, 3 goal, 4 text
 			for each(var b:BaseBlock in leveleditor.rectList) {
-				if (b.type() == "wall") {
+				if (b is Wall) {
 					blockcount[0]++;
-				} else if (b.type() == "deathwall") {
+				} else if (b is FalldownBlock) {
 					blockcount[1]++;
-				} else if (b.type() == "boost") {
+				} else if (b is Boost) {
 					blockcount[2]++;
-				} else if (b.type() == "goal") {
+				} else if (b is Goal) {
 					blockcount[3]++;
 				}
 			}
-			msg.text = "TotalObj:"+leveleditor.xmllist.length+"\n   Blue:"+blockcount[0]+"\n   Red:"+blockcount[1]+"\n   Yellow:"+blockcount[2]+"\n   Green:"+blockcount[3]+" \nCurrentHeight:"+(-leveleditor.currenty)+"px";
+			msg.text = "Total Objects:"+leveleditor.xmllist.length+"\n   Blue:"+blockcount[0]+"\n   Red:"+blockcount[1]+"\n   Yellow:"+blockcount[2]+"\n   Green:"+blockcount[3]+" \nCurrentHeight:"+(-leveleditor.currenty)+"px";
 		}
 		
 		public function selector(){
 			var msg:TextField = new TextField();
-			msg.embedFonts = true; msg.selectable = false; msg.x = 85; msg.y = 5; msg.antiAliasType = AntiAliasType.ADVANCED;msg.width = 75; msg.height = 100;
+			msg.embedFonts = true; msg.selectable = false; msg.x = 10; msg.y = 75; msg.antiAliasType = AntiAliasType.ADVANCED;msg.width = 156; msg.height = 14;
 			msg.defaultTextFormat = textFormat;msg.setTextFormat(textFormat); msg.wordWrap = true;
 			msg.text = "";
 			this.addChild(msg);
 			
+			var setx = 10;
+			var sety = 10;
+			var incrx = 23;
+			var incry = 23;
 			
 			var s0:Sprite = leveleditor.makeBitmapWrapper(blue);
-			s0.x = 10; s0.y = 10;
+			s0.x = setx; s0.y = sety;
+			s0.scaleX = 1.5; s0.scaleY = 1.5;
 			s0.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.WALL;leveleditor.unmakeui();leveleditor.makeui();});
 			s0.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Wall";});
 			addChild(s0);
 			
+			setx+=incrx;
+			
 			var s1:Sprite = leveleditor.makeBitmapWrapper(red);
-			s1.x = 25; s1.y = 10;
+			s1.x = setx; s1.y = sety;
 			s1.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.DEATHBLOCK;leveleditor.unmakeui();leveleditor.makeui();});
 			s1.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Spikey Vines";});
 			addChild(s1);
 			
+			setx+=incrx;
+			
 			var s2:Sprite = leveleditor.makeBitmapWrapper(yellow);
-			s2.x = 40; s2.y = 10;
+			s2.x = setx; s2.y = sety;
 			s2.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.BOOST;leveleditor.unmakeui();leveleditor.makeui();});
 			s2.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Boost Pad";});
 			addChild(s2);
 			
+			setx+=incrx;
+			
 			var s3:Sprite = leveleditor.makeBitmapWrapper(green);
-			s3.x = 55; s3.y = 10;
+			s3.x = setx; s3.y = sety;
 			s3.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.GOAL;leveleditor.unmakeui();leveleditor.makeui();});
 			s3.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Goal";});
 			addChild(s3);
 			
+			setx+=incrx;
+			
 			var s4:Sprite = leveleditor.makeBitmapWrapper(texticon);
-			s4.x = 70; s4.y = 10;
+			s4.x = setx; s4.y = sety;
 			s4.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TEXT;leveleditor.unmakeui();leveleditor.makeui();});
 			s4.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Text Bug";});
 			addChild(s4);
 			
+			setx+=incrx;
+			
 			var s5:Sprite = leveleditor.makeBitmapWrapper(deleteicon);
-			s5.x = 70; s5.y = 25;
+			s5.x = setx; s5.y = sety;
 			s5.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.DELETE;leveleditor.unmakeui();leveleditor.makeui();});
 			s5.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Delete";});
 			addChild(s5);
 			
+			setx+=incrx;
+			
 			var s6:Sprite = leveleditor.makeBitmapWrapper(moveicon);
-			s6.x = 55; s6.y = 25;
+			s6.x = setx; s6.y = sety;
 			s6.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.MOVE;leveleditor.unmakeui();leveleditor.makeui();});
 			s6.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Move";});
 			addChild(s6);
 			
+			setx=10;
+			sety+=incry; //2nd row
+			
 			var s7:Sprite = leveleditor.makeBitmapWrapper(boostfruiticon);
-			s7.x = 10; s7.y = 25;
+			s7.x = setx; s7.y = sety;
 			s7.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.BOOSTFRUIT;leveleditor.unmakeui();leveleditor.makeui();});
 			s7.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Jump Fruit";});
 			addChild(s7);
 			
+			setx+=incrx;
+			
 			var s8:Sprite = leveleditor.makeBitmapWrapper(trackicon);
-			s8.x = 10; s8.y = 40;
+			s8.x = setx; s8.y = sety;
 			s8.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACK;leveleditor.unmakeui();leveleditor.makeui();});
 			s8.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Moving Track";});
 			addChild(s8);
 			
+			setx+=incrx;
+			
 			var s9:Sprite = leveleditor.makeBitmapWrapper(trackwallicon);
-			s9.x = 25; s9.y = 40;
+			s9.x = setx; s9.y = sety;
 			s9.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACKWALL;leveleditor.unmakeui();leveleditor.makeui();});
 			s9.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Moving Wall";});
 			addChild(s9);
 			
+			setx+=incrx;
+			
 			var s10:Sprite = leveleditor.makeBitmapWrapper(trackbladeicon);
-			s10.x = 40; s10.y = 40;
+			s10.x = setx; s10.y = sety;
 			s10.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.TRACKBLADE;leveleditor.unmakeui();leveleditor.makeui();});
 			s10.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Moving Blade";});
 			addChild(s10);
 			
+			setx+=incrx;
+			
 			var s11:Sprite = leveleditor.makeBitmapWrapper(bossplanticon);
-			s11.x = 55; s11.y = 40;
+			s11.x = setx; s11.y = sety;
 			s11.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.FLOWERBOSS;leveleditor.unmakeui();leveleditor.makeui();});
 			s11.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="World 1 Boss";});
 			addChild(s11);
 			
+			setx+=incrx;
+			
 			var s12:Sprite = leveleditor.makeBitmapWrapper(bosscloudicon);
-			s12.x = 70; s12.y = 40;
+			s12.x = setx; s12.y = sety;
 			s12.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.CLOUDBOSS;leveleditor.unmakeui();leveleditor.makeui();});
 			s12.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="World 2 Boss";});
 			addChild(s12);
 			
+			setx+=incrx;
+			
+			var s17:Sprite = leveleditor.makeBitmapWrapper(rocketbossicon);
+			s17.x = setx; s17.y = sety;
+			s17.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ROCKETBOSS;leveleditor.unmakeui();leveleditor.makeui();});
+			s17.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="World 3 Boss";});
+			addChild(s17);
+			
+			setx=10;
+			sety+=incry;
+			
 			var s13:Sprite = leveleditor.makeBitmapWrapper(rocketlaunchericon);
-			s13.x = 10; s13.y = 55;
+			s13.x = setx; s13.y = sety;
 			s13.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ROCKETLAUNCHER;leveleditor.unmakeui();leveleditor.makeui();});
 			s13.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Rocket Launcher";});
 			addChild(s13);
 			
+			setx+=incrx;
+			
 			var s14:Sprite = leveleditor.makeBitmapWrapper(lasercwicon);
-			s14.x = 25; s14.y = 55;
+			s14.x = setx; s14.y = sety;
 			s14.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.LASERCW;leveleditor.unmakeui();leveleditor.makeui();});
 			s14.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Clockwise Laser";});
 			addChild(s14);
 			
+			setx+=incrx;
+			
 			var s15:Sprite = leveleditor.makeBitmapWrapper(laserccwicon);
-			s15.x = 40; s15.y = 55;
+			s15.x = setx; s15.y = sety;
 			s15.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.LASERCCW;leveleditor.unmakeui();leveleditor.makeui();});
 			s15.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Counterclockwise Laser";});
 			addChild(s15);
 			
+			setx+=incrx;
+			
 			var s16:Sprite = leveleditor.makeBitmapWrapper(activatetrackwallicon);
-			s16.x = 55; s16.y = 55;
+			s16.x = setx; s16.y = sety;
 			s16.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ACTIVATETRACKWALL;leveleditor.unmakeui();leveleditor.makeui();});
 			s16.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="Mobile Wall";});
 			addChild(s16);
 			
-			var s17:Sprite = leveleditor.makeBitmapWrapper(rocketbossicon);
-			s17.x = 70; s17.y = 55;
-			s17.addEventListener(MouseEvent.CLICK,function(){leveleditor.currenttype = LevelEditor.ROCKETBOSS;leveleditor.unmakeui();leveleditor.makeui();});
-			s17.addEventListener(MouseEvent.MOUSE_OVER,function(){msg.text="World 3 Boss";});
-			addChild(s17);
+			for (var i = 0; i < this.numChildren; i++) {
+				if (this.getChildAt(i) is Sprite) {
+					this.getChildAt(i).scaleX = 1.5;
+					this.getChildAt(i).scaleY = 1.5;
+				}
+			}
 		}
 		
 		private var message1:String = "Welcome to the level editor! To start placing blocks, select the type with the button to the far left. Pick your type from the menu.";

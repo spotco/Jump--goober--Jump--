@@ -40,9 +40,11 @@
 			this.main = main;
 			this.currentlevelinfo = currentlevelinfo;
 			submitplaycount();
-			main.playSpecific(JumpDieCreateMain.ONLINEEND,false);
+			this.main.playsfx(JumpDieCreateMain.cheersound);
+			this.main.playSpecific(JumpDieCreateMain.ONLINEEND,false);
 			initbg();
 			initratingui();
+			this.main.addChild(new Fireworks);
 		}
 		
 		private function submitplaycount() {

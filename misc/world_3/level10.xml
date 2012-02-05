@@ -30,18 +30,21 @@
   <trackwall x="236" y="-2007" width="82" height="72" text=""/>
   <track x="435" y="-2341" width="53" height="298" text=""/>
   <trackwall x="423" y="-2056" width="34" height="-197"/>
-  <deathwall x="449" y="-2321" width="113" height="259" text=""/>
-  <boostfruit x="259" y="-2391"/>
-  <wall x="205" y="-2505" width="120" height="37"/>
-  <laserlauncher x="255" y="-2801" dir="-3"/>
-  <boostfruit x="258" y="-2697"/>
-  <laserlauncher x="264" y="-2543" dir="3"/>
-  <wall x="438" y="-2840" width="59" height="-207"/>
-  <wall x="250" y="-3163" width="87" height="60"/>
-  <wall x="169" y="-3202" width="-95" height="-67"/>
-  <wall x="45" y="-3361" width="-46" height="-182"/>
+  <boostfruit x="177" y="-2529" width="24" height="28"/>
+  <wall x="197" y="-2629" width="120" height="37"/>
+  <laserlauncher x="253" y="-2955" dir="-3"/>
+  <boostfruit x="253" y="-2821" width="24" height="28"/>
+  <laserlauncher x="256" y="-2679" dir="3"/>
+  <wall x="459" y="-3195" width="59" height="207"/>
+  <wall x="255" y="-3205" width="87" height="60"/>
+  <wall x="98" y="-3308" width="95" height="67"/>
+  <!--<wall x="169" y="-3202" width="-95" height="-67"/>-->
+  <!--<wall x="199" y="-3629" width="121" height="98"/>-->
   <wall x="199" y="-3610" width="121" height="98" text=""/>
   <textfield x="312" y="-3769" width="156" height="70" text="Final boss ahead...so get ready!"/>
   <boost x="217" y="-3712" width="87" height="-203"/>
   <goal x="215" y="-3988" width="94" height="-119"/>
+  <wall x="231" y="-2450" width="50" height="145"/>
+  <deathwall x="450" y="-2321" width="52" height="260"/>
+  <wall x="51" y="-3357" width="-56" height="-227"/>
 </level>

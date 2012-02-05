@@ -74,8 +74,6 @@
 			
 			var isItSlide:Boolean = false;
 			updateImg();
-			vx*=.99;//friction
-			vy*=.99;
 			vy+=1;
 			this.vy = roundDec(this.vy,1);
 			var checkDepth:Number = 5;
@@ -176,6 +174,8 @@
 			if (Math.abs(vx) < 0.01) {
 				vx = 0;
 			}
+			vx*=.99;//friction
+			vy*=.99;
 		}
 				
 		private function checkCollision(walls:Array):Boolean {
@@ -234,9 +234,9 @@
 					}
 					
 				}
-			} else if (vy > .5) {
+			} else if (vy > .99) {
 				guydisplay.addChild(guyup);
-			} else if (vy < -.5) {
+			} else if (vy < -.99) {
 				guydisplay.addChild(guydown);
 			} else {
 				guydisplay.addChild(guy);

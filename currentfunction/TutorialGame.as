@@ -21,6 +21,7 @@
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import flash.media.SoundTransform;
 	
 	public class TutorialGame extends CurrentFunction {
 		public var levels:Array;
@@ -43,6 +44,7 @@
 		
 		
 		public function TutorialGame(main:JumpDieCreateMain) {
+			this.main = main;
 			if (!thisnametext) {
 				thisnametext = "World 1";
 				thisworld = 1;
@@ -67,7 +69,6 @@
 			selectorguy.addChild(besttimebubble);
 			
 			makeLevelArray();
-			this.main = main;
 			this.main.addChild(this);
 			getsave();
 			selectorguy.x = 114;
@@ -142,20 +143,21 @@
 				textbubblepic.scaleX = 0.7;
 				this.besttimebubble.x = 20;
 				this.besttimebubble.y = -50;
-				text.x = 10;
+				text.x = 7;
 			} else {
 				selectorguy.x = (tar).x - 26;
 				selectorguy.y = (tar).y;
 				textbubblepic.scaleX = -0.7;
 				this.besttimebubble.x = 0;
 				this.besttimebubble.y = -50;
-				text.x = -100;
+				text.x = -105;
 				
 			}
 			
 			var stostr:String = this.thisworld+"-"+this.clvl;
 			if (main.localdata.data[stostr]) {
-				this.text.text = "Best time:\n"+main.localdata.data[stostr];
+				var rank = parserank(parsetime(this.main.localdata.data[stostr]),this.thisworld,this.clvl,main.rankdata);
+				this.text.text = "Best time:\n"+main.localdata.data[stostr]+" Rank:"+rank;
 				text.setTextFormat(JumpDieCreateMain.getTextFormat(10));
 				this.besttimebubble.visible = true;
 			} else {
@@ -258,15 +260,30 @@
 		public function playGame() {
 			this.main.cstage.removeEventListener(KeyboardEvent.KEY_UP, kblmanager);
 			numDeath = 0;
-			starttime = new Date();
 			switchsong = true;
 			main.removeChild(this);
 			main.stop();
+			this.overallstarttime = new Date();
 			startLevel();
 		}
 		
 		public override function startLevel() {
 			if (clvl >= levels.length) {
+				worldcompleteart();
+				return;
+			}
+			currentGame = null;
+			if (switchsong) {
+				getsong();
+				main.sc.soundTransform = new SoundTransform(0.01);
+				switchsong = false;
+			}
+			var noskip:Boolean = this.clvl < this.maxlvl;
+			starttime = new Date();
+			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,this.thisworld,noskip);
+		}
+		
+		private function worldcompleteart() {
 				main.stop();
 				var complt:Sprite = new Sprite;
 				var compltbg:Bitmap;
@@ -278,7 +295,6 @@
 				} else if (this.thisworld == 3) {
 					compltbg = new TutorialGame.complete3 as Bitmap;
 				}
-				
 				
 				var f:Function = function(e:KeyboardEvent) {
 					if (e.keyCode == Keyboard.SPACE) {
@@ -315,16 +331,6 @@
 				complt.addChild(wc);
 				complt.addChild(wcd);
 				main.addChild(complt);
-				
-				return;
-			}
-			currentGame = null;
-			if (switchsong) {
-				getsong();
-				switchsong = false;
-			}
-			var noskip:Boolean = this.clvl < this.maxlvl;
-			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,this.thisworld,noskip);
 		}
 		
 		public function credits() {
@@ -381,17 +387,100 @@
 			//hitgoal = true;
 			
 			if (hitgoal) {
-				this.main.playsfx(JumpDieCreateMain.cheersound);
-				var endtime:Date = new Date();
+				levelcompletescreen();
+				return;
+			} else {
+				loadNextLevel();
+			}
+		}
+		
+		private function save(msectotal:Number, displaytime:String) {
+				try {
+					//save progress
+					if (thisworld == 1) { 
+						main.localdata.data.world1 = Math.max(this.clvl+1,main.localdata.data.world1);
+						trace("written to world 1:"+main.localdata.data.world1);
+					} else if (thisworld == 2) {
+						main.localdata.data.world2 = Math.max(this.clvl+1,main.localdata.data.world2);
+						trace("written to world 2:"+main.localdata.data.world2);
+					} else if (thisworld == 3) {
+						main.localdata.data.world3 = Math.max(this.clvl+1,main.localdata.data.world3);
+						trace("written to world 3:"+main.localdata.data.world3);
+					}
+				} catch(e:Error) {
+					trace("error in update save progress");
+					trace(e.message);
+				}
+				
+				try {
+					//save best time
+					var stostr:String = thisworld+"-"+this.clvl;
+					if (main.localdata.data[stostr]) {
+						//main.localdata.data[stostr] = Math.min(main.localdata.data[stostr],msectotal);
+						var savedsum = parsetime(main.localdata.data[stostr]);
+						
+						trace("saved:"+savedsum);
+						trace("new:"+msectotal);
+						if (savedsum > msectotal) {
+							trace("new record");
+							main.localdata.data[stostr] = displaytime;
+						}
+					} else {
+						//main.localdata.data[stostr] = msectotal;
+						main.localdata.data[stostr] = displaytime;
+					}
+					main.localdata.flush();
+					trace("best time for("+stostr+"):"+main.localdata.data[stostr]);
+				} catch (e:Error) {
+					trace("error saving time");
+					trace(e.message);
+				}
+		}
+		
+		public static function parsetime(t:String):Number {
+			var saveddat:Array = t.split(":");
+			var savedsum:Number = 0;
+			for (var i = 0; i < saveddat.length; i++) {
+				if (i == 0) {
+					savedsum+=(60000*Number(saveddat[i]));
+				} else if (i == 1) {
+					savedsum+=(1000*Number(saveddat[i]));
+				} else if (i == 2) {
+					savedsum+=(Number(saveddat[i]));
+				} else {
+					trace("saved data parsing error!!!");
+				}
+			}
+			return savedsum;
+		}
+		
+		private function getrank(ctime:Number):String {
+			return parserank(ctime,this.thisworld,this.clvl,main.rankdata);
+		}
+		
+		public static function parserank(ctime:Number, thisworld:Number, clvl:Number, rankdata:Object):String {
+			var key:String = "world"+thisworld+"_level"+clvl+"_";
+			if (ctime < parsetime(rankdata[key+"A"])) {
+				return "A";
+			} else if (ctime < parsetime(rankdata[key+"B"])) {
+				return "B"
+			} else if (ctime < parsetime(rankdata[key+"C"])) {
+				return "C";
+			} else {
+				return "F";
+			}
+		}
+		
+		private function getdisplaytime(starttime:Date, endtime:Date):String {
 				var sectotal:Number = (endtime.hours - starttime.hours)*60*60 + (endtime.minutes - starttime.minutes)*60 + (endtime.seconds - starttime.seconds);
-				var msectotal:Number = endtime.time - starttime.time;
-				trace("timeSec:"+sectotal);
+				//trace("timeSec:"+sectotal);
 				var displaytime:String = Math.floor(sectotal/60) + ":";
 				if (sectotal%60 < 10) {
 					displaytime += "0"+(sectotal%60);
 				} else {
 					displaytime += (sectotal%60);
 				}
+				var msectotal:Number = endtime.getTime() - starttime.getTime();
 				var msdisplaytimecalc:Number = (((msectotal%1000)/1000)*1000/1000)*1000;
 				if (msdisplaytimecalc < 10) {
 					displaytime += ":00"+msdisplaytimecalc;
@@ -400,60 +489,19 @@
 				} else {
 					displaytime += ":"+msdisplaytimecalc;
 				}
+				return displaytime;
+		}
+		
+		private function levelcompletescreen() {
+				this.main.playsfx(JumpDieCreateMain.cheersound);
+				var endtime:Date = new Date();
+				var msectotal:Number = endtime.getTime() - starttime.getTime();
 				
-				trace("numDeath:"+numDeath);
+				var displaytime = getdisplaytime(starttime,endtime);
+				var totaldisplaytime = getdisplaytime(this.overallstarttime,endtime);
 				
-				/*msectotal = msectotal/1000 + ((msectotal%1000)/1000);
-				msectotal = Math.round(msectotal*1000)/1000;
-
-				trace("timeMS:"+msectotal);*/
-				
-				//save progress
-				if (thisworld == 1) { 
-					main.localdata.data.world1 = Math.max(this.clvl+1,main.localdata.data.world1);
-					trace("written to world 1:"+main.localdata.data.world1);
-				} else if (thisworld == 2) {
-					main.localdata.data.world2 = Math.max(this.clvl+1,main.localdata.data.world2);
-					trace("written to world 2:"+main.localdata.data.world2);
-				} else if (thisworld == 3) {
-					main.localdata.data.world3 = Math.max(this.clvl+1,main.localdata.data.world3);
-					trace("written to world 3:"+main.localdata.data.world3);
-				}
-				
-				//save best time
-				var stostr:String = thisworld+"-"+this.clvl;
-				if (main.localdata.data[stostr]) {
-					//main.localdata.data[stostr] = Math.min(main.localdata.data[stostr],msectotal);
-					var saveddat:Array = main.localdata.data[stostr].split(":");
-					var savedsum:Number = 0;
-					for (var i = 0; i < saveddat.length; i++) {
-						if (i == 0) {
-							savedsum+=(60000*Number(saveddat[i]));
-						} else if (i == 1) {
-							savedsum+=(1000*Number(saveddat[i]));
-						} else if (i == 2) {
-							savedsum+=(Number(saveddat[i]));
-						} else {
-							trace("saved data parsing error!!!");
-						}
-					}
-					if (saveddat.length != 3) {
-						savedsum = msectotal+1;
-					}
-					trace("saved:"+savedsum);
-					trace("new:"+msectotal);
-					if (savedsum > msectotal) {
-						trace("new record");
-						main.localdata.data[stostr] = displaytime;
-					}
-				} else {
-					//main.localdata.data[stostr] = msectotal;
-					main.localdata.data[stostr] = displaytime;
-				}
-				main.localdata.flush();
-				trace("best time for("+stostr+"):"+main.localdata.data[stostr]);
-				
-				
+				save(msectotal,displaytime);
+				var rank:String = getrank(msectotal);
 				
 				main.addChild(new JumpDieCreateMenu.t1c as Bitmap);
 				var bub:Bitmap = JumpDieCreateMenu.getTextBubble();
@@ -468,21 +516,24 @@
 				displaytext.embedFonts = true;
             	displaytext.antiAliasType = AntiAliasType.ADVANCED;
 				displaytext.selectable = false;
-				displaytext.text = "  Time: "+displaytime+"\n    Deaths: "+numDeath;
-				displaytext.x = 140; 
-				displaytext.y = 225; 
+				displaytext.text = "Time: "+displaytime+"\nRank: "+rank+"\n\nTotal Time: "+totaldisplaytime+"\nDeaths: "+numDeath;
+				displaytext.x = 127; 
+				displaytext.y = 210; 
 				displaytext.width = 230; displaytext.height = 400;
-				displaytext.defaultTextFormat = JumpDieCreateMain.getTextFormat(20);
-				displaytext.setTextFormat(JumpDieCreateMain.getTextFormat(20));
+				var tf:TextFormat = JumpDieCreateMain.getTextFormat(17);
+				tf.align = "center";
+				displaytext.defaultTextFormat = tf;
+				displaytext.setTextFormat(tf);
+				
 				main.addChild(displaytext);
 				
 				var displayflash:Timer = new Timer(1000);
 				var haslistener:Boolean = false;
 				displayflash.addEventListener(TimerEvent.TIMER, function(){
 						if (!displaytext.wordWrap) {
-							displaytext.text = "  Time: "+displaytime+"\n    Deaths: "+numDeath+"\n\n    Press Space\n    to Continue";
+							displaytext.text = "Time: "+displaytime+"\nRank: "+rank+"\n\nTotal Time: "+totaldisplaytime+"\nDeaths: "+numDeath+"\n\nPress Space\nto Continue";
 						} else {
-							displaytext.text = "  Time: "+displaytime+"\n    Deaths: "+numDeath;
+							displaytext.text = "Time: "+displaytime+"\nRank: "+rank+"\n\nTotal Time: "+totaldisplaytime+"\nDeaths: "+numDeath;
 						}
 						displaytext.wordWrap = !displaytext.wordWrap;
 						if (displaytext.stage == null) {
@@ -503,10 +554,6 @@
 				main.stop();
 				playWinSound();
 				main.addChild(new Fireworks);
-				return;
-			} else {
-				loadNextLevel();
-			}
 		}
 		
 		public function playWinSound() {
@@ -529,6 +576,7 @@
 		public function loadNextLevel() {
 			numDeath = 0;
 			starttime = new Date;
+			this.overallstarttime = new Date();
 			clvl++;
 			switchsong = true;
 			startLevel();

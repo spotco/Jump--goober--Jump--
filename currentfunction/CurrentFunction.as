@@ -9,6 +9,7 @@
 		
 		public var numDeath:Number;
 		public var starttime:Date;
+		public var overallstarttime:Date;
 		
 		public function destroy() {
 		}

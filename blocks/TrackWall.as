@@ -35,6 +35,13 @@
 			
 			makebolts();
 			hasFoundDirection = false;
+			
+			frame.graphics.lineStyle(1,0x7788BB);
+			frame.graphics.lineTo(this.w,0);
+			frame.graphics.lineTo(this.w,this.h);
+			frame.graphics.lineTo(0,this.h);
+			frame.graphics.lineTo(0,0);
+			addChild(frame);
 		}
 		
 		private function makebolts() {

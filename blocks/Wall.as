@@ -10,6 +10,7 @@
 	public class Wall extends BaseBlock {
 		//the blue block wall with detail on top
 		public var hitbox:Sprite;
+		var frame:Sprite = new Sprite;
 		
 		public function Wall(x:Number,y:Number,w:Number,h:Number,nodetails:Boolean = false) {
 			if (w < 0) {
@@ -43,6 +44,13 @@
 			test.graphics.drawRect(0,-32,w,32);
 			test.graphics.endFill();
 			addChild(test);
+			
+			/*frame.graphics.lineStyle(1,0x7788BB);
+			frame.graphics.lineTo(this.w,0);
+			frame.graphics.lineTo(this.w,this.h);
+			frame.graphics.lineTo(0,this.h);
+			frame.graphics.lineTo(0,0);
+			addChild(frame);*/
 		}
 		
 				[Embed(source='..//img//block//blueblock.png')]

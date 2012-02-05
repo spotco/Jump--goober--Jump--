@@ -62,6 +62,7 @@
 		//loads and creates game given xml file, adds self to main param
 		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = -1, hasskip:Boolean = true) {
 			trace("gameengine start");
+			
 			this.usebackbutton = usebackbutton;
 			if (useBg == 1 || Number(clvlxml.@bg) == 1) {
 				bg = new bg1();
@@ -98,11 +99,7 @@
 			timer = new Timer(30); //start update cycle
             timer.addEventListener(TimerEvent.TIMER,update,false,100,false);
             timer.start();
-			
-			initmem = (System.totalMemory*0.0009765625)/1024;
 		}
-		
-		var initmem:Number;
 		
 		public function loadfromXML(clvlxml:XML) { //loads and adds blocks from xml, called from constructor
 			deathwall = new Array();
@@ -203,6 +200,7 @@
 		}
 		
 		var menubutton:Sprite; //wrappers for the ui buttons on bot-right
+		var mutebutton:Sprite;
 		var skipbutton:Sprite;
 		
 		public function makeui() { //makes game ui, called in constructor
@@ -218,7 +216,7 @@
 			} else {
 				skipbutton.addChild(skipbuttonimg);
 			}
-			skipbutton.x = 410; skipbutton.y = 503;
+			skipbutton.x = 362; skipbutton.y = 503;
 			if (this.hasskip) {
 				main.addChild(skipbutton);
 			}
@@ -237,14 +235,75 @@
 			leveldisplay.setTextFormat(JumpDieCreateMain.getTextFormat(10));
 			leveldisplay.defaultTextFormat = JumpDieCreateMain.getTextFormat(10);
             main.addChild(leveldisplay);
+			
+			mutebutton = new Sprite;
+			mutebutton.addChild(this.soundonbuttonimg);
+			mutebutton.addChild(this.soundoffbuttonimg);
+			mutebutton.x = 410;
+			mutebutton.y = 503;
+			mutebutton.addEventListener(MouseEvent.CLICK, function() {
+				main.mute = !main.mute;
+				mutebuttonaction();
+			});
+			mutebuttonvisual();
+			if (this.usebackbutton) {
+				skipbutton.x = 410;
+			} else {
+				main.addChild(mutebutton);
+			}
+			
+			
+		}
+		
+		private function mutebuttonvisual() {
+			if (main.mute) {
+				this.soundoffbuttonimg.visible = true;
+			} else {
+				this.soundoffbuttonimg.visible = false;
+			}
+		}
+		
+		private function mutebuttonaction() {
+			mutebuttonvisual();
+			var st:SoundTransform;
+			if (soundTransformStack.length == 0) {
+				st = new SoundTransform;
+			} else {
+				st = soundTransformStack.pop();
+			}
+			
+			if (main.mute) {
+				st.volume = 0;
+			} else {
+				st.volume = 1;
+			}
+			
+			soundTransformStack.push(main.sc.soundTransform);
+			main.sc.soundTransform = st;
+		}
+		
+		var soundTransformStack:Array = new Array;
+		private function soundfadein() {
+			//trace(main.sc.soundTransform.volume);
+			if (main.sc.soundTransform.volume < 1 && !main.mute) {
+				soundTransformStack.push(main.sc.soundTransform);
+				var nsct:SoundTransform ;
+				if (soundTransformStack.length == 0) {
+					nsct = new SoundTransform();
+				} else {
+					nsct = soundTransformStack.pop();
+				}
+				nsct.volume = main.sc.soundTransform.volume + 0.03;
+				main.sc.soundTransform = nsct;
+			}
 		}
 		
 		private var justWallJumped:Boolean = false;
 		var gctimer:Number = 0;
+		
 		//START GAME ENGINE CODE
 		public function update(e:TimerEvent) { //main update cycle
-			//trace(main.numChildren);
-			//trace(((System.totalMemory*0.0009765625)/1024));
+			soundfadein();
 			leveldisplay.text = displayname;
 			inputStackMove(); //moves testguy based on top key in input stack
 			
@@ -272,18 +331,8 @@
 				}
 			}
 			
-			//trace("updates: "+c+" mainchildren:"+main.numChildren);
-			
 			gameScroll(); //scrolls all the current blocks and player
 			moveUiToFront();
-			/*if (gctimer > 0) {
-				gctimer--;
-			}
-			if ( ((System.totalMemory*0.0009765625)/1024)>initmem*1.5 && gctimer == 0){
-				trace("GARBAGE COLLECT");
-				JumpDieCreateMain.gc();
-				gctimer = 500;
-			}*/
 		}
 		
 		public function moveUiToFront() {
@@ -296,6 +345,9 @@
 			main.setChildIndex(leveldisplayimg,main.numChildren-1);
 			main.setChildIndex(leveldisplay,main.numChildren-1);
 			main.setChildIndex(menubutton,main.numChildren-1);
+			if (this.mutebutton.stage != null) {
+				main.setChildIndex(this.mutebutton,main.numChildren-1);
+			}
 			if (skipbutton.stage != null) {
 				main.setChildIndex(skipbutton,main.numChildren-1);
 			}
@@ -367,7 +419,7 @@
 			if (storekey.indexOf(e.keyCode) != -1) {
 				storekey.splice(storekey.indexOf(e.keyCode),1);
 			}
-			if (e.keyCode != Keyboard.SPACE ) {
+			if (e.keyCode != Keyboard.SPACE && e.keyCode  != Keyboard.ENTER && e.keyCode  != Keyboard.UP && e.keyCode  != Keyboard.W && e.keyCode  != Keyboard.Z) {
 				storekey.push(e.keyCode);
 			} else if (jumpUnpressed) {
 				jumpUnpressed = false;
@@ -382,7 +434,7 @@
 			if (storekey.indexOf(e.keyCode) != -1) {
 				storekey.splice(storekey.indexOf(e.keyCode),1);
 			}
-			if (e.keyCode == Keyboard.SPACE) {
+			if (e.keyCode == Keyboard.SPACE || e.keyCode  == Keyboard.ENTER || e.keyCode  == Keyboard.UP|| e.keyCode  == Keyboard.W || e.keyCode  == Keyboard.Z) {
 				jumpUnpressed = true;
 			}
 		}
@@ -520,9 +572,17 @@
 		public static var mb3:Class;
 		private var skipbuttonimg:Bitmap = new mb3;
 		
-		[Embed(source='..//img//button//leveldisplay.png')]
+		[Embed(source='..//img//button//soundon.png')]
 		public static var mb4:Class;
-		private var leveldisplayimg:Bitmap = new mb4;
+		private var soundonbuttonimg:Bitmap = new mb4;
+		
+		[Embed(source='..//img//button//soundoff.png')]
+		public static var mb6:Class;
+		private var soundoffbuttonimg:Bitmap = new mb6;
+		
+		[Embed(source='..//img//button//leveldisplay.png')]
+		public static var mb5:Class;
+		private var leveldisplayimg:Bitmap = new mb5;
 		
 		[Embed(source='..//img//block//bg1.png')]
 		public static var bg1:Class;

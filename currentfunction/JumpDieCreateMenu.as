@@ -54,6 +54,7 @@
 			main.addChild(new t1c as Bitmap);
 			main.addChild(titlelogo);
 			main.addChild(menubuttonwrapper);
+			makelogo();
 			use_menu = main_menu;
 			loadOptions();
 			updateCursor();
@@ -63,14 +64,14 @@
 			main.cstage.focus = main.cstage;
 			makemutebutton();
 			
-			makelogo();
-			
 			checkonline();
 			JumpDieCreateMain.gc();
 		}
 		
+		private var logo:TextField;
+		
 		private function makelogo() {
-			var logo:TextField = SubmitMenu.maketextdisplay(0,505,"SPOTCO(www.spotcos.com)",12,200,30);
+			logo = SubmitMenu.maketextdisplay(0,490,"SPOTCO(www.spotcos.com)\nMUSIC BY(www.openheartsound.com)",12,500,60);
 			main.addChild(logo);
 		}
 		
@@ -83,7 +84,7 @@
 			urlLoader.addEventListener(Event.COMPLETE, updateonlinestatus);
 			urlLoader.load(urlRequest);
 			
-			var s:Bitmap = new GameEngine.mb4 as Bitmap;
+			var s:Bitmap = new GameEngine.mb5 as Bitmap;
 			s.scaleX = 2.3;
 			statusdisplaycontainer.addChild(s);
 			statusdisplay.embedFonts = true;
@@ -226,8 +227,10 @@
 			use_menu[menupos].addChild(use_menu[menupos].guycursor);
 			if (use_menu == online_menu) {
 				statusdisplaycontainer.visible = true;
+				logo.visible = false;
 			} else {
 				statusdisplaycontainer.visible = false;
+				logo.visible = true;
 			}
 		}
 		

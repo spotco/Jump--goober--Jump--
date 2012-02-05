@@ -99,6 +99,9 @@
 			main.playSpecific(JumpDieCreateMain.LEVELEDITOR_MUSIC);
 			main.addChildAt(bggrid,main.getChildIndex(this)+1);
 			drawGrid();
+			
+			this.moveplaceimg.x = 400;
+			
 		}
 				
 		[Embed(source="..//misc//blank.xml", mimeType="application/octet-stream")]
@@ -170,6 +173,10 @@
 					addblock = new RocketLauncher(e.@x,e.@y);
 				} else if (e.name() == "bossactivate") {
 					addblock = new BossActivate(e.@x,e.@y,e.@width,e.@height,e.@hp);
+				} else if (e.name() == "laserlauncher") {
+					addblock = new LaserLauncher(e.@x,e.@y,e.@dir);
+				} else {
+					continue;
 				}
 				rectList.push(addblock);
 				main.addChild(addblock);
@@ -224,6 +231,9 @@
 		
 		private function mousePreviewCreate(e:TimerEvent) { //ghost animator for creating
 			mousePreviewDrawer.graphics.clear();
+			if (main.stage.mouseY > 500) {
+				return;
+			}
 			mousePreviewDrawer.graphics.beginFill(colorByType(currenttype));
 			mousePreviewDrawer.graphics.drawRect(cboxx,cboxy,main.stage.mouseX-cboxx,main.stage.mouseY-cboxy);
 			mousePreviewDrawer.graphics.endFill();
@@ -484,6 +494,8 @@
 		public var helpbutton:Sprite;
 		public var bgbutton:Sprite;
 		
+		public var moveplaceindicator:Sprite;
+		
 		var gB:ButtonMessage = new ButtonMessage("",this);
 		//note, keep this order the same as the constant numbers
 		var iconBitmap:Array = new Array(gB.blue,
@@ -568,6 +580,9 @@
 											helpbutton.addChild( new ButtonMessage("bg",passhelper));
 										});
 			
+			this.moveplaceindicator = new Sprite;
+			this.moveplaceindicator.addChild(this.moveplaceimg);
+			main.addChild(this.moveplaceindicator);
 			main.stage.focus = main.stage;
 			
 		}
@@ -603,6 +618,8 @@
 			main.removeChild(selectorbutton);
 			main.removeChild(infobutton);
 			main.removeChild(helpbutton);
+			
+			main.removeChild(this.moveplaceindicator);
 			
 			menubutton = null;
 			playbutton = null;
@@ -743,6 +760,10 @@
 		[Embed(source='..//img//button//bg.png')]
 		private var mb7:Class;
 		private var bgbuttonimg:Bitmap = new mb7;
+		
+		[Embed(source='..//img//misc//moveplacesign.png')]
+		private var mb8:Class;
+		private var moveplaceimg:Bitmap = new mb8;
 		
 	}
 	

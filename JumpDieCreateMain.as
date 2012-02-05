@@ -37,6 +37,7 @@
 		public var mute:Boolean;
 		public var cstage:Stage;
 		public var localdata:SharedObject;
+		public var rankdata:Object;
 		
 		public static var ONLINE_DB_URL:String =  "http://spotcos.com/jumpdiecreate/dbscripts/";
 		
@@ -46,8 +47,9 @@
             Security.allowInsecureDomain("spotcos.com");
 			stage.quality = StageQuality.LOW;
 			cstage = stage;
-			mute = false;
+			mute = true;
 			localdata = SharedObject.getLocal("JumpDieOrCreateSPOTCO");
+			initrankdata();
 			
 			verifysave();
 			curfunction = new JumpDieCreateMenu(this);
@@ -132,60 +134,63 @@
 		
 		//oh yeah, and the main is the sound manager lol
 		public function playSpecific(tar:Number,repeat:Boolean = true) {
-			if (!mute) {
-				if (tar == MENU_MUSIC && pmenufix) {
-					return;
-				} else  if (tar == MENU_MUSIC && !pmenufix) {
-					pmenufix = true;
-				} else {
-					pmenufix = false;
-				}
-				
-				if (sc) {
-					sc.stop();
-				}
-				var test:Sound;
-				
-				if (tar == LEVELEDITOR_MUSIC) {
-					test = ((new mleveleditor) as Sound);
-				} else if (tar == MENU_MUSIC) {
-					test = ((new mmenu) as Sound);
-				} else if (tar == SONG1) {
-					test = ((new m1) as Sound);
-				} else if (tar == SONG2) {
-					test = ((new m2) as Sound);
-				} else if (tar == SONG1END) {
-					test = ((new m1end) as Sound);
-				} else if (tar == SONG2END) {
-					test = ((new m2end) as Sound);
-				} else if (tar == SONG3END) {
-					test = ((new m3end) as Sound);
-				} else if (tar == ONLINEEND) {
-					test = ((new onlineend) as Sound);
-				} else if (tar == ONLINE) {
-					test = ((new online) as Sound);
-				} else if (tar == SONG3) {
-					test = ((new m3) as Sound);
-				} else if (tar == SONG4) {
-					test = ((new m4) as Sound);
-				} else if (tar == BOSSSONG) {
-					test = ((new mboss) as Sound);
-				} else if (tar == BOSSENDSONG) {
-					test = ((new mbossend) as Sound);
-				}
-				
-				if (repeat) {
-					sc = test.play(0,9999);
-				} else {
-					sc = test.play();
-				}
-				
-				/*if (tar == SONG1) {
-					sc.addEventListener(Event.SOUND_COMPLETE, function() {
-											var test2:Sound = (new m1) as Sound;
-											sc = test2.play(0,9999);
-										});
-				}*/
+			/*if (mute) {
+				return;
+			}*/
+			
+			if (tar == MENU_MUSIC && pmenufix) {
+				return;
+			} else  if (tar == MENU_MUSIC && !pmenufix) {
+				pmenufix = true;
+			} else {
+				pmenufix = false;
+			}
+			
+			if (sc) {
+				sc.stop();
+			}
+			var test:Sound;
+			
+			if (tar == LEVELEDITOR_MUSIC) {
+				test = ((new mleveleditor) as Sound);
+			} else if (tar == MENU_MUSIC) {
+				test = ((new mmenu) as Sound);
+			} else if (tar == SONG1) {
+				test = ((new m1) as Sound);
+			} else if (tar == SONG2) {
+				test = ((new m2) as Sound);
+			} else if (tar == SONG1END) {
+				test = ((new m1end) as Sound);
+			} else if (tar == SONG2END) {
+				test = ((new m2end) as Sound);
+			} else if (tar == SONG3END) {
+				test = ((new m3end) as Sound);
+			} else if (tar == ONLINEEND) {
+				test = ((new onlineend) as Sound);
+			} else if (tar == ONLINE) {
+				test = ((new online) as Sound);
+			} else if (tar == SONG3) {
+				test = ((new m3) as Sound);
+			} else if (tar == SONG4) {
+				test = ((new m4) as Sound);
+			} else if (tar == BOSSSONG) {
+				test = ((new mboss) as Sound);
+			} else if (tar == BOSSENDSONG) {
+				test = ((new mbossend) as Sound);
+			}
+			
+			var t:SoundTransform;
+			if (mute) {
+				t = new SoundTransform(0);
+			} else {
+				t = new SoundTransform(1);
+			}
+			
+			
+			if (repeat) {
+				sc = test.play(0,9999,t);
+			} else {
+				sc = test.play(0,1,t);
 			}
 		}
 		
@@ -342,6 +347,10 @@
 			}
 			textFormat.size = size;
 			return textFormat;
+		}
+		
+		private function initrankdata() {
+			this.rankdata = RankData.initrankdata();			
 		}
 		
 	}

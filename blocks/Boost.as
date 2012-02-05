@@ -14,6 +14,7 @@
 		public var animframe:Number;
 		public var animslowtimer:Number;
 		
+		public var frame:Sprite = new Sprite;
 
 		public function Boost(x:Number,y:Number,w:Number,h:Number) {
 			//boost pad that accelerates upward (used to provide extra jumps)
@@ -34,9 +35,17 @@
 			animframe = 0;
 			animslowtimer = 0;
 			animarray = [makeBitmap(yellowblock0), makeBitmap(yellowblock1),makeBitmap(yellowblock2),makeBitmap(yellowblock3),makeBitmap(yellowblock4)];
-				graphics.beginBitmapFill(animarray[0]);
-				graphics.drawRect(0, 0, this.w,this.h);
-				graphics.endFill();
+			graphics.beginBitmapFill(animarray[0]);
+			graphics.drawRect(0, 0, this.w,this.h);
+			graphics.endFill();
+			this.alpha = 0.8;
+			
+			frame.graphics.lineStyle(2,0xFFAA33);
+			frame.graphics.lineTo(this.w,0);
+			frame.graphics.lineTo(this.w,this.h);
+			frame.graphics.lineTo(0,this.h);
+			frame.graphics.lineTo(0,0);
+			addChild(frame);
 		}
 		
 		var playstatus = false;
