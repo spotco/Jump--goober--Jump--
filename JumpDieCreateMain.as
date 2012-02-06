@@ -47,7 +47,7 @@
             Security.allowInsecureDomain("spotcos.com");
 			stage.quality = StageQuality.LOW;
 			cstage = stage;
-			mute = true;
+			mute = false;
 			localdata = SharedObject.getLocal("JumpDieOrCreateSPOTCO");
 			initrankdata();
 			
