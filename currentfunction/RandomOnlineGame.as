@@ -31,6 +31,8 @@
 		var die:Boolean = false;
 		var dietimer:Timer;
 		
+		var numdeath = -1;
+		
 		var startsong:Boolean = true;
 		
 		public function RandomOnlineGame(main:JumpDieCreateMain) {
@@ -101,10 +103,12 @@
 				main.playSpecific(JumpDieCreateMain.ONLINE);
 				startsong = false;
 			}
-			currentGame = new GameEngine(main,this,currentlevelxml,nom,false);
+			numdeath++;
+			currentGame = new GameEngine(main,this,currentlevelxml,nom,false,-1,true,numdeath);
 		}
 		
 		public override function nextLevel(hitgoal:Boolean) {
+			numdeath = -1;
 			if (hitgoal) {
 				new ReviewSubmitMenu(this,processNext,main,currentlevelinfo);
 			} else {

@@ -95,6 +95,7 @@
 		
 		public static function guyhit(g:GameEngine):Boolean {
 			g.moveUiToFront();
+			g.kill = true;
 			g.main.playsfx(JumpDieCreateMain.explodesound);
 			g.timer.stop();
 			g.testguy.explode();

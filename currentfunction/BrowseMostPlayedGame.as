@@ -37,6 +37,8 @@
 		
 		var KILL = false;
 		
+		var numdeath = -1;
+		
 		public function BrowseMostPlayedGame(main:JumpDieCreateMain,noload:Boolean = false) {
 			this.main = main;
 			initbg();
@@ -152,6 +154,10 @@
 			urlLoader.addEventListener(Event.COMPLETE, newLevelRecieved);
 			configureErrors(urlLoader);
 			urlLoader.load(urlRequest);
+			if (this.browsedisplay.stage != null) {
+				main.removeChild(this.browsedisplay);
+			}
+			loadingdisplay.visible = true;
 		}
 		
 		private function newLevelRecieved(e:Event) {
@@ -177,11 +183,13 @@
 				main.playSpecific(JumpDieCreateMain.ONLINE);
 				startsong = false;
 			}
-			this.currentgame = new GameEngine(this.main,this,this.clvlxml,this.clvlxml.@name,true);
+			this.numdeath++;
+			this.currentgame = new GameEngine(this.main,this,this.clvlxml,this.clvlxml.@name,true,-1,true,numdeath);
 		}
 		
 		public override function nextLevel(hitgoal:Boolean) {
 			startsong = true;
+			numdeath = -1;
 			if (hitgoal) {
 				new ReviewSubmitMenu(this,remakeUI,main,this.thislevelinfo);
 			} else {
@@ -213,13 +221,18 @@
 		}
 		
 		private function errorhandle(e:Event) {
-			browsedisplay.visible = false;
-			loadingdisplay.visible = true;
-			loadingdisplay.x = 145; loadingdisplay.y = 140;
-			loadingdisplay.setTextFormat(JumpDieCreateMain.getTextFormat(10));
-			loadingdisplay.defaultTextFormat = JumpDieCreateMain.getTextFormat(10);
-			loadingdisplay.textColor = 0xFF0000;
-			loadingdisplay.text = "Network error: "+e;
+			try {
+				browsedisplay.visible = false;
+				loadingdisplay.visible = true;
+				loadingdisplay.x = 145; loadingdisplay.y = 140;
+				loadingdisplay.setTextFormat(JumpDieCreateMain.getTextFormat(10));
+				loadingdisplay.defaultTextFormat = JumpDieCreateMain.getTextFormat(10);
+				loadingdisplay.textColor = 0xFF0000;
+				loadingdisplay.text = "Network error: "+e+"\nPlease try again.";
+			} catch (er:Error) {
+				trace(e);
+				trace(er);
+			}
 		}
 		
 		public function initbg() {

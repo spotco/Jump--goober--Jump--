@@ -29,4 +29,15 @@
   <wall x="360" y="-2453" width="101" height="165" text=""/>
   <wall x="218" y="-2530" width="78" height="-170"/>
   <goal x="167" y="-2987" width="177" height="180" text=""/>
+  <track x="275" y="-516" width="210" height="41"/>
+  <trackblade x="372" y="-510" width="50" height="55"/>
+  <track x="23" y="-805" width="161" height="57"/>
+  <track x="320" y="-808" width="161" height="40"/>
+  <trackblade x="53" y="-801"/>
+  <trackblade x="464" y="-800"/>
+  <track x="13" y="-514" width="214" height="43"/>
+  <trackblade x="114" y="-508"/>
+  <track x="140" y="-1167" width="214" height="42"/>
+  <track x="135" y="-1151" width="221" height="23"/>
+  <trackblade x="249" y="-1154"/>
 </level>

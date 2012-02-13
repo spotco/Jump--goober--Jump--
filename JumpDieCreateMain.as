@@ -319,6 +319,13 @@
 		private static var rocketbossdie: Class;
 		public static var rocketbossdiesound:Sound = (new rocketbossdie) as Sound;
 		
+		[Embed(source='snd//pause.mp3')] 		 
+		private static var pause: Class;
+		public static var pausesound:Sound = (new pause) as Sound;
+		
+		[Embed(source='snd//unpause.mp3')] 		 
+		private static var unpause: Class;
+		public static var unpausesound:Sound = (new unpause) as Sound;
 		
 		[Embed(source='snd//leveleditor.mp3')] 		 
 		private var mleveleditor : Class;

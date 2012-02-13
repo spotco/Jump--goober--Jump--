@@ -42,6 +42,8 @@
 		private var text:TextField = new TextField;
 		private var textbubblepic:Bitmap;
 		
+		public var prev_game_time_store:Number = 0;
+		
 		
 		public function TutorialGame(main:JumpDieCreateMain) {
 			this.main = main;
@@ -263,7 +265,7 @@
 			switchsong = true;
 			main.removeChild(this);
 			main.stop();
-			this.overallstarttime = new Date();
+			//this.overallstarttime = new Date();
 			startLevel();
 		}
 		
@@ -272,6 +274,9 @@
 				worldcompleteart();
 				return;
 			}
+			if (this.currentGame != null) {
+				this.prev_game_time_store += currentGame.game_time;
+			}
 			currentGame = null;
 			if (switchsong) {
 				getsong();
@@ -279,8 +284,8 @@
 				switchsong = false;
 			}
 			var noskip:Boolean = this.clvl < this.maxlvl;
-			starttime = new Date();
-			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,this.thisworld,noskip);
+			//starttime = new Date();
+			currentGame = new GameEngine(main,this,levels[clvl],levels[clvl].@name,false,this.thisworld,noskip,numDeath);
 		}
 		
 		private function worldcompleteart() {
@@ -385,13 +390,12 @@
 		
 		public override function nextLevel(hitgoal:Boolean) {
 			//hitgoal = true;
-			
 			if (hitgoal) {
 				levelcompletescreen();
-				return;
 			} else {
 				loadNextLevel();
 			}
+			this.prev_game_time_store = 0;
 		}
 		
 		private function save(msectotal:Number, displaytime:String) {
@@ -471,34 +475,16 @@
 			}
 		}
 		
-		private function getdisplaytime(starttime:Date, endtime:Date):String {
-				var sectotal:Number = (endtime.hours - starttime.hours)*60*60 + (endtime.minutes - starttime.minutes)*60 + (endtime.seconds - starttime.seconds);
-				//trace("timeSec:"+sectotal);
-				var displaytime:String = Math.floor(sectotal/60) + ":";
-				if (sectotal%60 < 10) {
-					displaytime += "0"+(sectotal%60);
-				} else {
-					displaytime += (sectotal%60);
-				}
-				var msectotal:Number = endtime.getTime() - starttime.getTime();
-				var msdisplaytimecalc:Number = (((msectotal%1000)/1000)*1000/1000)*1000;
-				if (msdisplaytimecalc < 10) {
-					displaytime += ":00"+msdisplaytimecalc;
-				} else if (msdisplaytimecalc < 100) {
-					displaytime += ":0"+msdisplaytimecalc;
-				} else {
-					displaytime += ":"+msdisplaytimecalc;
-				}
-				return displaytime;
-		}
-		
 		private function levelcompletescreen() {
-				this.main.playsfx(JumpDieCreateMain.cheersound);
-				var endtime:Date = new Date();
-				var msectotal:Number = endtime.getTime() - starttime.getTime();
+				//var endtime:Date = new Date();
+				//var msectotal:Number = endtime.getTime() - starttime.getTime();
+				//var displaytime = getdisplaytime(starttime,endtime);
+				//var totaldisplaytime = getdisplaytime(this.overallstarttime,endtime);
 				
-				var displaytime = getdisplaytime(starttime,endtime);
-				var totaldisplaytime = getdisplaytime(this.overallstarttime,endtime);
+				this.main.playsfx(JumpDieCreateMain.cheersound);
+				var msectotal:Number = this.currentGame.game_time;
+				var displaytime = GameEngine.gettimet(this.currentGame.game_time);
+				var totaldisplaytime = GameEngine.gettimet(this.prev_game_time_store+this.currentGame.game_time);
 				
 				save(msectotal,displaytime);
 				var rank:String = getrank(msectotal);
@@ -575,8 +561,9 @@
 		
 		public function loadNextLevel() {
 			numDeath = 0;
-			starttime = new Date;
-			this.overallstarttime = new Date();
+			/*starttime = new Date;
+			this.overallstarttime = new Date();*/
+			this.currentGame = null;
 			clvl++;
 			switchsong = true;
 			startLevel();
@@ -616,6 +603,28 @@
    			var ba:ByteArrayAsset = ByteArrayAsset(input);
    			var xml:XML = new XML( ba.readUTFBytes( ba.length ) );
    			return xml;    
+		}
+		
+		//NOT USED
+		public static function getdisplaytime(starttime:Date, endtime:Date):String {
+				var sectotal:Number = (endtime.hours - starttime.hours)*60*60 + (endtime.minutes - starttime.minutes)*60 + (endtime.seconds - starttime.seconds);
+				//trace("timeSec:"+sectotal);
+				var displaytime:String = Math.floor(sectotal/60) + ":";
+				if (sectotal%60 < 10) {
+					displaytime += "0"+(sectotal%60);
+				} else {
+					displaytime += (sectotal%60);
+				}
+				var msectotal:Number = endtime.getTime() - starttime.getTime();
+				var msdisplaytimecalc:Number = (((msectotal%1000)/1000)*1000/1000)*1000;
+				if (msdisplaytimecalc < 10) {
+					displaytime += ":00"+msdisplaytimecalc;
+				} else if (msdisplaytimecalc < 100) {
+					displaytime += ":0"+msdisplaytimecalc;
+				} else {
+					displaytime += ":"+msdisplaytimecalc;
+				}
+				return displaytime;
 		}
 
 		[Embed(source='..//img//misc//transparentmenu.png')]

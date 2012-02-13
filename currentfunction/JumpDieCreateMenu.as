@@ -14,7 +14,8 @@
 	import flash.net.*;
 	import flash.xml.*;
 	import flash.media.Sound;
-		import blocks.*;
+	import flash.events.*;
+	import blocks.*;
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
@@ -82,6 +83,7 @@
 			urlRequest.data = vars;
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE, updateonlinestatus);
+			configureErrors(urlLoader);
 			urlLoader.load(urlRequest);
 			
 			var s:Bitmap = new GameEngine.mb5 as Bitmap;
@@ -92,7 +94,7 @@
             statusdisplay.x = 12; statusdisplay.y = 2;
             statusdisplay.width = 500;
 			statusdisplay.selectable = false;
-			statusdisplay.text = "SERVER STATUS: OFFLINE";
+			statusdisplay.text = "SERVER STATUS: Connecting or OFFLINE";
 			statusdisplay.setTextFormat(JumpDieCreateMain.getTextFormat(10));
 			statusdisplay.defaultTextFormat = JumpDieCreateMain.getTextFormat(10);
 			
@@ -107,6 +109,21 @@
 		private function updateonlinestatus(e:Event) {
 			var t:XML = new XML(e.target.data);
 			statusdisplay.text = "SERVER STATUS: ONLINE with currently "+(t.numlevels.@val-1)+" levels!";
+		}
+		
+		private function configureErrors(dispatcher:IEventDispatcher) {
+			dispatcher.addEventListener(NetStatusEvent.NET_STATUS, errorhandle);
+			dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, errorhandle);
+			dispatcher.addEventListener(IOErrorEvent.IO_ERROR,errorhandle);
+		}
+		
+		private function errorhandle(e:Event) {
+			try {
+				statusdisplay.text = "ERROR IN CONNECTING TO SERVER, MAY BE OFFLINE";
+			} catch (er:Error) {
+				trace(e);
+				trace(er);
+			}
 		}
 		
 		public function activate() {

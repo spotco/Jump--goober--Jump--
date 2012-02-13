@@ -84,13 +84,14 @@
 				
 			}
 			if (!simple && hitbox.hitTestObject(g.testguy.innerhitbox)) {
-				g.main.playsfx(JumpDieCreateMain.explodesound);
+				/*g.main.playsfx(JumpDieCreateMain.explodesound);
 				g.timer.stop();
 				g.testguy.explode();
 				g.timer = new Timer(1200,1);
 				g.timer.start();
 				g.timer.addEventListener(TimerEvent.TIMER_COMPLETE, function(){g.reload();});
-				return true;
+				return true;*/
+				return guyhit(g);
 			}
 			
 			return false;

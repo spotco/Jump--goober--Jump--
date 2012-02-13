@@ -67,6 +67,8 @@
 		
 		private var ingame:Boolean = false;
 		
+		var numdeath:Number = -1;
+		
 		
 		public function LevelEditor(main:JumpDieCreateMain) {
 			currenttype = 0; 
@@ -94,7 +96,7 @@
 			mousePreviewDrawer = new Sprite;
 			main.addChild(mousePreviewDrawer);
 			
-			//loadFromEmbedXML();
+			loadFromEmbedXML();
 			
 			main.playSpecific(JumpDieCreateMain.LEVELEDITOR_MUSIC);
 			main.addChildAt(bggrid,main.getChildIndex(this)+1);
@@ -175,7 +177,10 @@
 					addblock = new BossActivate(e.@x,e.@y,e.@width,e.@height,e.@hp);
 				} else if (e.name() == "laserlauncher") {
 					addblock = new LaserLauncher(e.@x,e.@y,e.@dir);
+				} else if (e.name() == "activatetrackwall") {
+					addblock = new ActivateTrackWall(e.@x, e.@y, e.@width, e.@height);
 				} else {
+					trace("error with loading xml");
 					continue;
 				}
 				rectList.push(addblock);
@@ -435,7 +440,7 @@
 		public override function startLevel() { //converts to xml, then runs gameengine with it
 			clear();
 			trace(outputXML("new_level").toXMLString());
-			
+			this.numdeath++;
 			this.starttime = new Date;
 			
 			if (!this.ingame) { //for continuous music playing
@@ -443,7 +448,7 @@
 				main.stop();
 				main.playSpecific(JumpDieCreateMain.ONLINE);
 			}
-			currentgame = new GameEngine(main,this,outputXML("new_level"),"new level",true);
+			currentgame = new GameEngine(main,this,outputXML("new_level"),"new level",true,-1,true,this.numdeath);
 		}
 		
 		
@@ -673,6 +678,7 @@
 		}
 		
 		public override function nextLevel(hitgoal:Boolean) {
+			this.numdeath = -1;
 			if (!hitgoal) {
 				remake();
 			} else {

@@ -22,6 +22,7 @@
 	import currentfunction.*;
 	import misc.*;
 	import flash.media.SoundTransform;
+	import flash.utils.getTimer;
 	
 	public class GameEngine {
 		public var displayname:String;
@@ -58,11 +59,18 @@
 		
 		private var hasskip:Boolean;
 		
+		private var deathcount:Number;
+		private var pause:Boolean = false;
+		
+		public var game_time:Number = 0;
+		var prev_time:Number;
+		
 		var usebackbutton:Boolean;
+		
 		//loads and creates game given xml file, adds self to main param
-		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = -1, hasskip:Boolean = true) {
+		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = -1, hasskip:Boolean = true, deathcount:Number = 0) {
 			trace("gameengine start");
-			
+			this.deathcount = deathcount;
 			this.usebackbutton = usebackbutton;
 			if (useBg == 1 || Number(clvlxml.@bg) == 1) {
 				bg = new bg1();
@@ -84,6 +92,7 @@
 			loadfromXML(clvlxml); //loads and adds all blocks to stage
 			
 			makeui();
+			leveldisplay.text = displayname;
 			//makes player then adds eventlisteners
 			testguy = new Guy(250,250);
 			main.addChild(testguy);
@@ -98,7 +107,9 @@
 			main.stage.focus = main.stage;
 			timer = new Timer(30); //start update cycle
             timer.addEventListener(TimerEvent.TIMER,update,false,100,false);
+			prev_time = flash.utils.getTimer();
             timer.start();
+			
 		}
 		
 		public function loadfromXML(clvlxml:XML) { //loads and adds blocks from xml, called from constructor
@@ -202,13 +213,41 @@
 		var menubutton:Sprite; //wrappers for the ui buttons on bot-right
 		var mutebutton:Sprite;
 		var skipbutton:Sprite;
+		var pausebutton:Sprite;
+		var pausedcover:Sprite = new Sprite;
+		var toprighttext:TextField;
 		
 		public function makeui() { //makes game ui, called in constructor
+			toprighttext = SubmitMenu.maketextdisplay(380,0,"TIME: 00:00:00\n"+"DEATHS:0",12,120,60);
+			var tf:TextFormat = toprighttext.getTextFormat();
+			tf.align = TextFormatAlign.RIGHT;
+			toprighttext.setTextFormat(tf);
+			toprighttext.defaultTextFormat = tf;
+			main.addChild(toprighttext);
+			/*SubmitMenu.maketextdisplay(0,490,"SPOTCO(www.spotcos.com)\nMUSIC BY(www.openheartsound.com)",12,500,60);*/
+			
 			menubutton = new Sprite;
 			menubutton.addChild(menubuttonimg);
 			menubutton.x = 458; menubutton.y = 503;
 			main.addChild(menubutton);
 			menubutton.addEventListener(MouseEvent.CLICK,function(){clear();curfunction.destroy();});
+			
+			
+			pausebutton = new Sprite;
+			pausebutton.addChild(pausebuttonimg);
+			pausebutton.addChild(unpausebuttonimg);
+			unpausebuttonimg.visible = false;
+			pausebutton.x = 362; pausebutton.y = 503;
+			pausebutton.addEventListener(MouseEvent.CLICK,function(){pausebuttonaction();});
+			main.addChild(pausebutton);
+			
+			pausedcover.graphics.beginFill(0x000000,0.5);
+			pausedcover.graphics.drawRect(0,0,500,520);
+			var s:TextField = SubmitMenu.maketextdisplay(0,0,"PAUSED",14,500,500);
+			s.textColor = 0xFFFFFF;
+			pausedcover.addChild(s);
+			pausedcover.visible = false;
+			main.addChild(pausedcover);
 			
 			skipbutton = new Sprite;
 			if (usebackbutton) {
@@ -216,10 +255,7 @@
 			} else {
 				skipbutton.addChild(skipbuttonimg);
 			}
-			skipbutton.x = 362; skipbutton.y = 503;
-			if (this.hasskip) {
-				main.addChild(skipbutton);
-			}
+			skipbutton.x = 270; skipbutton.y = 503;
 			skipbutton.addEventListener(MouseEvent.CLICK,function(){loadnextlevel(false);});
 			
 			leveldisplayimg.x = -10; leveldisplayimg.y = 503; 
@@ -242,17 +278,54 @@
 			mutebutton.x = 410;
 			mutebutton.y = 503;
 			mutebutton.addEventListener(MouseEvent.CLICK, function() {
-				main.mute = !main.mute;
 				mutebuttonaction();
 			});
+			main.addChild(mutebutton);
+			
+			var size:Number = 45;
+			
 			mutebuttonvisual();
+			
+			
+			menubutton.x = 503-size*1;
+			skipbutton.x = 503-size*4;
+			mutebutton.x = 503-size*2;
+			pausebutton.x = 503-size*3;
+			
+			if (this.hasskip) {
+				main.addChild(skipbutton);
+			}
+
 			if (this.usebackbutton) {
-				skipbutton.x = 410;
-			} else {
-				main.addChild(mutebutton);
+				skipbutton.x = 503-size*2;
+				mutebutton.x = 503-size*3;
+				pausebutton.x = 503-size*4;
 			}
 			
 			
+		}
+		
+		public var kill = false;
+		private function pausebuttonaction() {
+			if (kill) {
+				return;
+			}
+			pause = !pause;
+			pausebuttonvisual();
+		}
+		
+		private function pausebuttonvisual() {
+			if (this.pause) {
+				this.pausebuttonimg.visible = false;
+				this.unpausebuttonimg.visible = true;
+				this.pausedcover.visible = true;
+				main.playsfx(JumpDieCreateMain.pausesound,new SoundTransform(0.1));
+			} else {
+				this.pausebuttonimg.visible = true;
+				this.unpausebuttonimg.visible = false;
+				this.pausedcover.visible = false;
+				main.playsfx(JumpDieCreateMain.unpausesound,new SoundTransform(0.1));
+			}
 		}
 		
 		private function mutebuttonvisual() {
@@ -264,6 +337,7 @@
 		}
 		
 		private function mutebuttonaction() {
+			main.mute = !main.mute;
 			mutebuttonvisual();
 			var st:SoundTransform;
 			if (soundTransformStack.length == 0) {
@@ -298,13 +372,43 @@
 			}
 		}
 		
-		private var justWallJumped:Boolean = false;
-		var gctimer:Number = 0;
+		public static function gettimet(n:Number):String {
+			var min:Number = Math.floor(n/(60*1000));
+			var displaytime:String = ""+min+":";
+			var sectotal:Number = Math.floor(n/1000);
+			if (sectotal%60 < 10) {
+				displaytime += "0"+(sectotal%60);
+			} else {
+				displaytime += (sectotal%60);
+			}
+			var msectotal:Number = n;
+			var msdisplaytimecalc:Number = (((msectotal%1000)/1000)*1000/1000)*1000;
+			if (msdisplaytimecalc < 10) {
+				displaytime += ":00"+msdisplaytimecalc;
+			} else if (msdisplaytimecalc < 100) {
+				displaytime += ":0"+msdisplaytimecalc;
+			} else {
+				displaytime += ":"+msdisplaytimecalc;
+			}
+			return displaytime;
+		}
 		
+		private var justWallJumped:Boolean = false;
+
 		//START GAME ENGINE CODE
 		public function update(e:TimerEvent) { //main update cycle
 			soundfadein();
-			leveldisplay.text = displayname;
+			var ct:Number = flash.utils.getTimer();
+			if (pause) {
+				prev_time = ct;
+				return;
+			}
+			
+			game_time += ct - prev_time;
+			prev_time = ct;
+			
+			toprighttext.text = "TIME: "+gettimet(game_time)+"\n"+"DEATHS:"+this.deathcount;
+			
 			inputStackMove(); //moves testguy based on top key in input stack
 			
 			justWallJumped = false;
@@ -312,7 +416,6 @@
 				return;
 			}
 			testguy.update(walls,justWallJumped); //loops through walls and checks collision, also updates player position based on velocity (not smart, I know)
-			
 			
 			for each(var a:Array in blocksarrays) {
 				for each(var b:BaseBlock in a) {
@@ -341,10 +444,13 @@
 					main.setChildIndex(b,main.numChildren-1);
 				}
 			}
+			main.setChildIndex(this.pausedcover,main.numChildren-1);
 			main.setChildIndex(testguy,main.numChildren-1);
+			main.setChildIndex(this.toprighttext,main.numChildren-1);
 			main.setChildIndex(leveldisplayimg,main.numChildren-1);
 			main.setChildIndex(leveldisplay,main.numChildren-1);
 			main.setChildIndex(menubutton,main.numChildren-1);
+			main.setChildIndex(pausebutton,main.numChildren-1);
 			if (this.mutebutton.stage != null) {
 				main.setChildIndex(this.mutebutton,main.numChildren-1);
 			}
@@ -436,6 +542,12 @@
 			}
 			if (e.keyCode == Keyboard.SPACE || e.keyCode  == Keyboard.ENTER || e.keyCode  == Keyboard.UP|| e.keyCode  == Keyboard.W || e.keyCode  == Keyboard.Z) {
 				jumpUnpressed = true;
+			}
+			if (e.keyCode == Keyboard.ESCAPE) {
+				pausebuttonaction();
+			}
+			if (e.keyCode == Keyboard.F1) {
+				mutebuttonaction();
 			}
 		}
 		
@@ -579,6 +691,14 @@
 		[Embed(source='..//img//button//soundoff.png')]
 		public static var mb6:Class;
 		private var soundoffbuttonimg:Bitmap = new mb6;
+		
+		[Embed(source='..//img//button//pause.png')]
+		public static var mb7:Class;
+		private var pausebuttonimg:Bitmap = new mb7;
+		
+		[Embed(source='..//img//button//unpause.png')]
+		public static var mb8:Class;
+		private var unpausebuttonimg:Bitmap = new mb8;
 		
 		[Embed(source='..//img//button//leveldisplay.png')]
 		public static var mb5:Class;
