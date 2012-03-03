@@ -41,6 +41,9 @@
 			no.addChild(nobutton);
 			no.addEventListener(MouseEvent.CLICK,nfunction);
 			addChild(no);
+			
+			JumpDieCreateMain.add_mouse_over(yes);
+			JumpDieCreateMain.add_mouse_over(no);
 		}
 
 	}

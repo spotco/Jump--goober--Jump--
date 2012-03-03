@@ -22,6 +22,7 @@
 	import currentfunction.*;
 	import misc.*;
 	import flash.media.SoundTransform;
+	import CPMStar.AdLoader;
 	
 	public class TutorialGame extends CurrentFunction {
 		public var levels:Array;
@@ -47,6 +48,7 @@
 		
 		public function TutorialGame(main:JumpDieCreateMain) {
 			this.main = main;
+			
 			if (!thisnametext) {
 				thisnametext = "World 1";
 				thisworld = 1;
@@ -241,6 +243,7 @@
 			backbutton.removeChild(backbutton.text);
 			backbutton.addChild(new GameEngine.mb2 as Bitmap);
 			this.addChild(backbutton);
+			JumpDieCreateMain.add_mouse_over(backbutton);
 			
 			backbutton.addEventListener(MouseEvent.CLICK, function() {
 				destroy();

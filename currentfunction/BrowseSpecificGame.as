@@ -43,6 +43,7 @@
 			okbutton.x = 355; okbutton.y = 230;
 			okbutton.addChild(new TextWindow.mb3 as Bitmap);
 			okbutton.addEventListener(MouseEvent.CLICK,start);
+			JumpDieCreateMain.add_mouse_over(okbutton);
 			main.addChild(okbutton);
 			
 		}

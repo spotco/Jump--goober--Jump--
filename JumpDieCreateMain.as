@@ -20,16 +20,16 @@
 	import flash.display.LoaderInfo;
 	import flash.display.Loader;
 	import flash.net.URLRequest;
-	import flash.events.Event;
+	import flash.events.*;
 	import flash.system.*;
 	import blocks.*;
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import CPMStar.AdLoader;
 	
 	//JUMP DIE AND CREATE by spotco (http://www.spotcos.com)
 	//An extension of Jump or Die (http://spotcos.com/misc/jumpdie/jumpordie.html), the xml level files are even both ways compatable!
-	//Compile from this class to run, a seperate SWF for preloader
 	
 	public class JumpDieCreateMain extends Sprite {
 		public var sc:SoundChannel;
@@ -38,26 +38,40 @@
 		public var cstage:Stage;
 		public var localdata:SharedObject;
 		public var rankdata:Object;
+		public var mochimanager:MochiManager;
 		
-		public static var ONLINE_DB_URL:String =  "http://spotcos.com/jumpdiecreate/dbscripts/";
+		public static var ONLINE_DB_URL:String =  "http://flashegames.net/spotco/";
+		//public static var ONLINE_DB_URL:String =  "http://spotcos.com/jumpdiecreate/dbscripts/";
 		
-		public function JumpDieCreateMain(stage:Stage) {
-			var _mochiads_game_id:String = "2b4163180653a1e6";
-			Security.allowDomain("spotcos.com");
-            Security.allowInsecureDomain("spotcos.com");
-			stage.quality = StageQuality.LOW;
+		public function JumpDieCreateMain(stage:Stage=null) {
 			cstage = stage;
-			mute = false;
+			//var _mochiads_game_id:String = "2b4163180653a1e6"; JUMP DIE CREATE on spotco
+			var _mochiads_game_id:String = "aa38693f65f9ca8e"; //
 			localdata = SharedObject.getLocal("JumpDieOrCreateSPOTCO");
+			Security.allowDomain("mochiads.com");
+			mochimanager = new MochiManager(_mochiads_game_id,this,localdata);
+			
+			Security.allowDomain("flashegames.net");
+            Security.allowInsecureDomain("flashegames.net");
+			stage.quality = StageQuality.LOW;
+			
+			mute = false;
+			
 			initrankdata();
 			
 			verifysave();
 			curfunction = new JumpDieCreateMenu(this);
-			//tracemem();
+			
 		}
 		
 		public static function clearDisplay(s:Sprite) {
+			if (s == null) {
+				return;
+			}
 			while(s.numChildren > 0) {
+				if (s.getChildAt(0) == null) {
+					continue;
+				}
 				if (s.getChildAt(0) is Bitmap) {
 					(s.getChildAt(0) as Bitmap).bitmapData.dispose();
 				}
@@ -93,9 +107,9 @@
 		
 		private function verifysave() {
 			if (false) {
-				localdata.data.world1 = 12;
-				localdata.data.world2 = 12;
-				localdata.data.world3 = 12;
+				localdata.data.world1 = 11;
+				localdata.data.world2 = 11;
+				localdata.data.world3 = 11;
 			}
 			if (!localdata.data.world1 || !localdata.data.world2 || !localdata.data.world3) {
 				localdata.data.world1 = 1;
@@ -107,7 +121,11 @@
 		}
 		
 		public function menuStart(menupos:Number) {
+			try {
 			curfunction.destroy();
+			} catch (e) {
+				trace("this only fires when mochi doesn't connect");
+			}
 			if (menupos != WORLD1 && menupos != WORLD2 && menupos != WORLD3 && menupos!= MOSTPLAYEDONLINE && menupos!= NEWESTONLINE && menupos!= SPECIFICONLINE) {
 				stop();
 			}
@@ -128,6 +146,15 @@
 			} else if (menupos == SPECIFICONLINE) {
 				curfunction = new BrowseSpecificGame(this);
 			}
+		}
+		
+		public static function add_mouse_over(o:DisplayObject) {
+			o.addEventListener(MouseEvent.ROLL_OVER, function() {
+				flash.ui.Mouse.cursor = flash.ui.MouseCursor.BUTTON; 
+			});
+			o.addEventListener(MouseEvent.ROLL_OUT, function() {
+				flash.ui.Mouse.cursor = flash.ui.MouseCursor.AUTO; 
+			});
 		}
 		
 		public var pmenufix:Boolean = false;
@@ -337,6 +364,10 @@
 		
 		[Embed(source='misc//acknowtt.ttf', embedAsCFF="false", fontName='Menu', fontFamily="Menu", mimeType='application/x-font')] 
       	public static var foo:String;
+		
+				[Embed(source='img//playbutton.png')] 		 
+		public static var playbuttonpreloader: Class;
+		
 		
 		public function playsfx(s:Sound,t:SoundTransform = null) {
 			if (mute) {

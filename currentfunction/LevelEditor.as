@@ -529,18 +529,21 @@
 			menubutton.x = 458; menubutton.y = 502;
 			main.addChild(menubutton);
 			menubutton.addEventListener(MouseEvent.CLICK,function(){destroy();});
+			JumpDieCreateMain.add_mouse_over(menubutton);
 			
 			playbutton = new Sprite;
 			playbutton.addChild(playbuttonimg);
 			playbutton.x = 410; playbutton.y = 502;
 			main.addChild(playbutton);
 			playbutton.addEventListener(MouseEvent.CLICK,function(){startLevel();});
+			JumpDieCreateMain.add_mouse_over(playbutton);
 			
 			undobutton = new Sprite;
 			undobutton.addChild(undobuttonimg);
 			undobutton.x = 362; undobutton.y = 502;
 			main.addChild(undobutton);
 			undobutton.addEventListener(MouseEvent.CLICK,function(){undo();});
+			JumpDieCreateMain.add_mouse_over(undobutton);
 			
 			var passhelper:LevelEditor = this;
 			
@@ -556,6 +559,7 @@
 			selectorbuttonelements.addChild(makeBitmapWrapper(iconBitmap[currenttype]));
 			selectorbuttonelements.getChildAt(1).x = 16; selectorbuttonelements.getChildAt(1).y = 4; 
 			selectorbutton.addChild(selectorbuttonelements);
+			JumpDieCreateMain.add_mouse_over(selectorbutton);
 			
 			infobutton = new Sprite;
 			infobutton.addChild(makeBitmapWrapper(infobuttonimg));
@@ -565,6 +569,7 @@
 											clearButtonMessage();
 											infobutton.addChild(new ButtonMessage("info",passhelper));
 										});
+			JumpDieCreateMain.add_mouse_over(infobutton);
 			
 			
 			helpbutton = new Sprite;
@@ -575,6 +580,7 @@
 											clearButtonMessage();
 											helpbutton.addChild( new ButtonMessage("help",passhelper));
 										});
+			JumpDieCreateMain.add_mouse_over(helpbutton);
 										
 			bgbutton = new Sprite;
 			bgbutton.addChild(makeBitmapWrapper(bgbuttonimg));
@@ -584,7 +590,7 @@
 											clearButtonMessage();
 											helpbutton.addChild( new ButtonMessage("bg",passhelper));
 										});
-			
+			JumpDieCreateMain.add_mouse_over(bgbutton);
 			this.moveplaceindicator = new Sprite;
 			this.moveplaceindicator.addChild(this.moveplaceimg);
 			main.addChild(this.moveplaceindicator);

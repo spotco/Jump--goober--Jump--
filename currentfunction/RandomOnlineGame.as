@@ -157,8 +157,9 @@
 			var spbubble:Bitmap = JumpDieCreateMenu.getTextBubble();
 			spbubble.alpha = 0.8;
 			bg.addChild(spbubble);
-			var backbutton:Sprite = new Sprite;
-			bg.addChild(backbutton);
+			/*var backbutton:Sprite = new Sprite;
+			bg.addChild(backbutton);*/
+			
 			loadingmessagedisplay = SubmitMenu.maketextdisplay(200,230,"Loading...",20,200,250);
 			bg.addChild(loadingmessagedisplay);			
 			
@@ -169,6 +170,7 @@
 											destroy();
 										});
 			bg.addChild(backbutton);
+			JumpDieCreateMain.add_mouse_over(backbutton);
 			
 			main.addChild(bg);
 		}

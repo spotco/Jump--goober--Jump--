@@ -45,6 +45,19 @@
 			initbg();
 			initratingui();
 			this.main.addChild(new Fireworks);
+			
+			if (main.localdata.data["online_levels_played"]) {
+				main.localdata.data["online_levels_played"]++;
+			} else {
+				main.localdata.data["online_levels_played"] = 1;
+			}
+			trace("num_levels_played:"+main.localdata.data["online_levels_played"]);
+			main.mochimanager.update_achievements_onlinecount();
+			try {
+				main.localdata.flush();
+			} catch(e) {
+				trace("write error");
+			}
 		}
 		
 		private function submitplaycount() {
@@ -92,8 +105,22 @@
 			skip.addEventListener(MouseEvent.CLICK, function() {
 				callback.call(caller);  
 			});
+			JumpDieCreateMain.add_mouse_over(skip);
 			ui.addChild(skip);
 			main.addChild(ui);
+			
+			
+			if (r == 1) {
+				main.localdata.data["1star"] = true;
+			} else if (r == 5) {
+				main.localdata.data["5star"] = true;
+			}
+			main.mochimanager.update_achievements_rating();
+			try {
+				main.localdata.flush();
+			} catch(e) {
+				trace("write error");
+			}
 		}
 		
 		private function initratingui() {
@@ -133,6 +160,7 @@
 			skip.addEventListener(MouseEvent.CLICK, function() {
 				callback.call(caller);  
 			});
+			JumpDieCreateMain.add_mouse_over(skip);
 			ui.addChild(skip);
 			main.addChild(ui);
 		}
@@ -151,12 +179,9 @@
 			var spbubble:Bitmap = JumpDieCreateMenu.getTextBubble();
 			spbubble.alpha = 0.8;
 			bg.addChild(spbubble);
-			var backbutton:Sprite = new Sprite;
-			bg.addChild(backbutton);
 			loadingmessagedisplay = SubmitMenu.maketextdisplay(118,135,dispinfo,13,276,243);
 			loadingmessagedisplay.wordWrap = true;
 			bg.addChild(loadingmessagedisplay);			
-			bg.addChild(backbutton);
 			
 			var backbutton:Sprite = new Sprite;
 			backbutton.addChild(GameEngine.backbuttonimg);
@@ -165,7 +190,7 @@
 				caller.destroy();
 			});
 			bg.addChild(backbutton);
-			
+			JumpDieCreateMain.add_mouse_over(backbutton);
 			main.addChild(bg);
 		}
 		

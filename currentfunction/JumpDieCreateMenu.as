@@ -19,6 +19,7 @@
 	import core.*;
 	import currentfunction.*;
 	import misc.*;
+	import flash.ui.MouseCursor;
 	
 	
 	public class JumpDieCreateMenu extends CurrentFunction {
@@ -45,6 +46,7 @@
 			initdesc();
 			initmenu();
 			this.main = main;
+			
 			sound = (new MySound) as Sound;
 			menupos = 0;
 			if (!main.pmenufix) {
@@ -67,13 +69,42 @@
 			
 			checkonline();
 			JumpDieCreateMain.gc();
+			main.mochimanager.show_panel();
+			main.mochimanager.update_achievements_menu();
 		}
 		
 		private var logo:TextField;
+		private var sponsorlogo:Sprite;
+		
+		[Embed(source='..//img//sitelogo.png')]
+		private var sitelogo:Class;
 		
 		private function makelogo() {
-			logo = SubmitMenu.maketextdisplay(0,490,"SPOTCO(www.spotcos.com)\nMUSIC BY(www.openheartsound.com)",12,500,60);
+			logo = SubmitMenu.maketextdisplay(0,490,"Game by SPOTCO(www.spotcos.com)\nMusic by (www.openheartsound.com)",12,500,60);
 			main.addChild(logo);
+			
+			sponsorlogo = new Sprite;
+			sponsorlogo.addChild(new sitelogo as Bitmap);
+			sponsorlogo.y = 440;
+			var clickarea:Sprite = new Sprite;
+			sponsorlogo.addChild(clickarea);
+			clickarea.graphics.beginFill(0x00FF00,0);
+			clickarea.graphics.drawRect(10,15,190,30);
+			clickarea.addEventListener(MouseEvent.CLICK, function() {
+			 	flash.net.navigateToURL(new URLRequest("http://www.flashegames.net/"));
+			});
+			JumpDieCreateMain.add_mouse_over(clickarea);
+			main.addChild(sponsorlogo);
+			
+			var ach_tab:Sprite = new Sprite;
+			ach_tab.addChild(new this.awardstab as Bitmap);
+			main.addChild(ach_tab);
+			ach_tab.x = 500-58;
+			
+			JumpDieCreateMain.add_mouse_over(ach_tab);
+			ach_tab.addEventListener(MouseEvent.CLICK, function() {
+				main.mochimanager.show_awards();
+			});
 		}
 		
 		private function checkonline() {
@@ -128,6 +159,10 @@
 		
 		public function activate() {
 			if (use_menu[menupos].menuoption > 0) {
+				try {
+					main.mochimanager.hide_panel();
+				} catch (e) {
+				}
 				main.menuStart(use_menu[menupos].menuoption);
 			} else if (use_menu[menupos].menuoption < 0) {
 				swapMenu(use_menu[menupos].menuoption);
@@ -167,14 +202,15 @@
 			mutebutton = new Sprite();
 			changemutebuttonicon();
 			mutebutton.addEventListener(MouseEvent.CLICK, function(){
-										main.stop();
-										main.mute = !main.mute; 
-										changemutebuttonicon();
-										if (!main.mute) {
-											main.pmenufix = false;
-											main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
-										}
-										});
+				main.stop();
+				main.mute = !main.mute; 
+				changemutebuttonicon();
+				if (!main.mute) {
+					main.pmenufix = false;
+					main.playSpecific(JumpDieCreateMain.MENU_MUSIC);
+				}
+			});
+			JumpDieCreateMain.add_mouse_over(mutebutton);
 			main.addChild(mutebutton);
 		}
 		
@@ -335,11 +371,13 @@
 								   new MenuOption(250,360,world3,JumpDieCreateMain.WORLD3),
 								   new MenuOption(250,410,(new backdata) as Bitmap,BACK_TO_MAIN));
 			
-			online_menu = new Array(new MenuOption(250,250,playrandom,JumpDieCreateMain.RANDOMONLINE),
-									new MenuOption(250,300,newestsubmitted,JumpDieCreateMain.NEWESTONLINE),
-									new MenuOption(250,350,mostplayed,JumpDieCreateMain.MOSTPLAYEDONLINE),
-									new MenuOption(250,400,entername,JumpDieCreateMain.SPECIFICONLINE),
-								   new MenuOption(250,450,(new backdata) as Bitmap,BACK_TO_MAIN));
+			var shift_up:Number = 25;
+			
+			online_menu = new Array(new MenuOption(250,250-shift_up,playrandom,JumpDieCreateMain.RANDOMONLINE),
+									new MenuOption(250,300-shift_up,newestsubmitted,JumpDieCreateMain.NEWESTONLINE),
+									new MenuOption(250,350-shift_up,mostplayed,JumpDieCreateMain.MOSTPLAYEDONLINE),
+									new MenuOption(250,400-shift_up,entername,JumpDieCreateMain.SPECIFICONLINE),
+								   	new MenuOption(250,450-shift_up,(new backdata) as Bitmap,BACK_TO_MAIN));
 		}
 		
 		public static var ADVENTURE:Number = -3;
@@ -375,15 +413,15 @@
 		private var a2:Class;
 		private var online:Bitmap = new a2();
 		
-				[Embed(source='..//img//misc//leveleditor.png')]
+		[Embed(source='..//img//misc//leveleditor.png')]
 		private var a3:Class;
 		private var leveleditor:Bitmap = new a3();
 		
-						[Embed(source='..//img//misc//world1.png')]
+		[Embed(source='..//img//misc//world1.png')]
 		private var a5:Class;
 		private var world1:Bitmap = new a5();
 		
-								[Embed(source='..//img//misc//world2.png')]
+		[Embed(source='..//img//misc//world2.png')]
 		private var a6:Class;
 		private var world2:Bitmap = new a6();
 		
@@ -391,24 +429,27 @@
 		private var a7:Class;
 		private var world3:Bitmap = new a7();
 		
-				[Embed(source='..//img//misc//playrandom.png')]
+		[Embed(source='..//img//misc//playrandom.png')]
 		private var a8:Class;
 		private var playrandom:Bitmap = new a8();
 		
-						[Embed(source='..//img//misc//mostplayed.png')]
+		[Embed(source='..//img//misc//mostplayed.png')]
 		private var a9:Class;
 		private var mostplayed:Bitmap = new a9();
 		
-								[Embed(source='..//img//misc//newestsubmitted.png')]
+		[Embed(source='..//img//misc//newestsubmitted.png')]
 		private var a11:Class;
 		private var newestsubmitted:Bitmap = new a11();
 		
-								[Embed(source='..//img//misc//entername.png')]
+		[Embed(source='..//img//misc//entername.png')]
 		private var a10:Class;
 		private var entername:Bitmap = new a10();
 		
 		[Embed(source='..//img//misc//back.png')]
 		private var backdata:Class;
+		
+		[Embed(source='..//img//awardstab.png')]
+		private var awardstab:Class;
 		
 		public static function getTextBubble():Bitmap {
 			var s:Bitmap = (new menububble) as Bitmap;

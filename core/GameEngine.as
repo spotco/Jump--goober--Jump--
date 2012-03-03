@@ -67,6 +67,9 @@
 		
 		var usebackbutton:Boolean;
 		
+		var bg_scroll_rect:Rectangle = new Rectangle(0,0,0,0);
+		var bg_y:Number;
+		
 		//loads and creates game given xml file, adds self to main param
 		public function GameEngine(main:JumpDieCreateMain,curfunction:CurrentFunction,clvlxml:XML,name:String, usebackbutton:Boolean = false, useBg:Number = -1, hasskip:Boolean = true, deathcount:Number = 0) {
 			trace("gameengine start");
@@ -81,7 +84,11 @@
 			} else {
 				bg = new bg1();
 			}
-			bg.y = -940;
+			//bg.y = -940;
+			bg.cacheAsBitmap = true;
+			bg_y = -940;
+			calc_bg_scroll_rect();
+			
 			main.addChild(bg);
 			
 			this.hasskip = hasskip;
@@ -302,7 +309,10 @@
 				pausebutton.x = 503-size*4;
 			}
 			
-			
+			JumpDieCreateMain.add_mouse_over(menubutton);
+			JumpDieCreateMain.add_mouse_over(mutebutton);
+			JumpDieCreateMain.add_mouse_over(skipbutton);
+			JumpDieCreateMain.add_mouse_over(pausebutton);
 		}
 		
 		public var kill = false;
@@ -359,7 +369,12 @@
 		var soundTransformStack:Array = new Array;
 		private function soundfadein() {
 			//trace(main.sc.soundTransform.volume);
-			if (main.sc.soundTransform.volume < 1 && !main.mute) {
+			if (main.mute && main.sc.soundTransform.volume > 0) {
+				main.sc.soundTransform = new SoundTransform(0);
+				return;
+			} else if (main.mute) {
+				return;
+			} else if (main.sc.soundTransform.volume < 1) {
 				soundTransformStack.push(main.sc.soundTransform);
 				var nsct:SoundTransform ;
 				if (soundTransformStack.length == 0) {
@@ -493,6 +508,13 @@
 			return false;
 		}
 		
+		private function calc_bg_scroll_rect() {
+			bg_scroll_rect.x = 0;
+			bg_scroll_rect.y = -bg_y;
+			bg_scroll_rect.width = 500;
+			bg_scroll_rect.height = 520;
+			bg.scrollRect = bg_scroll_rect;
+		}
 		
 		private function gameScroll() { //scrolls all blocks and player if player is certain height, a lot of wizardry here
 			//speed of scrolling based on distance between player and scrolling start point
@@ -502,11 +524,11 @@
 			}*/
 			if (testguy.y < 250) {
 				bgcounter++;
-				if(bgcounter > 0 && bg.y < -1 /*&& Math.abs(testguy.vy) >= 3*/) {
-					bg.y+=(SCROLL_SPD/3);
+				if(bgcounter > 0 && bg_y < -1 /*&& Math.abs(testguy.vy) >= 3*/) {
+					bg_y+=(SCROLL_SPD/3);
 					bgcounter = 0;
 				}
-				
+				calc_bg_scroll_rect();
 				for each (var a:Array in blocksarrays) {
 					for each (var b:BaseBlock in a) {
 						b.gameScroll(SCROLL_SPD);
@@ -516,8 +538,8 @@
 				testguy.y +=SCROLL_SPD;
 				currenty += SCROLL_SPD;
 			}
-			if (bg.y > 0) {
-				bg.y = 0;
+			if (bg_y > 0) {
+				bg_y = 0;
 			}
 		}
 		

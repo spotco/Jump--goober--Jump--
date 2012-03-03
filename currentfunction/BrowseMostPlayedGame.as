@@ -83,6 +83,10 @@
 			if (cxml != null) {
 				System.disposeXML(cxml);
 			}
+			if (this.KILL || this.main.curfunction != this) {
+				trace("kill in makexmldisplay");
+				return;
+			}
 			cxml = new XML(e.target.data);
 			browsedisplay = new Sprite;
 			this.selectionarray = new Array;
@@ -135,6 +139,8 @@
 				currentoffset+=5; 
 				loaddisplay();
 			});
+			JumpDieCreateMain.add_mouse_over(nextbutton);
+			JumpDieCreateMain.add_mouse_over(prevbutton);
 			if (i >= 5) {
 				browsedisplay.addChild(nextbutton);
 			}
@@ -145,13 +151,14 @@
 		
 		private function loadwithid(info:Object) {
 			this.thislevelinfo = info;
-			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/jumpdiecreate/dbscripts/getbyid.php');
+			var urlRequest:URLRequest = new URLRequest(JumpDieCreateMain.ONLINE_DB_URL+'/getbyid.php');
 			var vars:URLVariables = new URLVariables;
 			vars.nocache = new Date().getTime(); 
 			vars.id = info.id;
 			urlRequest.data = vars;
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE, newLevelRecieved);
+			this.KILL = false;
 			configureErrors(urlLoader);
 			urlLoader.load(urlRequest);
 			if (this.browsedisplay.stage != null) {
@@ -161,6 +168,10 @@
 		}
 		
 		private function newLevelRecieved(e:Event) {
+			if (this.KILL || this.main.curfunction != this) {
+				trace("kill in newLevelRecieved");
+				return;
+			}
 			if (clvlxml != null) {
 				System.disposeXML(clvlxml);
 			}
@@ -253,6 +264,7 @@
 											destroy();
 										});
 			bg.addChild(backbutton);
+			JumpDieCreateMain.add_mouse_over(backbutton);
 			main.addChild(bg);
 			
 			loadingdisplay = SubmitMenu.maketextdisplay(200,100,"Loading...",20,200,250);
@@ -269,7 +281,7 @@
 			this.bg = null;
 			this.browsedisplay = null;
 			main.curfunction = new JumpDieCreateMenu(main);
-			this.main = null;
+			this.KILL = true;
 		}
 		
 				[Embed(source='..//img//button//next.png')]

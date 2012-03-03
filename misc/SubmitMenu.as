@@ -55,14 +55,14 @@
 									   		cleardisplayarea();
 											makeinfoentry();
 									   });
-			
+			JumpDieCreateMain.add_mouse_over(yesbutton);
 			var nobutton:Sprite = new Sprite; nobutton.x = 288; nobutton.y = 300;
 			nobutton.addChild(TextWindow.nobutton);
 			nobutton.addEventListener(MouseEvent.CLICK, function() {
 									  	leveleditor.clear();
 										leveleditor.remake();
 									  });
-			
+			JumpDieCreateMain.add_mouse_over(nobutton);
 			displayarea.addChild(yesbutton);
 			displayarea.addChild(nobutton);
 		}
@@ -88,6 +88,7 @@
 									  		errordisplayarea.text = "Verifying text";
 											verifydata();
 									  });
+			JumpDieCreateMain.add_mouse_over(okbutton);
 			displayarea.addChild(okbutton);
 		}
 		
@@ -150,9 +151,13 @@
 			var okbutton:Sprite = new Sprite; okbutton.x = 229; okbutton.y = 300;
 			okbutton.addChild(TextWindow.okbutton);
 			okbutton.addEventListener(MouseEvent.CLICK, function() {
-									  		leveleditor.clear();
-											leveleditor.main.curfunction = new JumpDieCreateMenu(leveleditor.main);
-									  });
+				leveleditor.clear();
+				leveleditor.main.curfunction = new JumpDieCreateMenu(leveleditor.main);
+			});
+			
+			leveleditor.main.localdata.data["submitted_level"] = true;
+			leveleditor.main.mochimanager.update_achievements_submit();
+									  
 			displayarea.addChild(okbutton);
 		}
 		
@@ -207,6 +212,7 @@
 											leveleditor.clear();
 											leveleditor.remake();
 										});
+			JumpDieCreateMain.add_mouse_over(backbutton);
 			bg.addChild(backbutton);
 			this.addChild(bg);
 		}
