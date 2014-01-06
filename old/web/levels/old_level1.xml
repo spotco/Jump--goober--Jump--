@@ -1,0 +1,17 @@
+<level name="old_level1">
+<textfield x="35" y="450" text="This was the first level for the original game. BY SPOTCO"></textfield>
+<wall x="12" y="416" width="-12" height="82"></wall>
+<wall x="2" y="485" width="496" height="14"></wall>
+<wall x="484" y="251" width="14" height="248"></wall>
+<wall x="358" y="118" width="23" height="233"></wall>
+<wall x="236" y="106" width="-95" height="-56"></wall>
+<wall x="48" y="5" width="-21" height="-254"></wall>
+<wall x="132" y="-333" width="85" height="29"></wall>
+<wall x="327" y="-356" width="-22" height="-299"></wall>
+<wall x="149" y="-918" width="32" height="317"></wall>
+<wall x="269" y="-1020" width="98" height="33"></wall>
+<wall x="411" y="-1162" width="32" height="67"></wall>
+<wall x="264" y="-1275" width="-264" height="-20"></wall>
+<goal x="41" y="-1468" width="64" height="74"></goal>
+</level>
+

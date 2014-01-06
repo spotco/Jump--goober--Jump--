@@ -135,7 +135,11 @@
 			loadingmessagedisplay.setTextFormat(JumpDieCreateMain.getTextFormat(10));
 			loadingmessagedisplay.defaultTextFormat = JumpDieCreateMain.getTextFormat(10);
 			loadingmessagedisplay.textColor = 0xFF0000;
-			loadingmessagedisplay.text = "Network error: "+e;
+			//loadingmessagedisplay.text = "Network error: "+e;
+			if (e is SecurityErrorEvent) {
+				loadingmessagedisplay.text = (e as SecurityErrorEvent).text;
+			}
+			
 		}		
 		
 		public override function destroy() {

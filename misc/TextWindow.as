@@ -48,6 +48,7 @@
 			ok.addChild(okbutton);
 			ok.addEventListener(MouseEvent.CLICK,nfunction);
 			addChild(ok);
+			JumpDieCreateMain.add_mouse_over(ok);
 		}
 		
 		public function makewindow(questiontext:String) {

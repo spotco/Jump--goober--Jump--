@@ -1,0 +1,25 @@
+<level name="old_level4">
+<textfield x="35" y="450" text="This was the fourth level for the original game. BY SPOTCO"></textfield>
+<wall x="122" y="467" width="256" height="30"></wall>
+<wall x="121" y="351" width="-101" height="-35"></wall>
+<wall x="86" y="315" width="36" height="66"></wall>
+<wall x="45" y="208" width="-21" height="-163"></wall>
+<boost x="85" y="48" width="-65" height="-120"></boost>
+<wall x="410" y="-86" width="-36" height="-150"></wall>
+<wall x="241" y="-228" width="-96" height="-50"></wall>
+<wall x="70" y="-372" width="-46" height="-182"></wall>
+<wall x="167" y="-591" width="82" height="29"></wall>
+<wall x="397" y="-594" width="-21" height="-208"></wall>
+<wall x="211" y="-838" width="-150" height="-31"></wall>
+<boost x="185" y="-939" width="-94" height="-136"></boost>
+<wall x="297" y="-1332" width="30" height="98"></wall>
+<wall x="81" y="-1331" width="30" height="87"></wall>
+<deathwall x="233" y="-1414" width="-45" height="-190"></deathwall>
+<wall x="385" y="-1399" width="-27" height="-203"></wall>
+<wall x="47" y="-1603" width="-29" height="192"></wall>
+<wall x="118" y="-1664" width="-34" height="-149"></wall>
+<wall x="269" y="-1809" width="37" height="150"></wall>
+<wall x="109" y="-1920" width="143" height="34"></wall>
+<boost x="142" y="-2070" width="70" height="85"></boost>
+<goal x="373" y="-2061" width="65" height="73"></goal>
+</level>

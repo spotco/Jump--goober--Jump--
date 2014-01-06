@@ -112,6 +112,14 @@
 				okbutton.visible = true;
 				errordisplayarea.text = "Level is too short. Make it longer.";
 				return;				
+			} else if (this.leveleditor.rectList.length > 150) {
+				okbutton.visible = true;
+				errordisplayarea.text = "Level is too big. Make it shorter.";
+				return;				
+			} else if (this.leveleditor.rectList.length < 3) {
+				okbutton.visible = true;
+				errordisplayarea.text = "Level is too short. Make it longer.";
+				return;				
 			}
 			
 			errordisplayarea.text = "Submitting...";

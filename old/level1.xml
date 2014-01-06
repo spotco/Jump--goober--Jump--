@@ -1,0 +1,29 @@
+<level name="level1">
+  <wall x="32.05" y="379.8" width="468.7" height="33.64999999999998"/>
+  <textfield x="68.1" y="237.95" text="Welcome to Jump, Die or Create."/>
+  <textfield x="80.15" y="267.6" text="Arrow keys to move, space to jump."/>
+  <wall x="379.8" y="274.8" width="121.80000000000001" height="137.05"/>
+  <wall x="56.9" y="334.1" width="-26.45" height="76.94999999999999"/>
+  <textfield x="396.6" y="221.15" text="try jumping"/>
+  <textfield x="395.8" y="240.35" text="up here"/>
+  <wall x="260.4" y="165.10000000000002" width="77.70000000000005" height="28"/>
+  <wall x="208.3" y="117" width="-87.30000000000001" height="-38.44999999999999"/>
+  <textfield x="129" y="36.099999999999994" text="and here"/>
+  <wall x="39.25" y="-31.600000000000023" width="-32.05" height="-267.59999999999997"/>
+  <textfield x="56.9" y="-189.5" text="now climb up this wall"/>
+  <textfield x="97.75" y="-159.85000000000002" text="hold left while jumping"/>
+  <wall x="133" y="-264" width="389.4" height="19.19999999999999"/>
+  <textfield x="40.85" y="-368.2" text="and walljump off"/>
+  <textfield x="291.65" y="-339.2" text="you are very bouncy"/>
+  <textfield x="284.45" y="-316.8" text="and you can jump once midair"/>
+  <wall x="485.55" y="-312.8" width="35.24999999999994" height="66.5"/>
+  <wall x="387.8" y="-664.5" width="23.25" height="215.5"/>
+  <textfield x="274.05" y="-549.95" text="now use this knowledge"/>
+  <wall x="254.8" y="-613.65" width="-88.15" height="-52.89999999999998"/>
+  <wall x="63.3" y="-699.2" width="-38.449999999999996" height="-242.79999999999995"/>
+  <textfield x="83.35" y="-829" text="and finish the level!"/>
+  <wall x="235.55" y="-961.65" width="-39.25" height="-191.5000000000001"/>
+  <wall x="222.75" y="-1248" width="266" height="34.450000000000045"/>
+  <goal x="286.85" y="-1484.3" width="124.19999999999999" height="112.95000000000005"/>
+  <textfield x="271.6" y="-1313.65" text="this green square is the goal"/>
+</level>

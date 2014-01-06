@@ -631,7 +631,7 @@
 		}
 
 		[Embed(source='..//img//misc//transparentmenu.png')]
-		private static var transbg:Class;
+		public static var transbg:Class;
 		
 		[Embed(source='..//img//misc//creditslist.png')]
 		private static var creditslist:Class;

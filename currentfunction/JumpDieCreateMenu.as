@@ -69,7 +69,7 @@
 			
 			checkonline();
 			JumpDieCreateMain.gc();
-			main.mochimanager.show_panel();
+			//main.mochimanager.show_panel();
 			main.mochimanager.update_achievements_menu();
 		}
 		
@@ -96,6 +96,10 @@
 			JumpDieCreateMain.add_mouse_over(clickarea);
 			main.addChild(sponsorlogo);
 			
+			if (!JumpDieCreateMain.MOCHI_ENABLED) {
+				return;
+			}
+			
 			var ach_tab:Sprite = new Sprite;
 			ach_tab.addChild(new this.awardstab as Bitmap);
 			main.addChild(ach_tab);
@@ -105,6 +109,19 @@
 			ach_tab.addEventListener(MouseEvent.CLICK, function() {
 				main.mochimanager.show_awards();
 			});
+			
+			var show_mochi_button:Sprite = new Sprite;
+			show_mochi_button.addChild(new this.show_mochi_login_img as Bitmap);
+			main.addChild(show_mochi_button);
+			show_mochi_button.x = 500-show_mochi_button.width;
+			show_mochi_button.y = 520-show_mochi_button.height;
+			
+			show_mochi_button.addEventListener(MouseEvent.CLICK, function() {
+				main.mochimanager.show_panel();
+				show_mochi_button.visible = false;
+			});
+			
+			JumpDieCreateMain.add_mouse_over(show_mochi_button);
 		}
 		
 		private function checkonline() {
@@ -318,6 +335,8 @@
 					return "online";
 				} else if (this.menupos == 2) {
 					return "level editor";
+				} else if (this.menupos == 3) {
+					return "challenge";
 				}
 				
 			} else if (this.use_menu == this.online_menu) {
@@ -354,6 +373,12 @@
 			desc["newest online"] = "Browse the newest submitted levels online!";
 			desc["most plays online"] = "Browse the most played levels online!";
 			desc["specific online"] = "Enter a specific level to play online!";
+			desc["challenge"] = "Exclusive challenge levels!";
+			
+			if (JumpDieCreateMain.CONTEST_MODE) {
+				desc["adventure"] = "Contest entry database!";
+				desc["online"] = "Create and submit your own entry!";
+			}
 		}
 		
 		public override function destroy() {
@@ -362,16 +387,33 @@
 		}
 		
 		private function initmenu() {
-			main_menu = new Array(new MenuOption(250,260,adventure,ADVENTURE),
-								  new MenuOption(250,310,online,ONLINE),
-								  new MenuOption(250,360,leveleditor,JumpDieCreateMain.LEVELEDITOR));
+			var shift_up:Number = 25;
+			if (JumpDieCreateMain.HAS_CHALLENGE_LEVELS) {
+				main_menu = new Array(
+				  new MenuOption(250,260-shift_up,adventure,ADVENTURE),
+				  new MenuOption(250,310-shift_up,online,ONLINE),
+				  new MenuOption(250,360-shift_up,leveleditor,JumpDieCreateMain.LEVELEDITOR),
+				  new MenuOption(250,410-shift_up,this.challenge_menu_img,JumpDieCreateMain.WORLD_SPECIAL)
+				);
+			} else if (JumpDieCreateMain.CONTEST_MODE) {
+				main_menu = new Array(
+				  new MenuOption(250,270,online,ONLINE),
+				  new MenuOption(250,330,leveleditor,JumpDieCreateMain.LEVELEDITOR)
+				);
+			} else {
+				main_menu = new Array(
+				  new MenuOption(250,260,adventure,ADVENTURE),
+				  new MenuOption(250,310,online,ONLINE),
+				  new MenuOption(250,360,leveleditor,JumpDieCreateMain.LEVELEDITOR)
+				);
+			}
 			
 			world_menu = new Array(new MenuOption(250,260,world1,JumpDieCreateMain.WORLD1),
 								   new MenuOption(250,310,world2,JumpDieCreateMain.WORLD2),
 								   new MenuOption(250,360,world3,JumpDieCreateMain.WORLD3),
 								   new MenuOption(250,410,(new backdata) as Bitmap,BACK_TO_MAIN));
 			
-			var shift_up:Number = 25;
+			shift_up = 25;
 			
 			online_menu = new Array(new MenuOption(250,250-shift_up,playrandom,JumpDieCreateMain.RANDOMONLINE),
 									new MenuOption(250,300-shift_up,newestsubmitted,JumpDieCreateMain.NEWESTONLINE),
@@ -387,10 +429,10 @@
 		[Embed(source='..//img//misc//menubg0.png')]
 		public static var t1c:Class;
 		
-						[Embed(source='..//img//misc//menububble.png')]
+		[Embed(source='..//img//misc//menububble.png')]
 		public static var menububble:Class;
 		
-				[Embed(source='..//img//misc//titlelogo.png')]
+		[Embed(source='..//img//misc//titlelogo.png')]
 		private var l1:Class;
 		
 		[Embed(source='..//img//soundon.png')]
@@ -441,6 +483,10 @@
 		private var a11:Class;
 		private var newestsubmitted:Bitmap = new a11();
 		
+		[Embed(source='..//img//misc//challenge.png')]
+		private var a12:Class;
+		private var challenge_menu_img:Bitmap = new a12();
+		
 		[Embed(source='..//img//misc//entername.png')]
 		private var a10:Class;
 		private var entername:Bitmap = new a10();
@@ -450,6 +496,9 @@
 		
 		[Embed(source='..//img//awardstab.png')]
 		private var awardstab:Class;
+		
+		[Embed(source='..//img//mochilogo.png')]
+		private var show_mochi_login_img:Class;
 		
 		public static function getTextBubble():Bitmap {
 			var s:Bitmap = (new menububble) as Bitmap;

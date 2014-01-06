@@ -30,6 +30,7 @@
 	
 	//JUMP DIE AND CREATE by spotco (http://www.spotcos.com)
 	//An extension of Jump or Die (http://spotcos.com/misc/jumpdie/jumpordie.html), the xml level files are even both ways compatable!
+	//public static var ONLINE_DB_URL:String =  "http://spotcos.com/jumpdiecreate/dbscripts/";
 	
 	public class JumpDieCreateMain extends Sprite {
 		public var sc:SoundChannel;
@@ -40,28 +41,41 @@
 		public var rankdata:Object;
 		public var mochimanager:MochiManager;
 		
-		public static var ONLINE_DB_URL:String =  "http://flashegames.net/spotco/";
-		//public static var ONLINE_DB_URL:String =  "http://spotcos.com/jumpdiecreate/dbscripts/";
+		public static var MOCHI_ENABLED:Boolean = true;
+		public static var ONLINE_DB_URL:String =  "http://flashegames.net/spotco/"; //main on flashegames
+		public static var HAS_CHALLENGE_LEVELS:Boolean = false;
+		public static var IS_MUTED:Boolean = false;
+		
+		public static var CONTEST_MODE:Boolean = false;
+		public static var LEVELS_UNLOCKED:Boolean = false;
+		
 		
 		public function JumpDieCreateMain(stage:Stage=null) {
 			cstage = stage;
 			//var _mochiads_game_id:String = "2b4163180653a1e6"; JUMP DIE CREATE on spotco
-			var _mochiads_game_id:String = "aa38693f65f9ca8e"; //
+			//var _mochiads_game_id:String = "aa38693f65f9ca8e"; Jump, Goober, Jump on mthree
+			var _mochiads_game_id:String = "b503d0e90c77ace3"; //Jump, goober, jump unlocked
 			localdata = SharedObject.getLocal("JumpDieOrCreateSPOTCO");
+			Security.allowDomain("*");
+			Security.loadPolicyFile("http://flashegames.net/spotco/crossdomain.xml");
 			Security.allowDomain("mochiads.com");
+			Security.allowDomain("gameplay.mochimedia.com");
 			mochimanager = new MochiManager(_mochiads_game_id,this,localdata);
 			
 			Security.allowDomain("flashegames.net");
             Security.allowInsecureDomain("flashegames.net");
 			stage.quality = StageQuality.LOW;
 			
-			mute = false;
+			mute = IS_MUTED;
 			
 			initrankdata();
 			
 			verifysave();
-			curfunction = new JumpDieCreateMenu(this);
 			
+			if (CONTEST_MODE) {
+				ONLINE_DB_URL = "http://flashegames.net/spotcolevel/";
+			}
+			curfunction = new JumpDieCreateMenu(this);
 		}
 		
 		public static function clearDisplay(s:Sprite) {
@@ -106,10 +120,10 @@
 		}
 		
 		private function verifysave() {
-			if (false) {
-				localdata.data.world1 = 11;
-				localdata.data.world2 = 11;
-				localdata.data.world3 = 11;
+			if (LEVELS_UNLOCKED) {
+				localdata.data.world1 = 12;
+				localdata.data.world2 = 12;
+				localdata.data.world3 = 12;
 			}
 			if (!localdata.data.world1 || !localdata.data.world2 || !localdata.data.world3) {
 				localdata.data.world1 = 1;
@@ -122,11 +136,11 @@
 		
 		public function menuStart(menupos:Number) {
 			try {
-			curfunction.destroy();
+				curfunction.destroy();
 			} catch (e) {
 				trace("this only fires when mochi doesn't connect");
 			}
-			if (menupos != WORLD1 && menupos != WORLD2 && menupos != WORLD3 && menupos!= MOSTPLAYEDONLINE && menupos!= NEWESTONLINE && menupos!= SPECIFICONLINE) {
+			if (menupos != WORLD1 && menupos != WORLD2 && menupos != WORLD3 && menupos!= MOSTPLAYEDONLINE && menupos!= NEWESTONLINE && menupos!= SPECIFICONLINE && menupos != WORLD_SPECIAL) {
 				stop();
 			}
 			if (menupos == WORLD1) {
@@ -145,6 +159,8 @@
 				curfunction = new BrowseMostRecentGame(this);
 			} else if (menupos == SPECIFICONLINE) {
 				curfunction = new BrowseSpecificGame(this);
+			} else if (menupos == JumpDieCreateMain.WORLD_SPECIAL) {
+				curfunction = new SpecialGame(this);
 			}
 		}
 		
@@ -236,6 +252,7 @@
 		public static var WORLD1:Number = 1283;
 		public static var WORLD2:Number = 876423;
 		public static var WORLD3:Number = 908974;
+		public static var WORLD_SPECIAL:Number = 463811;
 		
 		public static var MENU_MUSIC:Number = 44141;
 		public static var LEVELEDITOR_MUSIC:Number = 12312;

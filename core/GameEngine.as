@@ -466,6 +466,7 @@
 			main.setChildIndex(leveldisplay,main.numChildren-1);
 			main.setChildIndex(menubutton,main.numChildren-1);
 			main.setChildIndex(pausebutton,main.numChildren-1);
+			
 			if (this.mutebutton.stage != null) {
 				main.setChildIndex(this.mutebutton,main.numChildren-1);
 			}

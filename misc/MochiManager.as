@@ -25,6 +25,11 @@
 			this.id = id;
 			this.main = main;
 			this.localdata = localdata;
+			
+			if (!JumpDieCreateMain.MOCHI_ENABLED) {
+				return;
+			}
+			
 			main.cstage.addChild(mochi_pane);
 			MochiServices.connect(id,mochi_pane,connect_error);
 			
@@ -52,6 +57,9 @@
 		}
 		
 		public function unlock_achievement(s:String) {
+			if (!JumpDieCreateMain.MOCHI_ENABLED) {
+				return;
+			}
 			MochiEvents.unlockAchievement( { id: s } );
 		}
 		
@@ -136,7 +144,7 @@
 				var key:String = world+"-"+i;
 				var val = localdata.data[key];
 				if (val == null) {
-					trace("at "+world+"-"+i+" null");
+					//trace("at "+world+"-"+i+" null");
 					return false;
 				} else {
 					val = TutorialGame.parsetime(val);
@@ -151,22 +159,31 @@
 		}
 		
 		public function show_awards() {
+			if (!JumpDieCreateMain.MOCHI_ENABLED) {
+				return;
+			}
 			MochiEvents.showAwards();
 		}
 		
 		private function update(e:Event) {
-			if (panel_showing) {
+			if (main.curfunction is currentfunction.JumpDieCreateMenu) {
 				main.cstage.setChildIndex(mochi_pane,main.cstage.numChildren-1);   
 			} 
 			
 		}
 		
 		public function show_panel() {
+			if (!JumpDieCreateMain.MOCHI_ENABLED) {
+				return;
+			}
 			panel_showing = true;
 			MochiSocial.showLoginWidget({x:305, y:490 });
 		}
 		
 		public function hide_panel() {
+			if (!JumpDieCreateMain.MOCHI_ENABLED) {
+				return;
+			}
 			panel_showing = false;
 			MochiSocial.hideLoginWidget();
 		}

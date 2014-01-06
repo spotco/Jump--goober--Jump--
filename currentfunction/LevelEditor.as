@@ -408,9 +408,9 @@
 		var ststo:Number;
 		public function onKeyPress(e:KeyboardEvent) { //for moving up and down extra position
 			clearButtonMessage();
-			if (e.keyCode == Keyboard.UP && !keydown) {
+			if ((e.keyCode == Keyboard.UP || e.keyCode == Keyboard.W) && !keydown) {
 				levelEditorScroll(5);
-			} else if (e.keyCode == Keyboard.DOWN && !keydown) {
+			} else if ((e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) && !keydown) {
 				levelEditorScroll(-5);
 			} else if (e.keyCode == Keyboard.PAGE_UP && !keydown) {
 				levelEditorScroll(25);
@@ -527,9 +527,9 @@
 			menubutton = new Sprite;
 			menubutton.addChild(menubuttonimg);
 			menubutton.x = 458; menubutton.y = 502;
-			main.addChild(menubutton);
 			menubutton.addEventListener(MouseEvent.CLICK,function(){destroy();});
 			JumpDieCreateMain.add_mouse_over(menubutton);
+			main.addChild(menubutton);
 			
 			playbutton = new Sprite;
 			playbutton.addChild(playbuttonimg);
@@ -594,6 +594,7 @@
 			this.moveplaceindicator = new Sprite;
 			this.moveplaceindicator.addChild(this.moveplaceimg);
 			main.addChild(this.moveplaceindicator);
+			
 			main.stage.focus = main.stage;
 			
 		}
